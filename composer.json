@@ -1,0 +1,12 @@
+{
+    "name": "mwijngaard/php-pdg",
+    "description": "Program Dependence Graph (PDG) library for PHP",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Merijn Wijngaard",
+            "email": "mwijngaard@gmail.com"
+        }
+    ],
+    "require": {}
+}
