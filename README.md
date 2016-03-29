@@ -1,0 +1,3 @@
+# PHP-PDG
+
+A Program Dependence Graph (PDG) library for PHP, or it should be at some point...
