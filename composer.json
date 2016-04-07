@@ -8,12 +8,25 @@
             "email": "mwijngaard@gmail.com"
         }
     ],
+	"repositories": [
+		{
+			"type": "git",
+			"url":  "https://github.com/mwijngaard/php-cfg.git"
+		}
+	],
     "require": {
+	    "php": ">=5.5",
 	    "nikic/php-parser": "^2.0",
 	    "ircmaxell/php-cfg": "dev-master",
+	    "ircmaxell/php-types": "dev-master",
 	    "phpdocumentor/graphviz": "dev-master"
     },
 	"require-dev": {
         "phpunit/phpunit": "^5.2"
-    }
+    },
+	"autoload": {
+		"psr-4": {
+			"PhpPdg\\": "src/PhpPdg/"
+		}
+	}
 }
