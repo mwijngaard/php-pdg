@@ -32,7 +32,7 @@ class DirectionalGraph {
 
 	/**
 	 * @param object $from
-	 * @return object[]|false
+	 * @return \SplObjectStorage|false
 	 */
 	public function getOutgoing($from) {
 		if ($this->incoming->contains($from) === false) {
@@ -43,7 +43,7 @@ class DirectionalGraph {
 
 	/**
 	 * @param object $to
-	 * @return object[]|false
+	 * @return \SplObjectStorage|false
 	 */
 	public function getIncoming($to) {
 		if ($this->outgoing->contains($to) === false) {
