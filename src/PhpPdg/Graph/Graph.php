@@ -2,90 +2,84 @@
 
 namespace PhpPdg\Graph;
 
-class Graph {
-	/** @var  \SplObjectStorage|Node[] */
-	private $nodes;
+class Graph implements GraphInterface {
+	/** @var NodeInterface[] */
+	private $nodes = [];
+	/** @var NodeInterface[][] */
+	private $outgoing_edges = [];
+	/** @var NodeInterface[][] */
+	private $incoming_edges = [];
 
-	public function __construct() {
-		$this->nodes = new \SplObjectStorage();
-	}
-
-	public function addNode($obj) {
-		if ($this->nodes->contains($obj) === false) {
-			$this->nodes->attach($obj, new Node($obj));
+	public function addNode(NodeInterface $node) {
+		$hash = $node->getHash();
+		if (isset($hash) === true) {
+			throw new \InvalidArgumentException("Node already exists");
 		}
+		$this->nodes[$hash] = $node;
+		$this->outgoing_edges[$hash] = [];
+		$this->incoming_edges[$hash] = [];
 	}
 
-	public function addEdge($from_obj, $to_obj) {
-		$from_node = $this->getNodeForObject($from_obj);
-		$to_node = $this->getNodeForObject($to_obj);
-		$from_node->addEdge($to_node);
+	public function addEdge(NodeInterface $from_node, NodeInterface $to_node) {
+		$this->assertNodeExists($from_node, 'from_node');
+		$this->assertNodeExists($to_node, 'to_node');
+		$from_node_hash = $from_node->getHash();
+		$to_node_hash = $to_node->getHash();
+		if (isset($this->outgoing_edges[$from_node_hash][$to_node_hash]) === true) {
+			throw new \InvalidArgumentException("Edge already exists");
+		}
+		$this->outgoing_edges[$from_node_hash][$to_node_hash] = $to_node;
+		$this->incoming_edges[$to_node_hash][$from_node_hash] = $from_node;
 	}
 
-	/**
-	 * @return object[]
-	 */
 	public function getNodes() {
-		return iterator_to_array($this->nodes);
+		return $this->nodes;
 	}
 
-	/**
-	 * @param object $from_obj
-	 * @return object[]
-	 */
-	public function getOutgoingEdgeNodes($from_obj) {
-		return $this->returnNodeObjects($this->getNodeForObject($from_obj)->getOutgoingEdgeNodes());
+	public function getOutgoingEdgeNodes(NodeInterface $from_node) {
+		$this->assertNodeExists($from_node, 'from_node');
+		return $this->outgoing_edges[$from_node->getHash()];
 	}
 
-	/**
-	 * @param object $to_obj
-	 * @return object[]
-	 */
-	public function getIncomingEdgeNodes($to_obj) {
-		return $this->returnNodeObjects($this->getNodeForObject($to_obj)->getIncomingEdgeNodes());
+	public function getIncomingEdgeNodes(NodeInterface $to_node) {
+		$this->assertNodeExists($to_node, 'to_node');
+		return $this->incoming_edges[$to_node->getHash()];
 	}
 
-	/**
-	 * @param object $obj
-	 */
-	public function deleteNode($obj) {
-		$node = $this->getNodeForObject($obj);
-		foreach ($node->getIncomingEdgeNodes() as $from_node) {
-			$from_node->deleteEdge($node);
+	public function deleteNode(NodeInterface $node) {
+		$this->assertNodeExists($node, 'node');
+		$hash = $node->getHash();
+		foreach ($this->outgoing_edges as $to_hash => $_) {
+			unset($this->outgoing_edges[$to_hash][$hash]);
 		}
-		$this->nodes->detach($node);
-	}
-
-	/**
-	 * @param object $from_obj
-	 * @param object $to_obj
-	 */
-	public function deleteEdge($from_obj, $to_obj) {
-		$from_node = $this->getNodeForObject($from_obj);
-		$to_node = $this->getNodeForObject($to_obj);
-		$from_node->deleteEdge($to_node);
-	}
-
-	/**
-	 * @param object $obj
-	 * @return Node
-	 */
-	private function getNodeForObject($obj) {
-		if ($this->nodes->contains($obj) === false) {
-			throw new \InvalidArgumentException("No such node");
+		foreach ($this->incoming_edges as $from_hash => $_) {
+			unset($this->incoming_edges[$from_hash][$hash]);
 		}
-		return $this->nodes[$obj];
+		unset($this->outgoing_edges[$hash]);
+		unset($this->incoming_edges[$hash]);
+		unset($this->nodes[$hash]);
 	}
 
-	/**
-	 * @param Node[] $nodes
-	 * @return object[]
-	 */
-	private function returnNodeObjects($nodes) {
-		$ret = array();
-		foreach ($nodes as $node) {
-			$ret[] = $node->getObject();
+	public function deleteEdge(NodeInterface $from_node, NodeInterface $to_node) {
+		$this->assertNodeExists($from_node, 'from_node');
+		$this->assertNodeExists($to_node, 'to_node');
+		$from_node_hash = $from_node->getHash();
+		$to_node_hash = $to_node->getHash();
+		if (isset($this->nodes[$from_node_hash][$to_node_hash]) === false) {
+			throw new \InvalidArgumentException("Edge does not exist");
 		}
-		return $ret;
+		unset($this->nodes[$from_node_hash][$to_node_hash]);
+	}
+
+	public function clear() {
+		$this->nodes = [];
+		$this->incoming_edges = [];
+		$this->outgoing_edges = [];
+	}
+
+	private function assertNodeExists(NodeInterface $node, $label) {
+		if (isset($this->nodes[$node->getHash()]) === false) {
+			throw new \InvalidArgumentException(sprintf("Node `%s` does not exist", $label));
+		}
 	}
 }
