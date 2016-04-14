@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./vendor/autoload.php">
+    <testsuites>
+        <testsuite name="PhpPdg Test Suite">
+            <directory>test/</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/PhpPdg/</directory>
+        </whitelist>
+    </filter>
+</phpunit>
