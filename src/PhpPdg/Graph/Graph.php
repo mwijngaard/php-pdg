@@ -32,6 +32,14 @@ class Graph implements GraphInterface {
 		$this->incoming_edges[$to_node_hash][$from_node_hash] = $from_node;
 	}
 
+	public function hasNode(NodeInterface $node) {
+		return isset($this->nodes[$node->getHash()]);
+	}
+
+	public function hasEdge(NodeInterface $from_node, NodeInterface $to_node) {
+		return isset($this->outgoing_edges[$from_node->getHash()][$to_node->getHash()]);
+	}
+
 	public function getNodes() {
 		return $this->nodes;
 	}

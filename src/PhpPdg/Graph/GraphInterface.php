@@ -21,6 +21,19 @@ interface GraphInterface {
 	public function addEdge(NodeInterface $from_node, NodeInterface $to_node);
 
 	/**
+	 * @param NodeInterface $node
+	 * @return boolean
+	 */
+	public function hasNode(NodeInterface $node);
+
+	/**
+	 * @param NodeInterface $from_node
+	 * @param NodeInterface $to_node
+	 * @return boolean
+	 */
+	public function hasEdge(NodeInterface $from_node, NodeInterface $to_node);
+
+	/**
 	 * Return all nodes in the graph
 	 *
 	 * @return NodeInterface[]
