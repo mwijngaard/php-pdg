@@ -16,9 +16,10 @@ interface GraphInterface {
 	 *
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
+	 * @param string $type
 	 * @return mixed
 	 */
-	public function addEdge(NodeInterface $from_node, NodeInterface $to_node);
+	public function addEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '');
 
 	/**
 	 * @param NodeInterface $node
@@ -29,9 +30,10 @@ interface GraphInterface {
 	/**
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
+	 * @param string $type
 	 * @return boolean
 	 */
-	public function hasEdge(NodeInterface $from_node, NodeInterface $to_node);
+	public function hasEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '');
 
 	/**
 	 * Return all nodes in the graph
@@ -44,17 +46,19 @@ interface GraphInterface {
 	 * Return all nodes that from_node has an edge to
 	 *
 	 * @param NodeInterface $from_node
+	 * @param string $type
 	 * @return NodeInterface[]
 	 */
-	public function getOutgoingEdgeNodes(NodeInterface $from_node);
+	public function getOutgoingEdgeNodes(NodeInterface $from_node, $type = '');
 
 	/**
 	 * Return all nodes that have an edge to this node
 	 *
 	 * @param NodeInterface $to_node
+	 * @param string $type
 	 * @return NodeInterface[]
 	 */
-	public function getIncomingEdgeNodes(NodeInterface $to_node);
+	public function getIncomingEdgeNodes(NodeInterface $to_node, $type = '');
 
 	/**
 	 * Delete a single node, and all its connected edges from the graph
@@ -68,8 +72,9 @@ interface GraphInterface {
 	 *
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
+	 * @param string $type
 	 */
-	public function deleteEdge(NodeInterface $from_node, NodeInterface $to_node);
+	public function deleteEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '');
 
 	/**
 	 * Clear all nodes and edges from the graph
