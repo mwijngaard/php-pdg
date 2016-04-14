@@ -10,6 +10,6 @@ class StopNode implements NodeInterface {
 	}
 
 	public function getHash() {
-		return spl_object_hash($this);
+		return 'STOP';
 	}
 }

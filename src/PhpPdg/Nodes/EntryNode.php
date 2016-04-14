@@ -10,6 +10,6 @@ class EntryNode implements NodeInterface {
 	}
 
 	public function getHash() {
-		return spl_object_hash($this);
+		return 'ENTRY';
 	}
 }

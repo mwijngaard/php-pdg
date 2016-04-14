@@ -29,6 +29,6 @@ class BlockNode implements NodeInterface {
 	}
 
 	public function getHash() {
-		return spl_object_hash($this->block);
+		return 'BLOCK(' . spl_object_hash($this->block) . ')';
 	}
 }
