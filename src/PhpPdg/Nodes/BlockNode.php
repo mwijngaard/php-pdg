@@ -25,7 +25,7 @@ class BlockNode implements NodeInterface {
 	}
 
 	public function toString() {
-		return 'Block (' . $this->getHash() . ')';
+		return $this->getHash();
 	}
 
 	public function getHash() {
