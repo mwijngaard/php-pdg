@@ -12,7 +12,7 @@ class Graph implements GraphInterface {
 
 	public function addNode(NodeInterface $node) {
 		$hash = $node->getHash();
-		if (isset($hash) === true) {
+		if (isset($this->nodes[$hash]) === true) {
 			throw new \InvalidArgumentException("Node already exists");
 		}
 		$this->nodes[$hash] = $node;
