@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpPdg\ControlDependence\Block;
+namespace PhpPdg\ControlDependence\Block\Cfg;
 
 use PHPCfg\Func;
 use PhpPdg\Graph\GraphInterface;
@@ -13,5 +13,5 @@ interface GeneratorInterface {
 	 * @param NodeInterface $stop_node
 	 * @return GraphInterface
 	 */
-	public function generateControlDependenceGraph(Func $func, NodeInterface $entry_node, NodeInterface $stop_node);
+	public function generate(Func $func, NodeInterface $entry_node, NodeInterface $stop_node);
 }
