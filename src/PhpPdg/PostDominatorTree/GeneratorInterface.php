@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpPdg\PostDominator;
+namespace PhpPdg\PostDominatorTree;
 
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Graph\NodeInterface;

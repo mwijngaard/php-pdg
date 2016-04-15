@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpPdg\PostDominator;
+namespace PhpPdg\PostDominatorTree;
 
 use PhpPdg\Graph\FactoryInterface;
 use PhpPdg\Graph\GraphInterface;
@@ -38,7 +38,7 @@ class Generator implements GeneratorInterface {
 					$to_node_post_dominator_hashes = $post_dominators[$to_node->getHash()];
 					$new_post_dominators = $new_post_dominators === null ? $to_node_post_dominator_hashes : array_intersect($new_post_dominators, $to_node_post_dominator_hashes);
 				}
-				$new_post_dominators[] = $hash;
+				$new_post_dominators = array_unique(array_merge((array) $new_post_dominators, [$hash]));
 
 				// If changes, store new post dominators and ensure we do another iteration
 				if (count($new_post_dominators) !== count($post_dominators[$hash])) {
@@ -48,15 +48,27 @@ class Generator implements GeneratorInterface {
 			}
 		} while ($changes === true);
 
-		$pd_graph = $this->graph_factory->create();
+		// compute post-dominations to allow adding only immediate dominators
+		$post_dominations = [];
+		foreach ($post_dominators as $hash => $post_dominator_hashes) {
+			foreach ($post_dominator_hashes as $post_dominator_hash) {
+				$post_dominations[$post_dominator_hash][] = $hash;
+			}
+		}
+
+		$pdt_graph = $this->graph_factory->create();
 		foreach ($nodes_by_hash as $node) {
-			$pd_graph->addNode($node);
+			$pdt_graph->addNode($node);
 		}
 		foreach ($post_dominators as $node_hash => $post_dominator_hashes) {
 			foreach ($post_dominator_hashes as $post_dominator_hash) {
-				$pd_graph->addEdge($nodes_by_hash[$node_hash], $nodes_by_hash[$post_dominator_hash]);
+				// if this is an immediate post-dominator, then there are no nodes between the dominator and the dominated node.
+				if (count(array_intersect($post_dominators[$post_dominator_hash], $post_dominations[$node_hash])) === 0) {
+					$pdt_graph->addEdge($nodes_by_hash[$node_hash], $nodes_by_hash[$post_dominator_hash]);
+				}
 			}
 		}
-		return $pd_graph;
+
+		return $pdt_graph;
 	}
 }
