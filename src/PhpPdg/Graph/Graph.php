@@ -77,7 +77,7 @@ class Graph implements GraphInterface {
 		$this->assertNodeExists($to_node, 'to_node');
 		$from_node_hash = $from_node->getHash();
 		$to_node_hash = $to_node->getHash();
-		if (isset($this->nodes[$from_node_hash][$type][$to_node_hash]) === false) {
+		if (isset($this->outgoing_edges[$from_node_hash][$type][$to_node_hash]) === false) {
 			throw new \InvalidArgumentException("Edge does not exist");
 		}
 		$this->innerDeleteEdge($from_node_hash, $to_node_hash, $type);
