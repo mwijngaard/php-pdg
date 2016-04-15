@@ -22,15 +22,9 @@ class Generator implements GeneratorInterface {
 		$graph = $this->graph_factory->create();
 		$graph->addNode($entry_node);
 		$graph->addNode($stop_node);
-		$graph->addEdge($entry_node, new BlockNode($func->cfg));
 		$visitor = new GeneratingVisitor($graph, $entry_node, $stop_node);
 		$traverser->addVisitor($visitor);
 		$traverser->traverseFunc($func);
-		foreach ($graph->getNodes() as $node) {
-			if (count($graph->getOutgoingEdgeNodes($node)) === 0) {
-				$graph->addEdge($node, $stop_node);
-			}
-		}
 		return $graph;
 	}
 }
