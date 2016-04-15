@@ -7,11 +7,10 @@ use PhpPdg\Graph\GraphInterface;
 
 interface GeneratorInterface {
 	/**
-	 * Add control dependences edges to a graph (must already contain nodes)
+	 * Add control dependence edges to a graph (must already contain nodes)
 	 *
 	 * @param Func $func
-	 * @param GraphInterface $graph
-	 * @param string $edge_type
+	 * @param GraphInterface $target_graph
 	 */
-	public function addControlDependencesToGraph(Func $func, GraphInterface $graph, $edge_type = '');
+	public function addControlDependencesToGraph(Func $func, GraphInterface $target_graph);
 }

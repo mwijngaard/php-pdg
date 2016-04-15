@@ -20,18 +20,12 @@ class Generator implements GeneratorInterface {
 	private $control_dependence_generator;
 	/** @var DataDependenceGeneratorInterface  */
 	private $data_dependence_generator;
-	/** @var string  */
-	private $control_dependence_edge_type;
-	/** @var string  */
-	private $data_dependence_edge_type;
 
-	public function __construct(FactoryInterface $graph_factory, BaseGraphGeneratorInterface $base_graph_generator, ControlDependenceGeneratorInterface $control_dependence_generator, DataDependenceGeneratorInterface $data_dependence_generator, $control_dependence_edge_type = 'control', $data_dependence_edge_type = 'data') {
+	public function __construct(FactoryInterface $graph_factory, BaseGraphGeneratorInterface $base_graph_generator, ControlDependenceGeneratorInterface $control_dependence_generator, DataDependenceGeneratorInterface $data_dependence_generator) {
 		$this->graph_factory = $graph_factory;
 		$this->base_graph_generator = $base_graph_generator;
 		$this->control_dependence_generator = $control_dependence_generator;
 		$this->data_dependence_generator = $data_dependence_generator;
-		$this->control_dependence_edge_type= $control_dependence_edge_type;
-		$this->data_dependence_edge_type = $data_dependence_edge_type;
 	}
 
 	/**
@@ -45,8 +39,8 @@ class Generator implements GeneratorInterface {
 		$graph->addNode($entry_node);
 		$graph->addNode($stop_node);
 		$this->base_graph_generator->addOpNodesToGraph($cfg_func, $graph);
-		$this->control_dependence_generator->addControlDependencesToGraph($cfg_func, $graph, $this->control_dependence_edge_type);
-		$this->data_dependence_generator->addDataDependencesToGraph($cfg_func, $graph, $this->data_dependence_edge_type);
+		$this->control_dependence_generator->addControlDependencesToGraph($cfg_func, $graph);
+		$this->data_dependence_generator->addDataDependencesToGraph($cfg_func, $graph);
 		return new PdgFunc($cfg_func->name, $cfg_func->class, $entry_node, $stop_node, $graph);
 	}
 }

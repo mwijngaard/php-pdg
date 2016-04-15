@@ -7,9 +7,20 @@ use PhpPdg\CfgAdapter\Traverser;
 use PhpPdg\Graph\GraphInterface;
 
 class Generator implements GeneratorInterface {
-	public function addDataDependencesToGraph(Func $func, GraphInterface $graph, $edge_type = '') {
+	/** @var string  */
+	private $edge_type;
+
+	/**
+	 * Generator constructor.
+	 * @param string $edge_type
+	 */
+	public function __construct($edge_type = 'data') {
+		$this->edge_type = $edge_type;
+	}
+
+	public function addDataDependencesToGraph(Func $func, GraphInterface $target_graph, $edge_type = '') {
 		$traverser = new Traverser();
-		$traverser->addVisitor(new GeneratingVisitor($graph, $edge_type));
+		$traverser->addVisitor(new GeneratingVisitor($target_graph, $edge_type));
 		$traverser->traverseFunc($func);
 	}
 }

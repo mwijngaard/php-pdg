@@ -12,12 +12,17 @@ use PhpPdg\Nodes\OpNode;
 
 class GeneratingVisitor extends BaseVisitor {
 	/** @var GraphInterface  */
-	private $graph;
+	private $target_graph;
 	/** @var string  */
 	private $edge_type;
 
-	public function __construct(GraphInterface $graph, $edge_type = '') {
-		$this->graph = $graph;
+	/**
+	 * GeneratingVisitor constructor.
+	 * @param GraphInterface $target_graph
+	 * @param string $edge_type
+	 */
+	public function __construct(GraphInterface $target_graph, $edge_type) {
+		$this->target_graph = $target_graph;
 		$this->edge_type = $edge_type;
 	}
 
@@ -25,7 +30,7 @@ class GeneratingVisitor extends BaseVisitor {
 		$op_node = new OpNode($op);
 		foreach ($this->resolveOpDataDependences($op) as $write_op) {
 			$write_op_node = new OpNode($write_op);
-			$this->graph->addEdge($op_node, $write_op_node, $this->edge_type);
+			$this->target_graph->addEdge($op_node, $write_op_node, $this->edge_type);
 		}
 	}
 
