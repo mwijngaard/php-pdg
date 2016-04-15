@@ -18,7 +18,7 @@ class Generator implements GeneratorInterface {
 		$this->edge_type = $edge_type;
 	}
 
-	public function addDataDependencesToGraph(Func $func, GraphInterface $target_graph, $edge_type = '') {
+	public function addDataDependencesToGraph(Func $func, GraphInterface $target_graph, $edge_type = 'data') {
 		$traverser = new Traverser();
 		$traverser->addVisitor(new GeneratingVisitor($target_graph, $edge_type));
 		$traverser->traverseFunc($func);
