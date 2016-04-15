@@ -23,29 +23,44 @@ class GeneratingVisitor extends BaseVisitor {
 
 	public function enterOp(Op $op, Block $block) {
 		$op_node = new OpNode($op);
-		foreach ($this->resolveWriteOps($op) as $write_op) {
+		foreach ($this->resolveOpDataDependences($op) as $write_op) {
 			$write_op_node = new OpNode($write_op);
-			if ($this->graph->hasEdge($op_node, $write_op_node, $this->edge_type) === false) {
-				$this->graph->addEdge($op_node, $write_op_node, $this->edge_type);
-			}
+			$this->graph->addEdge($op_node, $write_op_node, $this->edge_type);
 		}
 	}
 
-	private function resolveWriteOps(Op $op) {
+	private function resolveOpDataDependences(Op $op) {
 		$write_ops = [];
 		foreach ($op->getVariableNames() as $variable_name) {
+			// since the CFG is in SSA form, we only need to look at non-write variables
+			if ($op->isWriteVariable($variable_name) === true) {
+				continue;
+			}
+
 			/** @var Operand $operand */
 			$operand = $op->$variable_name;
-			if ($operand !== null) {
-				foreach ($operand->ops as $write_op) {
-					if ($op !== $write_op) {
-						if ($write_op instanceof Phi) {
-							$write_ops = array_merge($write_ops, $this->resolveWriteOps($write_op));
-						} else {
-							$write_ops[] = $write_op;
-						}
-					}
+			if ($operand === null) {
+				continue;
+			}
+
+			if (is_array($operand) === true) {
+				foreach ($operand as $operand_entry) {
+					$write_ops = array_merge($write_ops, $this->resolveOperandDataDependences($operand_entry));
 				}
+			} else {
+				$write_ops = array_merge($write_ops, $this->resolveOperandDataDependences($operand));
+			}
+		}
+		return $write_ops;
+	}
+
+	private function resolveOperandDataDependences(Operand $operand) {
+		$write_ops = [];
+		foreach ($operand->ops as $write_op) {
+			if ($write_op instanceof Phi) {
+				$write_ops = array_merge($write_ops, $this->resolveOpDataDependences($write_op));
+			} else {
+				$write_ops[] = $write_op;
 			}
 		}
 		return $write_ops;
