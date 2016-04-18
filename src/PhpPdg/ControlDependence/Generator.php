@@ -5,8 +5,6 @@ namespace PhpPdg\ControlDependence;
 use PhpPdg\ControlDependence\Block\Cfg\GeneratorInterface as BlockCfgGeneratorInterface;
 use PhpPdg\PostDominatorTree\GeneratorInterface as PdtGeneratorInterface;
 use PhpPdg\ControlDependence\Block\Cdg\GeneratorInterface as BlockCdgGeneratorInterface;
-use PhpPdg\Graph\Graph;
-use PhpPdg\Graph\NodeInterface;
 use PHPCfg\Func;
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Nodes\EntryNode;
