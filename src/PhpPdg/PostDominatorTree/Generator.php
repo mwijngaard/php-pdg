@@ -48,11 +48,15 @@ class Generator implements GeneratorInterface {
 			}
 		} while ($changes === true);
 
-		// compute post-dominations to allow adding only immediate dominators
+		// remove non-strict post dominators and compute post-dominations - this allows easy adding of immediate dominators
 		$post_dominations = [];
 		foreach ($post_dominators as $hash => $post_dominator_hashes) {
-			foreach ($post_dominator_hashes as $post_dominator_hash) {
-				$post_dominations[$post_dominator_hash][] = $hash;
+			foreach ($post_dominator_hashes as $index => $post_dominator_hash) {
+				if ($hash === $post_dominator_hash) {
+					unset($post_dominators[$hash][$index]);
+				} else {
+					$post_dominations[$post_dominator_hash][] = $hash;
+				}
 			}
 		}
 
@@ -62,8 +66,8 @@ class Generator implements GeneratorInterface {
 		}
 		foreach ($post_dominators as $node_hash => $post_dominator_hashes) {
 			foreach ($post_dominator_hashes as $post_dominator_hash) {
-				// if this is an immediate post-dominator, then there are no nodes between the dominator and the dominated node.
-				if (count(array_intersect($post_dominators[$post_dominator_hash], $post_dominations[$node_hash])) === 0) {
+				// if this is an immediate post-dominator, then there are no nodes that both dominate $node_hash and are dominated by $post_dominator_hash
+				if (empty(array_diff(array_intersect($post_dominations[$post_dominator_hash], $post_dominator_hashes), [$node_hash, $post_dominator_hash])) === true) {
 					$pdt_graph->addEdge($nodes_by_hash[$node_hash], $nodes_by_hash[$post_dominator_hash]);
 				}
 			}
