@@ -31,17 +31,14 @@ class GeneratingVisitor extends BaseVisitor {
 	}
 
 	public function enterOp(Op $op, Block $block) {
-//		$op_node = new OpNode($op);
-//		foreach ($this->block_cdg->getOutgoingEdgeNodes(new BlockNode($block)) as $node) {
-//			if ($node instanceof EntryNode) {
-//				$this->target_graph->addEdge($op_node, $node);
-//			} else if ($node instanceof BlockNode) {
-//				$block_children = $node->getBlock()->children;
-//				$last_child = $block_children[count($block_children)-1];
-//				$this->target_graph->addEdge($op_node, new OpNode($last_child));
-//			} else {
-//				throw new \LogicException("This is weird");
-//			}
-//		}
+		$op_node = new OpNode($op);
+		foreach ($this->block_cdg->getOutgoingEdgeNodes(new BlockNode($block)) as $node) {
+			if ($node instanceof BlockNode) {
+				$block_children = $node->getBlock()->children;
+				$last_child = $block_children[count($block_children)-1];
+				$node = new OpNode($last_child);
+			}
+			$this->target_graph->addEdge($op_node, $node, $this->edge_type);
+		}
 	}
 }

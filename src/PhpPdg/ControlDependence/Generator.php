@@ -40,8 +40,8 @@ class Generator implements GeneratorInterface {
 	public function addControlDependencesToGraph(Func $func, GraphInterface $target_graph) {
 		$entry_node = new EntryNode();
 		$stop_node = new StopNode();
-
 		$block_cfg = $this->block_cfg_generator->generate($func, $entry_node, $stop_node);
+		$block_cfg->addEdge($entry_node, $stop_node);
 		$block_pdt = $this->pdt_generator->generate($block_cfg, $stop_node);
 		$block_cdg = $this->cdg_generator->generate($block_cfg, $block_pdt);
 
