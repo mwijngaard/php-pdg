@@ -31,8 +31,11 @@ class Generator implements GeneratorInterface {
 
 	private function addNodeControlDependences(GraphInterface $cdg, GraphInterface $pdt, NodeInterface $node_a, NodeInterface $node_from_b_to_l) {
 		$cdg->addEdge($node_from_b_to_l, $node_a);
+
+		// If $node_from_b_to_l equals $node_a, we have found Case 2 from Ferrante et al. (loop dependence) and are done.
 		if ($node_a->getHash() !== $node_from_b_to_l->getHash()) {
 			$node_from_b_to_l_parent = $pdt->getOutgoingEdgeNodes($node_from_b_to_l)[0];
+			// If $node_from_b_to_l is the parent of $node_a, we have found Case 1 from Ferrante et al. and are done.
 			if ($pdt->hasEdge($node_a, $node_from_b_to_l_parent) === false) {
 				$this->addNodeControlDependences($cdg, $pdt, $node_a, $node_from_b_to_l_parent);
 			}
