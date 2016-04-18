@@ -7,7 +7,6 @@ use PHPCfg\Op;
 use PhpPdg\CfgAdapter\BaseVisitor;
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Nodes\BlockNode;
-use PhpPdg\Nodes\EntryNode;
 use PhpPdg\Nodes\OpNode;
 
 class GeneratingVisitor extends BaseVisitor {
