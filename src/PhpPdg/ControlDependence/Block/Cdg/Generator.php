@@ -21,10 +21,9 @@ class Generator implements GeneratorInterface {
 		foreach ($cfg->getNodes() as $node_a) {
 			foreach ($cfg->getOutgoingEdgeNodes($node_a) as $node_b) {
 				// Evaluate all CFG edges as A-B where B does not post-dominate A
-				if ($pdt->hasEdge($node_a, $node_b) === true) {
-					continue;
+				if ($pdt->hasEdge($node_a, $node_b) === false) {
+					$this->addNodeControlDependences($cdg, $pdt, $node_a, $node_b);
 				}
-				$this->addNodeControlDependences($cdg, $pdt, $node_a, $node_b);
 			};
 		}
 		return $cdg;
