@@ -9,7 +9,9 @@ use PhpPdg\DataDependence\GeneratorInterface as DataDependenceGeneratorInterface
 use PhpPdg\Nodes\EntryNode;
 use PhpPdg\Nodes\StopNode;
 use PhpPdg\Func as PdgFunc;
+use PhpPdg\Script as PdgScript;
 use PHPCfg\Func as CfgFunc;
+use PHPCfg\Script as CfgScript;
 
 class Generator implements GeneratorInterface {
 	/** @var FactoryInterface  */
@@ -28,11 +30,16 @@ class Generator implements GeneratorInterface {
 		$this->data_dependence_generator = $data_dependence_generator;
 	}
 
-	/**
-	 * @param CfgFunc $cfg_func
-	 * @return Func
-	 */
-	public function generate(CfgFunc $cfg_func) {
+	public function generate(CfgScript $cfg_script) {
+		$pdg_script = new PdgScript();
+		$pdg_script->main = $this->generateFunc($cfg_script->main);
+		foreach ($cfg_script->functions as $cfg_func) {
+			$pdg_script->functions[] = $this->generateFunc($cfg_func);
+		}
+		return $pdg_script;
+	}
+
+	private function generateFunc(CfgFunc $cfg_func) {
 		$graph = $this->graph_factory->create();
 		$entry_node = new EntryNode();
 		$stop_node = new StopNode();
