@@ -7,7 +7,7 @@ use PhpPdg\Graph\NodeInterface;
 
 class BlockNode implements NodeInterface {
 	/** @var Block  */
-	private $block;
+	public $block;
 
 	/**
 	 * BlockNode constructor.
@@ -15,13 +15,6 @@ class BlockNode implements NodeInterface {
 	 */
 	public function __construct(Block $block) {
 		$this->block = $block;
-	}
-
-	/**
-	 * @return Block
-	 */
-	public function getBlock() {
-		return $this->block;
 	}
 
 	public function toString() {
