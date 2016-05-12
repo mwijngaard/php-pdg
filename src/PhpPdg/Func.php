@@ -16,6 +16,8 @@ class Func {
 	/** @var NodeInterface[] */
 	public $param_nodes = [];
 	/** @var NodeInterface[] */
+	public $call_nodes = [];
+	/** @var NodeInterface[] */
 	public $return_nodes = [];
 	/** @var NodeInterface[] */
 	public $exceptional_return_nodes = [];

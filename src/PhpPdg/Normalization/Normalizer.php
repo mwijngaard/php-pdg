@@ -18,11 +18,15 @@ class Normalizer implements NormalizerInterface {
 		$struct['Name'] = $func->name;
 		$struct['Class'] = $func->class;
 		$struct['EntryNode'] = $func->entry_node->toString();
-
-		$struct['ReturnNodes'] = array_map(function (NodeInterface $return_node) {
-			return $return_node->toString();
-		}, $func->return_nodes);
+		$struct['CallNodes'] = $this->normalizeNodes($func->call_nodes);
+		$struct['ReturnNodes'] = $this->normalizeNodes($func->return_nodes);
 		$struct['DependenceGraph'] = $this->graph_normalizer->normalizeGraph($func->dependence_graph);
 		return $struct;
+	}
+
+	private function normalizeNodes($nodes) {
+		return array_map(function (NodeInterface $return_node) {
+			return $return_node->toString();
+		}, $nodes);
 	}
 }
