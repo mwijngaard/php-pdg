@@ -45,27 +45,27 @@ class Graph implements GraphInterface {
 	public function getOutgoingEdgeTypes(NodeInterface $from_node) {
 		$this->assertNodeExists($from_node, 'from_node');
 		$from_node_hash = $from_node->getHash();
-		return isset($this->outgoing_edges[$from_node_hash]) ? array_keys($this->outgoing_edges[$from_node_hash]) : [];
+		return isset($this->outgoing_edges[$from_node_hash]) === true ? array_keys($this->outgoing_edges[$from_node_hash]) : [];
 	}
 
 	public function getOutgoingEdgeNodes(NodeInterface $from_node, $type = '') {
 		$this->assertNodeExists($from_node, 'from_node');
 		$from_node_hash = $from_node->getHash();
-		$outgoing_edge_types = isset($this->outgoing_edges[$from_node_hash]) ? $this->outgoing_edges[$from_node_hash] : [];
-		return isset($outgoing_edge_types[$type]) ? $this->hashesToNodes(array_keys($outgoing_edge_types[$type])) : [];
+		$outgoing_edge_types = isset($this->outgoing_edges[$from_node_hash]) === true ? $this->outgoing_edges[$from_node_hash] : [];
+		return isset($outgoing_edge_types[$type]) === true ? $this->hashesToNodes(array_keys($outgoing_edge_types[$type])) : [];
 	}
 
 	public function getIncomingEdgeTypes(NodeInterface $to_node) {
 		$this->assertNodeExists($to_node, 'to_node');
 		$to_node_hash = $to_node->getHash();
-		return isset($this->incoming_edges[$to_node_hash]) ? array_keys($this->incoming_edges[$to_node_hash]) : [];
+		return isset($this->incoming_edges[$to_node_hash]) === true ? array_keys($this->incoming_edges[$to_node_hash]) : [];
 	}
 
 	public function getIncomingEdgeNodes(NodeInterface $to_node, $type = '') {
 		$this->assertNodeExists($to_node, 'to_node');
 		$to_node_hash = $to_node->getHash();
-		$incoming_edge_types = isset($this->incoming_edges[$to_node_hash]) ? $this->incoming_edges[$to_node_hash] : [];
-		return isset($incoming_edge_types[$type]) ? $this->hashesToNodes(array_keys($incoming_edge_types[$type])) : [];
+		$incoming_edge_types = isset($this->incoming_edges[$to_node_hash]) === true ? $this->incoming_edges[$to_node_hash] : [];
+		return isset($incoming_edge_types[$type]) === true ? $this->hashesToNodes(array_keys($incoming_edge_types[$type])) : [];
 	}
 
 	public function deleteNode(NodeInterface $node) {
