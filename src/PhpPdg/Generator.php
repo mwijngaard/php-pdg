@@ -4,12 +4,10 @@ namespace PhpPdg;
 
 use PHPCfg\Traverser;
 use PhpPdg\Graph\FactoryInterface;
-use PhpPdg\BaseGraph\GeneratorInterface as BaseGraphGeneratorInterface;
 use PhpPdg\ControlDependence\GeneratorInterface as ControlDependenceGeneratorInterface;
 use PhpPdg\DataDependence\GeneratorInterface as DataDependenceGeneratorInterface;
 use PhpPdg\Nodes\EntryNode;
 use PhpPdg\Nodes\OpNode;
-use PhpPdg\Nodes\StopNode;
 use PhpPdg\Func as PdgFunc;
 use PHPCfg\Func as CfgFunc;
 
@@ -38,7 +36,7 @@ class Generator implements GeneratorInterface {
 			$pdg_func->param_nodes[] = $param_node;
 		}
 		$traverser = new Traverser();
-		$traverser->addVisitor(new GraphInitializationVisitor($graph));
+		$traverser->addVisitor(new GraphInitializationVisitor($pdg_func, $graph));
 		$traverser->traverseFunc($cfg_func);
 		$this->control_dependence_generator->addControlDependencesToGraph($cfg_func, $graph);
 		$this->data_dependence_generator->addDataDependencesToGraph($cfg_func, $graph);
