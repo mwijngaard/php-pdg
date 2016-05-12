@@ -14,7 +14,10 @@ class OpNode implements NodeInterface {
 	}
 
 	public function toString() {
-		return $this->getHash();
+		$startLine = $this->op_node->getAttribute('startLine');
+		$endLine = $this->op_node->getAttribute('endLine');
+		$lines = $startLine === $endLine ? $startLine : $startLine . ':' . $endLine;
+		return sprintf('%s (line %s)', get_class($this->op_node), $lines) ;
 	}
 
 	public function getHash() {
