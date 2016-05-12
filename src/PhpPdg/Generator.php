@@ -36,7 +36,7 @@ class Generator implements GeneratorInterface {
 			$pdg_func->param_nodes[] = $param_node;
 		}
 		$traverser = new Traverser();
-		$traverser->addVisitor(new GraphInitializationVisitor($pdg_func, $graph));
+		$traverser->addVisitor(new FuncInitializationVisitor($pdg_func, $graph));
 		$traverser->traverseFunc($cfg_func);
 		$this->control_dependence_generator->addControlDependencesToGraph($cfg_func, $graph);
 		$this->data_dependence_generator->addDataDependencesToGraph($cfg_func, $graph);
