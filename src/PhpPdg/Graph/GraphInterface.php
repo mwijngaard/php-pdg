@@ -43,6 +43,14 @@ interface GraphInterface {
 	public function getNodes();
 
 	/**
+	 * Return all outgoing edge types from this node
+	 *
+	 * @param NodeInterface $from_node
+	 * @return string[]
+	 */
+	public function getOutgoingEdgeTypes(NodeInterface $from_node);
+
+	/**
 	 * Return all nodes that from_node has an edge to
 	 *
 	 * @param NodeInterface $from_node
@@ -50,6 +58,14 @@ interface GraphInterface {
 	 * @return NodeInterface[]
 	 */
 	public function getOutgoingEdgeNodes(NodeInterface $from_node, $type = '');
+
+	/**
+	 * Return all incoming edge types to this node
+	 *
+	 * @param NodeInterface $to_node
+	 * @return string[]
+	 */
+	public function getIncomingEdgeTypes(NodeInterface $to_node);
 
 	/**
 	 * Return all nodes that have an edge to this node
