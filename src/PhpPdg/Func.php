@@ -8,29 +8,31 @@ use PhpPdg\Graph\NodeInterface;
 
 class Func {
 	/** @var  string */
-	private $name;
+	public $name;
 	/** @var  string */
-	private $class;
+	public $class;
 	/** @var NodeInterface  */
-	private $entry_node;
-	/** @var NodeInterface */
-	private $stop_node;
+	public $entry_node;
+	/** @var NodeInterface[] */
+	public $param_nodes = [];
+	/** @var NodeInterface[] */
+	public $return_nodes = [];
+	/** @var NodeInterface[] */
+	public $exceptional_return_nodes = [];
 	/** @var GraphInterface */
-	private $pdg;
+	public $dependence_graph;
 
 	/**
 	 * Func constructor.
 	 * @param string $name
 	 * @param string $class
 	 * @param NodeInterface $entry_node
-	 * @param NodeInterface $stop_node
-	 * @param GraphInterface $pdg
+	 * @param GraphInterface $dependence_graph
 	 */
-	public function __construct($name, $class, NodeInterface $entry_node, NodeInterface $stop_node, GraphInterface $pdg) {
+	public function __construct($name, $class, NodeInterface $entry_node, GraphInterface $dependence_graph) {
 		$this->name = $name;
 		$this->class = $class;
 		$this->entry_node = $entry_node;
-		$this->stop_node = $stop_node;
-		$this->pdg = $pdg;
+		$this->dependence_graph = $dependence_graph;
 	}
 }

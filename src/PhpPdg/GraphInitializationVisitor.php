@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpPdg\BaseGraph;
+namespace PhpPdg;
 
 use PHPCfg\AbstractVisitor;
 use PHPCfg\Block;
@@ -8,7 +8,7 @@ use PHPCfg\Op;
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Nodes\OpNode;
 
-class GeneratingVisitor extends AbstractVisitor {
+class GraphInitializationVisitor extends AbstractVisitor {
 	/** @var GraphInterface */
 	private $graph;
 
