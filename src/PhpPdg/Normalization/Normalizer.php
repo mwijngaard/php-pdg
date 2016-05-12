@@ -3,6 +3,7 @@
 namespace PhpPdg\Normalization;
 
 use PhpPdg\Func;
+use PhpPdg\Graph\NodeInterface;
 use PhpPdg\Graph\Normalization\Normalizer as GraphNormalizerInterface;
 
 class Normalizer implements NormalizerInterface {
@@ -16,7 +17,12 @@ class Normalizer implements NormalizerInterface {
 		$struct = [];
 		$struct['Name'] = $func->name;
 		$struct['Class'] = $func->class;
-		$struct['DependenceGraph'] = $this->graph_normalizer->normalize($func->dependence_graph);
+		$struct['EntryNode'] = $func->entry_node->toString();
+
+		$struct['ReturnNodes'] = array_map(function (NodeInterface $return_node) {
+			return $return_node->toString();
+		}, $func->return_nodes);
+		$struct['DependenceGraph'] = $this->graph_normalizer->normalizeGraph($func->dependence_graph);
 		return $struct;
 	}
 }
