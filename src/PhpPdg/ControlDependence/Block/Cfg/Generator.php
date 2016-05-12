@@ -3,7 +3,7 @@
 namespace PhpPdg\ControlDependence\Block\Cfg;
 
 use PHPCfg\Func;
-use PhpPdg\CfgAdapter\Traverser;
+use PHPCfg\Traverser;
 use PhpPdg\Graph\FactoryInterface;
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Graph\NodeInterface;

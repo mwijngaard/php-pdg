@@ -2,13 +2,13 @@
 
 namespace PhpPdg\ControlDependence\Block\Cfg;
 
+use PHPCfg\AbstractVisitor;
 use PHPCfg\Block;
-use PhpPdg\CfgAdapter\BaseVisitor;
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Graph\NodeInterface;
 use PhpPdg\Nodes\BlockNode;
 
-class GeneratingVisitor extends BaseVisitor {
+class GeneratingVisitor extends AbstractVisitor {
 	/** @var GraphInterface */
 	public $graph;
 	/** @var  NodeInterface */

@@ -2,6 +2,7 @@
 
 namespace PhpPdg\ControlDependence;
 
+use PHPCfg\Traverser;
 use PhpPdg\ControlDependence\Block\Cfg\GeneratorInterface as BlockCfgGeneratorInterface;
 use PhpPdg\PostDominatorTree\GeneratorInterface as PdtGeneratorInterface;
 use PhpPdg\ControlDependence\Block\Cdg\GeneratorInterface as BlockCdgGeneratorInterface;
@@ -9,7 +10,6 @@ use PHPCfg\Func;
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Nodes\EntryNode;
 use PhpPdg\Nodes\StopNode;
-use PhpPdg\CfgAdapter\Traverser;
 
 class Generator implements GeneratorInterface {
 	/** @var BlockCfgGeneratorInterface  */

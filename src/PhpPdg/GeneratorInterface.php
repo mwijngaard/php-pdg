@@ -2,13 +2,13 @@
 
 namespace PhpPdg;
 
-use PHPCfg\Script as CfgScript;
+use PHPCfg\Func as CfgFunc;
 use PhpPdg\Func as PdgFunc;
 
 interface GeneratorInterface {
 	/**
-	 * @param CfgScript $cfg_script
+	 * @param CfgFunc $cfg_func
 	 * @return PdgFunc
 	 */
-	public function generate(CfgScript $cfg_script);
+	public function generate(CfgFunc $cfg_func);
 }
