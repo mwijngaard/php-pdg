@@ -34,7 +34,7 @@ class GeneratingVisitor extends AbstractVisitor {
 		foreach ($this->block_cdg->getOutgoingEdgeNodes(new BlockNode($block)) as $node) {
 			if ($node instanceof BlockNode) {
 				$block_children = $node->block->children;
-				$last_child = $block_children[count($block_children)-1];
+				$last_child = $block_children[count($block_children) - 1];
 				$node = new OpNode($last_child);
 			}
 			$this->target_graph->addEdge($op_node, $node, $this->edge_type);
