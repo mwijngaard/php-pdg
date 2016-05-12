@@ -17,7 +17,7 @@ class OpNode implements NodeInterface {
 		$startLine = $this->op_node->getAttribute('startLine');
 		$endLine = $this->op_node->getAttribute('endLine');
 		$lines = $startLine === $endLine ? $startLine : $startLine . ':' . $endLine;
-		return sprintf('%s (line %s)', get_class($this->op_node), $lines) ;
+		return sprintf('OP[%s] @ line %s', str_replace("PHPCfg\\Op\\", '', get_class($this->op_node)), $lines) ;
 	}
 
 	public function getHash() {

@@ -7,7 +7,7 @@ use PhpPdg\Graph\NodeInterface;
 
 class EntryNode implements NodeInterface {
 	public function toString() {
-		return $this->getHash();
+		return 'Entry';
 	}
 
 	public function getHash() {
