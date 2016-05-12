@@ -3,7 +3,7 @@
 namespace PhpPdg\BaseGraph;
 
 use PHPCfg\Func;
-use PhpPdg\CfgAdapter\Traverser;
+use PHPCfg\Traverser;
 use PhpPdg\Graph\GraphInterface;
 
 class Generator implements GeneratorInterface {

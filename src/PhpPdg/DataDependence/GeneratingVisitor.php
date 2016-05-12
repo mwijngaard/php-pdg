@@ -2,15 +2,15 @@
 
 namespace PhpPdg\DataDependence;
 
+use PHPCfg\AbstractVisitor;
 use PHPCfg\Block;
 use PHPCfg\Op;
 use PHPCfg\Op\Phi;
 use PHPCfg\Operand;
-use PhpPdg\CfgAdapter\BaseVisitor;
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Nodes\OpNode;
 
-class GeneratingVisitor extends BaseVisitor {
+class GeneratingVisitor extends AbstractVisitor {
 	/** @var GraphInterface  */
 	private $target_graph;
 	/** @var string  */
