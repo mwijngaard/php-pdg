@@ -35,15 +35,23 @@ class GeneratingVisitor extends AbstractVisitor {
 			$this->graph->addEdge(new BlockNode($block), new BlockNode($op->target));
 		} else if ($op instanceof Op\Stmt\JumpIf) {
 			$from_block_node = new BlockNode($block);
-			$this->graph->addEdge($from_block_node, new BlockNode($op->if));
-			$this->graph->addEdge($from_block_node, new BlockNode($op->else));
+			$this->graph->addEdge($from_block_node, new BlockNode($op->if), [
+				'case' => true
+			]);
+			$this->graph->addEdge($from_block_node, new BlockNode($op->else), [
+				'case' => false
+			]);
 		} else if ($op instanceof Op\Stmt\Switch_) {
 			$from_block_node = new BlockNode($block);
 			foreach ($op->cases as $i => $case) {
-				$this->graph->addEdge($from_block_node, new BlockNode($op->targets[$i]));
+				$this->graph->addEdge($from_block_node, new BlockNode($op->targets[$i]), [
+					'case' => $case
+				]);
 			}
 			if ($op->default !== null) {
-				$this->graph->addEdge($from_block_node, new BlockNode($op->default));
+				$this->graph->addEdge($from_block_node, new BlockNode($op->default), [
+					'case' => null
+				]);
 			}
 		}
 	}

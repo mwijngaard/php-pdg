@@ -39,7 +39,8 @@ class GeneratingVisitor extends AbstractVisitor {
 				$to_node = new OpNode($last_child);
 			}
 			$this->target_graph->addEdge($op_node, $to_node, array(
-				'type' => $this->edge_type
+				'type' => $this->edge_type,
+				'case' => $edge->getAttributes()['case'],
 			));
 		}
 	}
