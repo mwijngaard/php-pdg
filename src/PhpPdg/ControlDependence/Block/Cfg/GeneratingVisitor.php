@@ -45,7 +45,7 @@ class GeneratingVisitor extends AbstractVisitor {
 			$from_block_node = new BlockNode($block);
 			foreach ($op->cases as $i => $case) {
 				$this->graph->addEdge($from_block_node, new BlockNode($op->targets[$i]), [
-					'case' => $case
+					'case' => $case->value
 				]);
 			}
 			if ($op->default !== null) {
