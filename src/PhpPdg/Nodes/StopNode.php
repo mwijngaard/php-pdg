@@ -3,9 +3,10 @@
 namespace PhpPdg\Nodes;
 
 use PHPCfg\Op;
+use PhpPdg\Graph\AbstractNode;
 use PhpPdg\Graph\NodeInterface;
 
-class StopNode implements NodeInterface {
+class StopNode extends AbstractNode {
 	public function toString() {
 		return "Stop";
 	}

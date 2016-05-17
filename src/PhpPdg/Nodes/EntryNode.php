@@ -3,9 +3,11 @@
 namespace PhpPdg\Nodes;
 
 use PHPCfg\Op;
+use PhpPdg\Graph\AbstractNode;
 use PhpPdg\Graph\NodeInterface;
 
-class EntryNode implements NodeInterface {
+class EntryNode extends AbstractNode {
+
 	public function toString() {
 		return 'Entry';
 	}

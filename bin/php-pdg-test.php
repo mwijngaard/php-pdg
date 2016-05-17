@@ -17,6 +17,8 @@ $testfilepath = __DIR__ . '/test.php';
 $cfg_script = $cfg_parser->parse(file_get_contents($testfilepath), $testfilepath);
 
 $normalizer = new \PhpPdg\Normalization\Normalizer(new \PhpPdg\Graph\Normalization\Normalizer());
+
 echo json_encode(array_map(function ($func) use ($normalizer, $pdg_generator) {
-	return $normalizer->normalizeFunc($pdg_generator->generate($func));
+	$pdg = $pdg_generator->generate($func);
+	return $normalizer->normalizeFunc($pdg);
 }, array_merge([$cfg_script->main], $cfg_script->functions)), JSON_PRETTY_PRINT);

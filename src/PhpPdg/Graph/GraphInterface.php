@@ -7,7 +7,6 @@ interface GraphInterface {
 	 * Add a node to the graph
 	 *
 	 * @param NodeInterface $node
-	 * @return mixed
 	 */
 	public function addNode(NodeInterface $node);
 
@@ -16,10 +15,9 @@ interface GraphInterface {
 	 *
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
-	 * @param string $type
-	 * @return mixed
+	 * @param array $attributes
 	 */
-	public function addEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '');
+	public function addEdge(NodeInterface $from_node, NodeInterface $to_node, array $attributes = []);
 
 	/**
 	 * @param NodeInterface $node
@@ -30,10 +28,11 @@ interface GraphInterface {
 	/**
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
-	 * @param string $type
+	 * @param array $filterAttributes
+	 * @param boolean $filterAttributesExact
 	 * @return boolean
 	 */
-	public function hasEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '');
+	public function hasEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false);
 
 	/**
 	 * Return all nodes in the graph
@@ -43,38 +42,16 @@ interface GraphInterface {
 	public function getNodes();
 
 	/**
-	 * Return all outgoing edge types from this node
-	 *
-	 * @param NodeInterface $from_node
-	 * @return string[]
-	 */
-	public function getOutgoingEdgeTypes(NodeInterface $from_node);
-
-	/**
 	 * Return all nodes that from_node has an edge to
 	 *
 	 * @param NodeInterface $from_node
-	 * @param string $type
-	 * @return NodeInterface[]
-	 */
-	public function getOutgoingEdgeNodes(NodeInterface $from_node, $type = '');
-
-	/**
-	 * Return all incoming edge types to this node
-	 *
 	 * @param NodeInterface $to_node
-	 * @return string[]
+	 * @param array $filterAttributes
+	 * @param boolean $filterAttributesExact
+	 * @return Edge[]
 	 */
-	public function getIncomingEdgeTypes(NodeInterface $to_node);
+	public function getEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false);
 
-	/**
-	 * Return all nodes that have an edge to this node
-	 *
-	 * @param NodeInterface $to_node
-	 * @param string $type
-	 * @return NodeInterface[]
-	 */
-	public function getIncomingEdgeNodes(NodeInterface $to_node, $type = '');
 
 	/**
 	 * Delete a single node, and all its connected edges from the graph
@@ -88,9 +65,10 @@ interface GraphInterface {
 	 *
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
-	 * @param string $type
+	 * @param array $filterAttributes
+	 * @param boolean $filterAttributesExact
 	 */
-	public function deleteEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '');
+	public function deleteEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false);
 
 	/**
 	 * Clear all nodes and edges from the graph

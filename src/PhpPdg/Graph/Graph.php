@@ -5,10 +5,8 @@ namespace PhpPdg\Graph;
 class Graph implements GraphInterface {
 	/** @var NodeInterface[] */
 	private $nodes = [];
-	/** @var int[][][] */
-	private $outgoing_edges = [];
-	/** @var int[][][] */
-	private $incoming_edges = [];
+	/** @var Edge[] */
+	private $edges = [];
 
 	public function addNode(NodeInterface $node) {
 		$hash = $node->getHash();
@@ -18,115 +16,90 @@ class Graph implements GraphInterface {
 		$this->nodes[$hash] = $node;
 	}
 
-	public function addEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '') {
-		$this->assertNodeExists($from_node, 'from_node');
-		$this->assertNodeExists($to_node, 'to_node');
-		$from_node_hash = $from_node->getHash();
-		$to_node_hash = $to_node->getHash();
-		if (isset($this->outgoing_edges[$from_node_hash][$type][$to_node_hash]) === true) {
-			throw new \InvalidArgumentException("Edge already exists");
-		}
-		$this->outgoing_edges[$from_node_hash][$type][$to_node_hash] = 1;
-		$this->incoming_edges[$to_node_hash][$type][$from_node_hash] = 1;
+	public function addEdge(NodeInterface $from_node, NodeInterface $to_node, array $attributes = []) {
+		$this->assertNodeExistsIfNotNull('from_node', $from_node);
+		$this->assertNodeExistsIfNotNull('to_node', $to_node);
+		$this->edges[] = new Edge($from_node, $to_node, $attributes);
 	}
 
 	public function hasNode(NodeInterface $node) {
 		return isset($this->nodes[$node->getHash()]);
 	}
 
-	public function hasEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '') {
-		return isset($this->outgoing_edges[$from_node->getHash()][$type][$to_node->getHash()]);
+	public function hasEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false) {
+		$this->assertNodeExistsIfNotNull('from_node', $from_node);
+		$this->assertNodeExistsIfNotNull('to_node', $to_node);
+		foreach ($this->edges as $edge) {
+			if ($this->edgeMatches($edge, $from_node, $to_node, $filterAttributes, $filterAttributesExact) === true) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public function getNodes() {
 		return array_values($this->nodes);
 	}
 
-	public function getOutgoingEdgeTypes(NodeInterface $from_node) {
-		$this->assertNodeExists($from_node, 'from_node');
-		$from_node_hash = $from_node->getHash();
-		return isset($this->outgoing_edges[$from_node_hash]) === true ? array_keys($this->outgoing_edges[$from_node_hash]) : [];
-	}
-
-	public function getOutgoingEdgeNodes(NodeInterface $from_node, $type = '') {
-		$this->assertNodeExists($from_node, 'from_node');
-		$from_node_hash = $from_node->getHash();
-		$outgoing_edge_types = isset($this->outgoing_edges[$from_node_hash]) === true ? $this->outgoing_edges[$from_node_hash] : [];
-		return isset($outgoing_edge_types[$type]) === true ? $this->hashesToNodes(array_keys($outgoing_edge_types[$type])) : [];
-	}
-
-	public function getIncomingEdgeTypes(NodeInterface $to_node) {
-		$this->assertNodeExists($to_node, 'to_node');
-		$to_node_hash = $to_node->getHash();
-		return isset($this->incoming_edges[$to_node_hash]) === true ? array_keys($this->incoming_edges[$to_node_hash]) : [];
-	}
-
-	public function getIncomingEdgeNodes(NodeInterface $to_node, $type = '') {
-		$this->assertNodeExists($to_node, 'to_node');
-		$to_node_hash = $to_node->getHash();
-		$incoming_edge_types = isset($this->incoming_edges[$to_node_hash]) === true ? $this->incoming_edges[$to_node_hash] : [];
-		return isset($incoming_edge_types[$type]) === true ? $this->hashesToNodes(array_keys($incoming_edge_types[$type])) : [];
+	public function getEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false) {
+		$this->assertNodeExistsIfNotNull('from_node', $from_node);
+		$this->assertNodeExistsIfNotNull('to_node', $to_node);
+		$result = [];
+		foreach ($this->edges as $edge) {
+			if ($this->edgeMatches($edge, $from_node, $to_node, $filterAttributes, $filterAttributesExact) === true) {
+				$result[] = $edge;
+			}
+		}
+		return $result;
 	}
 
 	public function deleteNode(NodeInterface $node) {
-		$this->assertNodeExists($node, 'node');
-		$hash = $node->getHash();
-		foreach ($this->outgoing_edges as $type => $to_nodes) {
-			foreach ($to_nodes as $to_node_hash => $_) {
-				$this->innerDeleteEdge($hash, $to_node_hash, $type);
+		$this->assertNodeExistsIfNotNull($node, 'node');
+		foreach ($this->edges as $index => $edge) {
+			if ($this->edgeMatches($edge, $node) === true || $this->edgeMatches($edge, null, $node) === true) {
+				unset($this->edges[$index]);
 			}
 		}
-		foreach ($this->incoming_edges as $type => $from_nodes) {
-			foreach ($from_nodes as $from_node_hash => $_) {
-				$this->innerDeleteEdge($from_node_hash, $hash, $type);
-			}
-		}
-		unset($this->nodes[$hash]);
+		unset($this->nodes[$node->getHash()]);
 	}
 
-	public function deleteEdge(NodeInterface $from_node, NodeInterface $to_node, $type = '') {
-		$this->assertNodeExists($from_node, 'from_node');
-		$this->assertNodeExists($to_node, 'to_node');
-		$from_node_hash = $from_node->getHash();
-		$to_node_hash = $to_node->getHash();
-		if (isset($this->outgoing_edges[$from_node_hash][$type][$to_node_hash]) === false) {
-			throw new \InvalidArgumentException("Edge does not exist");
+	public function deleteEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false) {
+		$this->assertNodeExistsIfNotNull('from_node', $from_node);
+		$this->assertNodeExistsIfNotNull('to_node', $to_node);
+		foreach ($this->edges as $index => $edge) {
+			if ($this->edgeMatches($edge, $from_node, $to_node, $filterAttributes, $filterAttributesExact) === true) {
+				unset($this->edges[$index]);
+			}
 		}
-		$this->innerDeleteEdge($from_node_hash, $to_node_hash, $type);
 	}
 
 	public function clear() {
 		$this->nodes = [];
-		$this->incoming_edges = [];
-		$this->outgoing_edges = [];
+		$this->edges = [];
 	}
 
-	private function assertNodeExists(NodeInterface $node, $label) {
-		if (isset($this->nodes[$node->getHash()]) === false) {
+	private function assertNodeExistsIfNotNull($label, NodeInterface $node = null) {
+		if ($node !== null && isset($this->nodes[$node->getHash()]) === false) {
 			throw new \InvalidArgumentException(sprintf("Node `%s` does not exist", $label));
 		}
 	}
 
-	private function hashesToNodes(array $hashes) {
-		return array_map(function ($hash) {
-			return $this->nodes[$hash];
-		}, $hashes);
+	private function edgeMatches(Edge $edge, NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false) {
+		return
+			($from_node === null || $from_node->equals($edge->getFromNode()))
+			&& ($to_node === null || $to_node->equals($edge->getToNode()))
+			&& $this->attributesMatch($edge->getAttributes(), $filterAttributes, $filterAttributesExact);
 	}
 
-	private function innerDeleteEdge($from_node_hash, $to_node_hash, $type) {
-		unset($this->outgoing_edges[$from_node_hash][$type][$to_node_hash]);
-		if (count($this->outgoing_edges[$from_node_hash][$type]) === 0) {
-			unset($this->outgoing_edges[$from_node_hash][$type]);
+	private function attributesMatch(array $attributes, array $filter_attributes, $filter_attributes_exact) {
+		if ($filter_attributes_exact === true && count($attributes) !== count($filter_attributes)) {
+			return false;
 		}
-		if (count($this->outgoing_edges[$from_node_hash]) === 0) {
-			unset($this->outgoing_edges[$from_node_hash]);
+		foreach ($filter_attributes as $key => $value) {
+			if (isset($attributes[$key]) === false || $attributes[$key] !== $value) {
+				return false;
+			}
 		}
-		unset($this->incoming_edges[$to_node_hash][$type][$from_node_hash]);
-		if (count($this->incoming_edges[$to_node_hash][$type]) === 0) {
-			unset($this->incoming_edges[$to_node_hash][$type]);
-		}
-		if (count($this->incoming_edges[$to_node_hash]) === 0) {
-			unset($this->incoming_edges[$to_node_hash]);
-		}
+		return true;
 	}
 }

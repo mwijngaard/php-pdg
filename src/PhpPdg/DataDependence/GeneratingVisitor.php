@@ -30,7 +30,9 @@ class GeneratingVisitor extends AbstractVisitor {
 		$op_node = new OpNode($op);
 		foreach ($this->resolveOpDataDependences($op) as $write_op) {
 			$write_op_node = new OpNode($write_op);
-			$this->target_graph->addEdge($op_node, $write_op_node, $this->edge_type);
+			$this->target_graph->addEdge($op_node, $write_op_node, [
+				'type' => $this->edge_type
+			]);
 		}
 	}
 

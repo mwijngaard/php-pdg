@@ -1,11 +1,7 @@
 <?php
 
-function foo($a, $b) {
-	return $a + $b;
-}
-
 $a = 0;
-if (true) {
+if (true === true) {
 	$a++;
 } else {
 	$a--;

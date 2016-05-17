@@ -6,26 +6,21 @@ use PhpPdg\Graph\GraphInterface;
 
 class Normalizer implements NormalizerInterface {
 	public function normalizeGraph(GraphInterface $graph) {
-		$struct = [];
+		$nodes = [];
 		foreach ($graph->getNodes() as $node) {
-			$out = [];
-			$in = [];
-			foreach ($graph->getOutgoingEdgeTypes($node) as $edge_type) {
-				foreach ($graph->getOutgoingEdgeNodes($node, $edge_type) as $to_node) {
-					$out[$edge_type][] = $to_node->toString();
-				}
-			}
-			foreach ($graph->getIncomingEdgeTypes($node) as $edge_type) {
-				foreach ($graph->getIncomingEdgeNodes($node, $edge_type) as $from_node) {
-					$in[$edge_type][] = $from_node->toString();
-				}
-			}
-			$struct[] = [
-				'Node' => $node->toString(),
-				'Out' => $out,
-				'In' => $in,
+			$nodes[] = $node->toString();
+		}
+		$edges = [];
+		foreach ($graph->getEdges() as $edge) {
+			$edges[] = [
+				'From' => $edge->getFromNode()->toString(),
+				'To' => $edge->getToNode()->toString(),
+				'Attributes' => $edge->getAttributes(),
 			];
 		}
-		return $struct;
+		return [
+			'Nodes' => $nodes,
+			'Edges' => $edges,
+		];
 	}
 }

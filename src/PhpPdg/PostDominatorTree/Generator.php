@@ -34,8 +34,8 @@ class Generator implements GeneratorInterface {
 			foreach ($nodes_by_hash as $hash => $node) {
 				// A node's post-dominators consist of the intersection of the post dominators of all outgoing edge nodes, and the node itself.
 				$new_post_dominators = null;
-				foreach ($graph->getOutgoingEdgeNodes($node) as $to_node) {
-					$to_node_post_dominator_hashes = $post_dominators[$to_node->getHash()];
+				foreach ($graph->getEdges($node) as $edge) {
+					$to_node_post_dominator_hashes = $post_dominators[$edge->getToNode()->getHash()];
 					$new_post_dominators = $new_post_dominators === null ? $to_node_post_dominator_hashes : array_intersect($new_post_dominators, $to_node_post_dominator_hashes);
 				}
 				$new_post_dominators = array_unique(array_merge((array) $new_post_dominators, [$hash]));
