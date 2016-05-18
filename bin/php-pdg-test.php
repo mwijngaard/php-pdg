@@ -13,12 +13,12 @@ $pdg_generator = new PhpPdg\Generator($graph_factory, $control_dependence_genera
 $ast_parser = (new PhpParser\ParserFactory())->create(\PhpParser\ParserFactory::PREFER_PHP7);
 $cfg_parser = new PHPCfg\Parser($ast_parser);
 
-$testfilepath = __DIR__ . '/test.php';
+$testfilepath = realpath(__DIR__ . '/test.php');
 $cfg_script = $cfg_parser->parse(file_get_contents($testfilepath), $testfilepath);
 
 $normalizer = new \PhpPdg\Normalization\Normalizer(new \PhpPdg\Graph\Normalization\Normalizer());
 
-echo json_encode(array_map(function ($func) use ($normalizer, $pdg_generator) {
-	$pdg = $pdg_generator->generate($func);
-	return $normalizer->normalizeFunc($pdg);
+echo json_encode(array_map(function ($func) use ($normalizer, $pdg_generator, $testfilepath) {
+	$pdg = $pdg_generator->generate($func, $testfilepath);
+	return $normalizer->normalizeProgram($pdg);
 }, array_merge([$cfg_script->main], $cfg_script->functions)), JSON_PRETTY_PRINT);

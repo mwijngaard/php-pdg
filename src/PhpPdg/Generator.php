@@ -3,13 +3,16 @@
 namespace PhpPdg;
 
 use PHPCfg\Traverser;
+use PhpPdg\Program\ClassMethod;
+use PhpPdg\Program\Closure;
+use PhpPdg\Program\Function_;
+use PhpPdg\Program\Script;
 use PhpPdg\Graph\FactoryInterface;
 use PhpPdg\ControlDependence\GeneratorInterface as ControlDependenceGeneratorInterface;
 use PhpPdg\DataDependence\GeneratorInterface as DataDependenceGeneratorInterface;
 use PhpPdg\Nodes\EntryNode;
 use PhpPdg\Nodes\OpNode;
-use PhpPdg\Func as PdgFunc;
-use PHPCfg\Func as CfgFunc;
+use PHPCfg\Func;
 
 class Generator implements GeneratorInterface {
 	/** @var FactoryInterface  */
@@ -25,21 +28,32 @@ class Generator implements GeneratorInterface {
 		$this->data_dependence_generator = $data_dependence_generator;
 	}
 
-	public function generate(CfgFunc $cfg_func) {
+	public function generate(Func $func, $script_path = null) {
 		$graph = $this->graph_factory->create();
 		$entry_node = new EntryNode();
-		$pdg_func = new PdgFunc($cfg_func->name, $cfg_func->class, $entry_node, $graph);
 		$graph->addNode($entry_node);
-		foreach ($cfg_func->params as $param) {
-			$param_node = new OpNode($param);
-			$graph->addNode($param_node);
-			$pdg_func->param_nodes[] = $param_node;
+		if ($func->name === '{main}') {
+			$program = new Script($script_path, $entry_node, $graph);
+		} else {
+			if ($func->class !== null) {
+				$program = new ClassMethod($func->name, $func->class->value, $entry_node, $graph);
+			} else if (strpos($func->name, '{anonymous}#') === 0) {
+				$program = new Closure($func->name, $entry_node, $graph);
+			} else {
+				$program = new Function_(implode("\\", $func->name->parts), $entry_node, $graph);
+			}
+			foreach ($func->params as $param) {
+				$param_node = new OpNode($param);
+				$graph->addNode($param_node);
+				$program->param_nodes[] = $param_node;
+			}
 		}
+
 		$traverser = new Traverser();
-		$traverser->addVisitor(new FuncInitializationVisitor($pdg_func, $graph));
-		$traverser->traverseFunc($cfg_func);
-		$this->control_dependence_generator->addControlDependencesToGraph($cfg_func, $graph);
-		$this->data_dependence_generator->addDataDependencesToGraph($cfg_func, $graph);
-		return $pdg_func;
+		$traverser->addVisitor(new FuncInitializationVisitor($program, $graph));
+		$traverser->traverseFunc($func);
+		$this->control_dependence_generator->addControlDependencesToGraph($func, $graph);
+		$this->data_dependence_generator->addDataDependencesToGraph($func, $graph);
+		return $program;
 	}
 }

@@ -2,14 +2,14 @@
 
 namespace PhpPdg\Normalization;
 
-use PhpPdg\Func;
+use PhpPdg\Program\Program;
 
 interface NormalizerInterface {
 	/**
-	 * Normalizes a func into arrays, which can be used in serialization.
+	 * Normalizes a program into arrays, which can be used in serialization.
 	 *
-	 * @param Func $func
+	 * @param \PhpPdg\Program\Program $program
 	 * @return array
 	 */
-	public function normalizeFunc(Func $func);
+	public function normalizeProgram(Program $program);
 }
