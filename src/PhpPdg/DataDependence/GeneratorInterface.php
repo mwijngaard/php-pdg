@@ -12,5 +12,5 @@ interface GeneratorInterface {
 	 * @param Func $func
 	 * @param GraphInterface $target_graph
 	 */
-	public function addDataDependencesToGraph(Func $func, GraphInterface $target_graph);
+	public function addFuncDataDependenceEdgesToGraph(Func $func, GraphInterface $target_graph);
 }

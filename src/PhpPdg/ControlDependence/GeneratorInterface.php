@@ -2,8 +2,10 @@
 
 namespace PhpPdg\ControlDependence;
 
+use PHPCfg\Block;
 use PHPCfg\Func;
 use PhpPdg\Graph\GraphInterface;
+use PhpPdg\Graph\NodeInterface;
 
 interface GeneratorInterface {
 	/**
@@ -11,6 +13,7 @@ interface GeneratorInterface {
 	 *
 	 * @param Func $func
 	 * @param GraphInterface $target_graph
+	 * @param NodeInterface $entry_node
 	 */
-	public function addControlDependencesToGraph(Func $func, GraphInterface $target_graph);
+	public function addFuncControlDependenceEdgesToGraph(Func $func, GraphInterface $target_graph, NodeInterface $entry_node);
 }

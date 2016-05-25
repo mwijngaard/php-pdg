@@ -2,10 +2,10 @@
 
 namespace PhpPdg\Normalization;
 
+use PhpPdg\Func;
 use PhpPdg\Graph\NodeInterface;
 use PhpPdg\Graph\Normalization\Normalizer as GraphNormalizerInterface;
-use PhpPdg\Program\FunctionLike;
-use PhpPdg\Program\Program;
+use PhpPdg\System;
 
 class Normalizer implements NormalizerInterface {
 	private $graph_normalizer;
@@ -14,19 +14,30 @@ class Normalizer implements NormalizerInterface {
 		$this->graph_normalizer = $graph_normalizer;
 	}
 
-	public function normalizeProgram(Program $program) {
-		$struct = [];
-		$struct['Type'] = get_class($program);
-		$struct['Identifier'] = $program->getIdentifier();
-		$struct['EntryNode'] = $program->entry_node->toString();
-		if ($program instanceof FunctionLike) {
-			$struct['ParamNodes'] = $this->normalizeNodes($program->param_nodes);
-		}
-		$struct['CallNodes'] = $this->normalizeNodes($program->call_nodes);
-		$struct['ReturnNodes'] = $this->normalizeNodes($program->return_nodes);
-		$struct['ClosureNodes'] = $this->normalizeNodes($program->closure_nodes);
-		$struct['DependenceGraph'] = $this->graph_normalizer->normalizeGraph($program->dependence_graph);
-		return $struct;
+	public function normalizeSystem(System $system) {
+		return [
+			'Scripts' => $this->normalizeFuncs($system->scripts),
+			'Functions' => $this->normalizeFuncs($system->functions),
+			'Methods' => $this->normalizeFuncs($system->methods),
+			'Closures' => $this->normalizeFuncs($system->closures),
+			'Graph' => $this->graph_normalizer->normalizeGraph($system->graph)
+		];
+	}
+
+	public function normalizeFunc(Func $func) {
+		return [
+			'Name' => $func->name,
+			'Class Name' => $func->class_name,
+			'Entry Node' => $func->entry_node->toString(),
+			'Return Nodes' => $this->normalizeNodes($func->return_nodes),
+			'Exceptional Return Nodes' => $this->normalizeNodes($func->exceptional_return_nodes)
+		];
+	}
+
+	private function normalizeFuncs($funcs) {
+		return array_map(function (Func $func) {
+			return $this->normalizeFunc($func);
+		}, $funcs);
 	}
 
 	private function normalizeNodes($nodes) {

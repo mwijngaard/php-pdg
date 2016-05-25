@@ -1,0 +1,38 @@
+<?php
+
+$a = 1;
+if (true) {
+	$a++;
+} else {
+	$a--;
+}
+echo $a;
+-----
+Script foo.php:
+    Entry Node: #0 Entry(script[foo.php])
+Graph:
+    Nodes:
+        #0 Entry(script[foo.php])
+        #1 Op Expr\Assign @ line 3
+        #2 Op Stmt\JumpIf @ line 4:8
+        #3 Op Expr\BinaryOp\Plus @ line 5
+        #4 Op Expr\Assign @ line 5
+        #5 Op Stmt\Jump @ line 4:8
+        #6 Op Terminal\Echo_ @ line 9
+        #7 Op Terminal\Return_ @ line -1
+        #8 Op Expr\BinaryOp\Minus @ line 7
+        #9 Op Expr\Assign @ line 7
+        #10 Op Stmt\Jump @ line 4:8
+    Edges:
+        #3 Op Expr\BinaryOp\Plus @ line 5 =={"type":"control","case":true}=> #2 Op Stmt\JumpIf @ line 4:8
+        #4 Op Expr\Assign @ line 5 =={"type":"control","case":true}=> #2 Op Stmt\JumpIf @ line 4:8
+        #5 Op Stmt\Jump @ line 4:8 =={"type":"control","case":true}=> #2 Op Stmt\JumpIf @ line 4:8
+        #8 Op Expr\BinaryOp\Minus @ line 7 =={"type":"control","case":false}=> #2 Op Stmt\JumpIf @ line 4:8
+        #9 Op Expr\Assign @ line 7 =={"type":"control","case":false}=> #2 Op Stmt\JumpIf @ line 4:8
+        #10 Op Stmt\Jump @ line 4:8 =={"type":"control","case":false}=> #2 Op Stmt\JumpIf @ line 4:8
+        #3 Op Expr\BinaryOp\Plus @ line 5 =={"type":"data"}=> #1 Op Expr\Assign @ line 3
+        #4 Op Expr\Assign @ line 5 =={"type":"data"}=> #3 Op Expr\BinaryOp\Plus @ line 5
+        #6 Op Terminal\Echo_ @ line 9 =={"type":"data"}=> #4 Op Expr\Assign @ line 5
+        #6 Op Terminal\Echo_ @ line 9 =={"type":"data"}=> #9 Op Expr\Assign @ line 7
+        #8 Op Expr\BinaryOp\Minus @ line 7 =={"type":"data"}=> #1 Op Expr\Assign @ line 3
+        #9 Op Expr\Assign @ line 7 =={"type":"data"}=> #8 Op Expr\BinaryOp\Minus @ line 7

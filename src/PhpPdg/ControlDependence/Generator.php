@@ -4,11 +4,11 @@ namespace PhpPdg\ControlDependence;
 
 use PHPCfg\Traverser;
 use PhpPdg\ControlDependence\Block\Cfg\GeneratorInterface as BlockCfgGeneratorInterface;
+use PhpPdg\Graph\NodeInterface;
 use PhpPdg\PostDominatorTree\GeneratorInterface as PdtGeneratorInterface;
 use PhpPdg\ControlDependence\Block\Cdg\GeneratorInterface as BlockCdgGeneratorInterface;
 use PHPCfg\Func;
 use PhpPdg\Graph\GraphInterface;
-use PhpPdg\Nodes\EntryNode;
 use PhpPdg\Nodes\StopNode;
 
 class Generator implements GeneratorInterface {
@@ -22,7 +22,7 @@ class Generator implements GeneratorInterface {
 	private $edge_type;
 
 	/**
-	 * Generator constructor.
+	 * Factory constructor.
 	 * @param BlockCfgGeneratorInterface $block_cfg_generator
 	 * @param PdtGeneratorInterface $pdt_generator
 	 * @param BlockCdgGeneratorInterface $cdg_generator
@@ -35,8 +35,7 @@ class Generator implements GeneratorInterface {
 		$this->edge_type = $edge_type;
 	}
 
-	public function addControlDependencesToGraph(Func $func, GraphInterface $target_graph) {
-		$entry_node = new EntryNode();
+	public function addFuncControlDependenceEdgesToGraph(Func $func, GraphInterface $target_graph, NodeInterface $entry_node) {
 		$stop_node = new StopNode();
 		$block_cfg = $this->block_cfg_generator->generate($func, $entry_node, $stop_node);
 		$block_cfg->addEdge($entry_node, $stop_node);

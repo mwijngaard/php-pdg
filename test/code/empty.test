@@ -1,0 +1,7 @@
+-----
+Script foo.php:
+    Entry Node: #0 Entry(script[foo.php])
+Graph:
+    Nodes:
+        #0 Entry(script[foo.php])
+        #1 Op Terminal\Return_ @ line -1

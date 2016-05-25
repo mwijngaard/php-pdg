@@ -1,0 +1,18 @@
+<?php
+
+function foo() {}
+
+foo();
+-----
+Script foo.php:
+    Entry Node: #0 Entry(script[foo.php])
+Function foo:
+    Entry Node: #1 Entry(func[foo])
+Graph:
+    Nodes:
+        #0 Entry(script[foo.php])
+        #2 Op Stmt\Function_ @ line 3
+        #3 Op Expr\FuncCall @ line 5
+        #4 Op Terminal\Return_ @ line -1
+        #1 Entry(func[foo])
+        #5 Op Terminal\Return_ @ line -1

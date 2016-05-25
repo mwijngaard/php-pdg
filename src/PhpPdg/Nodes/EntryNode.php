@@ -7,12 +7,21 @@ use PhpPdg\Graph\AbstractNode;
 use PhpPdg\Graph\NodeInterface;
 
 class EntryNode extends AbstractNode {
+	private $id;
+
+	/**
+	 * EntryNode constructor.
+	 * @param string $id
+	 */
+	public function __construct($id) {
+		$this->id = $id;
+	}
 
 	public function toString() {
-		return 'Entry';
+		return "Entry($this->id)";
 	}
 
 	public function getHash() {
-		return 'ENTRY';
+		return "ENTRY($this->id)";
 	}
 }
