@@ -4,8 +4,7 @@ namespace PhpPdg;
 
 use PHPCfg\Func as CfgFunc;
 use PHPCfg\Op\CallableOp;
-use PHPCfg\Op\Stmt\Function_;
-use PHPCfg\Op\Terminal\Return_;
+use PHPCfg\Op\Stmt\ClassMethod;
 use PHPCfg\Operand;
 use PHPCfg\Operand\Literal;
 use PHPCfg\Script;
@@ -17,6 +16,7 @@ use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Nodes\EntryNode;
 use PhpPdg\Nodes\OpNode;
 use PHPTypes\State;
+use PHPTypes\Type;
 use PHPTypes\TypeReconstructor;
 
 class Factory implements FactoryInterface {
@@ -40,7 +40,7 @@ class Factory implements FactoryInterface {
 		$graph = $this->graph_factory->create();
 		$system = new System($graph);
 		$state = new State($scripts_by_path);
-//		$this->type_reconstructor->resolve($state);     // add type information to cfg's
+		$this->type_reconstructor->resolve($state);     // add type information to cfg's
 
 		$pdg_func_lookup = new \SplObjectStorage();
 
@@ -73,7 +73,7 @@ class Factory implements FactoryInterface {
 			if ($funcCall->name instanceof Literal) {
 				$name = strtolower($funcCall->name->value);
 				if (isset($state->functionLookup[$name]) === true) {
-					$this->addFunctionCallEdges($graph, new OpNode($funcCall), $funcCall->args, $state->functionLookup[$name], $pdg_func_lookup);
+					$this->addFunctionsCallEdges($graph, new OpNode($funcCall), $funcCall->args, $state->functionLookup[$name], $pdg_func_lookup);
 				}
 			}
 		}
@@ -94,9 +94,32 @@ class Factory implements FactoryInterface {
 			}
 
 			if ($functions !== null) {
-				$this->addFunctionCallEdges($graph, new OpNode($nsFuncCall), $nsFuncCall->args, $functions, $pdg_func_lookup);
+				$this->addFunctionsCallEdges($graph, new OpNode($nsFuncCall), $nsFuncCall->args, $functions, $pdg_func_lookup);
 			}
+		}
 
+		foreach ($state->methodCalls as $methodCallPair) {
+			$methodCall = $methodCallPair[0];
+			if ($methodCall->name instanceof Literal) {
+				$name = strtolower($methodCall->name->value);
+				$var_type = $methodCall->var->type;
+				if ($var_type->type === Type::TYPE_OBJECT) {
+					$class_name = strtolower($var_type->userType);
+					if (isset($state->classResolves[$class_name]) === true) {
+						$methods = [];
+						foreach ($state->classResolves[$class_name] as $class) {
+							foreach ($class->stmts->children as $op) {
+								if ($op instanceof ClassMethod && strtolower($op->func->name) === $name) {
+									$methods[] = $op;
+								}
+							}
+						}
+						if (empty($methods) === false) {
+							$this->addFunctionsCallEdges($graph, new OpNode($methodCall), $methodCall->args, $methods, $pdg_func_lookup);
+						}
+					}
+				}
+			}
 		}
 
 		return $system;
@@ -109,7 +132,7 @@ class Factory implements FactoryInterface {
 	 * @param CallableOp[] $callable_ops
 	 * @param \SplObjectStorage $pdg_func_lookup
 	 */
-	public function addFunctionCallEdges(GraphInterface $graph, OpNode $call_op_node, $call_op_args, $callable_ops, \SplObjectStorage $pdg_func_lookup) {
+	private function addFunctionsCallEdges(GraphInterface $graph, OpNode $call_op_node, $call_op_args, $callable_ops, \SplObjectStorage $pdg_func_lookup) {
 		foreach ($callable_ops as $callable_op) {
 			$cfg_func = $callable_op->getFunc();
 			/** @var Func $pdg_func */
