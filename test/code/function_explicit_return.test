@@ -2,6 +2,7 @@
 
 function foo($arg) {
 	echo $arg;
+	return true;
 }
 
 foo('Hello World');
@@ -13,15 +14,15 @@ Function foo:
 Graph:
     Nodes:
         #0 Entry(script[foo.php])
-        #2 Op Stmt\Function_ @ line 3:5
-        #3 Op Expr\FuncCall @ line 7
+        #2 Op Stmt\Function_ @ line 3:6
+        #3 Op Expr\FuncCall @ line 8
         #4 Op Terminal\Return_ @ line -1
         #1 Entry(func[foo])
         #5 Op Expr\Param @ line 3
         #6 Op Terminal\Echo_ @ line 4
-        #7 Op Terminal\Return_ @ line -1
+        #7 Op Terminal\Return_ @ line 5
     Edges:
         #6 Op Terminal\Echo_ @ line 4 =={"type":"data"}=> #5 Op Expr\Param @ line 3
-        #3 Op Expr\FuncCall @ line 7 =={"type":"call"}=> #1 Entry(func[foo])
-        #3 Op Expr\FuncCall @ line 7 =={"type":"param in","index":0}=> #5 Op Expr\Param @ line 3
-        #7 Op Terminal\Return_ @ line -1 =={"type":"return"}=> #3 Op Expr\FuncCall @ line 7
+        #3 Op Expr\FuncCall @ line 8 =={"type":"call"}=> #1 Entry(func[foo])
+        #3 Op Expr\FuncCall @ line 8 =={"type":"param in","index":0}=> #5 Op Expr\Param @ line 3
+        #7 Op Terminal\Return_ @ line 5 =={"type":"return"}=> #3 Op Expr\FuncCall @ line 8

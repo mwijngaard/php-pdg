@@ -1,0 +1,29 @@
+<?php
+
+namespace Foo;
+
+function foo($arg) {
+	echo $arg;
+}
+
+foo('Hello World');
+-----
+Script foo.php:
+    Entry Node: #0 Entry(script[foo.php])
+Function Foo\foo:
+    Entry Node: #1 Entry(func[Foo\foo])
+Graph:
+    Nodes:
+        #0 Entry(script[foo.php])
+        #2 Op Stmt\Function_ @ line 5:7
+        #3 Op Expr\NsFuncCall @ line 9
+        #4 Op Terminal\Return_ @ line -1
+        #1 Entry(func[Foo\foo])
+        #5 Op Expr\Param @ line 5
+        #6 Op Terminal\Echo_ @ line 6
+        #7 Op Terminal\Return_ @ line -1
+    Edges:
+        #6 Op Terminal\Echo_ @ line 6 =={"type":"data"}=> #5 Op Expr\Param @ line 5
+        #3 Op Expr\NsFuncCall @ line 9 =={"type":"call"}=> #1 Entry(func[Foo\foo])
+        #3 Op Expr\NsFuncCall @ line 9 =={"type":"param in","index":0}=> #5 Op Expr\Param @ line 5
+        #7 Op Terminal\Return_ @ line -1 =={"type":"return"}=> #3 Op Expr\NsFuncCall @ line 9
