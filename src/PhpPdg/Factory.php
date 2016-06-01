@@ -105,24 +105,41 @@ class Factory implements FactoryInterface {
 				$var_type = $methodCall->var->type;
 				if ($var_type->type === Type::TYPE_OBJECT) {
 					$class_name = strtolower($var_type->userType);
-					if (isset($state->classResolves[$class_name]) === true) {
-						$methods = [];
-						foreach ($state->classResolves[$class_name] as $class) {
-							foreach ($class->stmts->children as $op) {
-								if ($op instanceof ClassMethod && strtolower($op->func->name) === $name) {
-									$methods[] = $op;
-								}
-							}
-						}
-						if (empty($methods) === false) {
-							$this->addFunctionsCallEdges($graph, new OpNode($methodCall), $methodCall->args, $methods, $pdg_func_lookup);
-						}
-					}
+					$methods = $this->resolveClassMethods($state, $class_name, $name);
+
+					$this->addFunctionsCallEdges($graph, new OpNode($methodCall), $methodCall->args, $methods, $pdg_func_lookup);
+				}
+			}
+		}
+
+		foreach ($state->staticCalls as $staticCallPair) {
+			$staticCall = $staticCallPair[0];
+			if ($staticCall->name instanceof Literal) {
+				if ($staticCall->class instanceof Literal) {
+					$class_name = strtolower($staticCall->class->value);
+				} else {
+					$class_name = $this->resolveClassNameFromType($staticCall->class->type);
+				}
+				if ($class_name !== null) {
+					$name = strtolower($staticCall->name->value);
+					$methods = $this->resolveClassMethods($state, $class_name, $name);
+					$this->addFunctionsCallEdges($graph, new OpNode($staticCall), $staticCall->args, $methods, $pdg_func_lookup);
 				}
 			}
 		}
 
 		return $system;
+	}
+
+	private function initFunc(CfgFunc $cfg_func, $entry_node, GraphInterface $graph) {
+		$pdg_func = new Func($cfg_func->name, $cfg_func->class, $entry_node);
+		$graph->addNode($entry_node);
+		$traverser = new Traverser();
+		$traverser->addVisitor(new InitializingVisitor($graph, $pdg_func));
+		$traverser->traverseFunc($cfg_func);
+		$this->control_dependence_generator->addFuncControlDependenceEdgesToGraph($cfg_func, $graph, $entry_node);
+		$this->data_dependence_generator->addFuncDataDependenceEdgesToGraph($cfg_func, $graph);
+		return $pdg_func;
 	}
 
 	/**
@@ -154,23 +171,34 @@ class Factory implements FactoryInterface {
 		}
 	}
 
-	private function tryResolveFunction($name_operand, $functionLookup) {
-		if ($name_operand instanceof Literal) {
-			$name = strtolower($name_operand->value);
-			if (isset($functionLookup[$name]) === true) {
-				return $functionLookup[$name];
-			}
+	/**
+	 * @param Type $type
+	 * @return string|null
+	 */
+	private function resolveClassNameFromType(Type $type) {
+		if ($type->type === Type::TYPE_OBJECT) {
+			return strtolower($type->userType);
 		}
+		return null;
 	}
 
-	private function initFunc(CfgFunc $cfg_func, $entry_node, GraphInterface $graph) {
-		$pdg_func = new Func($cfg_func->name, $cfg_func->class, $entry_node);
-		$graph->addNode($entry_node);
-		$traverser = new Traverser();
-		$traverser->addVisitor(new InitializingVisitor($graph, $pdg_func));
-		$traverser->traverseFunc($cfg_func);
-		$this->control_dependence_generator->addFuncControlDependenceEdgesToGraph($cfg_func, $graph, $entry_node);
-		$this->data_dependence_generator->addFuncDataDependenceEdgesToGraph($cfg_func, $graph);
-		return $pdg_func;
+	/**
+	 * @param State $state
+	 * @param string $class_name
+	 * @param string $method_name
+	 * @return ClassMethod[]
+	 */
+	private function resolveClassMethods(State $state, $class_name, $method_name) {
+		$methods = [];
+		if (isset($state->classResolves[$class_name]) === true) {
+			foreach ($state->classResolves[$class_name] as $class) {
+				foreach ($class->stmts->children as $op) {
+					if ($op instanceof ClassMethod && strtolower($op->func->name) === $method_name) {
+						$methods[] = $op;
+					}
+				}
+			}
+		}
+		return $methods;
 	}
 }
