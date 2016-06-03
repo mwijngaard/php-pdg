@@ -158,10 +158,12 @@ class Factory implements FactoryInterface {
 				'type' => 'call'
 			]);
 			foreach ($call_op_args as $i => $arg) {
-				$graph->addEdge($call_op_node, $pdg_func->param_nodes[$i], [
-					'type' => 'param in',
-					'index' => $i
-				]);
+				if (isset($pdg_func->param_nodes[$i]) === true) {
+					$graph->addEdge($call_op_node, $pdg_func->param_nodes[$i], [
+						'type' => 'param in',
+						'index' => $i
+					]);
+				}
 			}
 			foreach ($pdg_func->return_nodes as $return_node) {
 				$graph->addEdge($return_node, $call_op_node, [
