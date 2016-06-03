@@ -27,7 +27,7 @@ class Normalizer implements NormalizerInterface {
 	public function normalizeFunc(Func $func) {
 		return [
 			'Name' => $func->name,
-			'Class Name' => $func->class_name,
+			'Class Name' => $func->class_name !== null ? $func->class_name->value : null,
 			'Entry Node' => $func->entry_node->toString(),
 			'Return Nodes' => $this->normalizeNodes($func->return_nodes),
 			'Exceptional Return Nodes' => $this->normalizeNodes($func->exceptional_return_nodes)
