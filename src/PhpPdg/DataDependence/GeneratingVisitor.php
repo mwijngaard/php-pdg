@@ -28,7 +28,7 @@ class GeneratingVisitor extends AbstractVisitor {
 
 	public function enterOp(Op $op, Block $block) {
 		$op_node = new OpNode($op);
-		foreach ($this->resolveOpDataDependences($op) as $write_op) {
+		foreach ($this->resolveOpDataDependences($op, new \SplObjectStorage()) as $write_op) {
 			$write_op_node = new OpNode($write_op);
 			$this->target_graph->addEdge($op_node, $write_op_node, [
 				'type' => $this->edge_type
@@ -36,7 +36,7 @@ class GeneratingVisitor extends AbstractVisitor {
 		}
 	}
 
-	private function resolveOpDataDependences(Op $op) {
+	private function resolveOpDataDependences(Op $op, \SplObjectStorage $seen_phis) {
 		$write_ops = [];
 		foreach ($op->getVariableNames() as $variable_name) {
 			// since the CFG is in SSA form, we only need to look at non-write variables
@@ -50,24 +50,33 @@ class GeneratingVisitor extends AbstractVisitor {
 				continue;
 			}
 
-			if (is_array($operand) === true) {
-				foreach ($operand as $operand_entry) {
-					$write_ops = array_merge($write_ops, $this->resolveOperandDataDependences($operand_entry));
-				}
-			} else {
-				$write_ops = array_merge($write_ops, $this->resolveOperandDataDependences($operand));
-			}
+			$write_ops = array_merge($write_ops, $this->resolveOperandDataDependences($operand, $seen_phis));
 		}
 		return $write_ops;
 	}
 
-	private function resolveOperandDataDependences(Operand $operand) {
+	/**
+	 * @param Operand|array $operand
+	 * @return array
+	 */
+	private function resolveOperandDataDependences($operand, \SplObjectStorage $seen_phis) {
 		$write_ops = [];
-		foreach ($operand->ops as $write_op) {
-			if ($write_op instanceof Phi) {
-				$write_ops = array_merge($write_ops, $this->resolveOpDataDependences($write_op));
+		if (!is_null($operand)) {
+			if (is_array($operand)) {
+				foreach ($operand as $operand_entry) {
+					$write_ops = array_merge($write_ops, $this->resolveOperandDataDependences($operand_entry, $seen_phis));
+				}
 			} else {
-				$write_ops[] = $write_op;
+				foreach ($operand->ops as $write_op) {
+					if ($write_op instanceof Phi) {
+						if ($seen_phis->contains($write_op) === false) {
+							$seen_phis->attach($write_op);
+							$write_ops = array_merge($write_ops, $this->resolveOpDataDependences($write_op, $seen_phis));
+						}
+					} else {
+						$write_ops[] = $write_op;
+					}
+				}
 			}
 		}
 		return $write_ops;
