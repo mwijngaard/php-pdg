@@ -1,0 +1,39 @@
+<?php
+
+function foo($arg) {
+	echo $arg;
+}
+
+foo('Hello World');
+-----
+Script /foo/bar/baz.php:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #1 Op Terminal\Return_ @ line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #2 Op Stmt\Function_ @ line 3:5
+            #3 Op Expr\FuncCall @ line 7
+            #1 Op Terminal\Return_ @ line -1
+Function foo:
+    Entry Node: #0 ENTRY
+    Param Nodes:
+        #4 Op Expr\Param @ line 3
+    Return Nodes:
+        #5 Op Terminal\Return_ @ line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #4 Op Expr\Param @ line 3
+            #6 Op Terminal\Echo_ @ line 4
+            #5 Op Terminal\Return_ @ line -1
+        Edges:
+            #6 Op Terminal\Echo_ @ line 4 =={"type":"data"}=> #4 Op Expr\Param @ line 3
+Graph:
+    Nodes:
+        #7 Func script[/foo/bar/baz.php]
+        #8 Func function[foo]
+        #9 Call Expr\FuncCall @ script[/foo/bar/baz.php] on line 7
+    Edges:
+        #9 Call Expr\FuncCall @ script[/foo/bar/baz.php] on line 7 ==[]=> #8 Func function[foo]

@@ -2,6 +2,8 @@
 
 namespace PhpPdg\Graph;
 
+use PhpPdg\Graph\Node\NodeInterface;
+
 interface GraphInterface {
 	/**
 	 * Add a node to the graph

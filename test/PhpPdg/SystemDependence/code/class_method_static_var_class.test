@@ -1,0 +1,48 @@
+<?php
+
+class Foo {
+	public static function bar($arg) {
+		echo $arg;
+	}
+}
+
+$foo = new Foo();
+$foo::bar('Hello World');
+-----
+Script /foo/bar/baz.php:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #1 Op Terminal\Return_ @ line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #2 Op Stmt\Class_ @ line 3:7
+            #3 Op Stmt\ClassMethod @ line 4:6
+            #4 Op Expr\New_ @ line 9
+            #5 Op Expr\Assign @ line 9
+            #6 Op Expr\StaticCall @ line 10
+            #1 Op Terminal\Return_ @ line -1
+        Edges:
+            #5 Op Expr\Assign @ line 9 =={"type":"data"}=> #4 Op Expr\New_ @ line 9
+            #6 Op Expr\StaticCall @ line 10 =={"type":"data"}=> #5 Op Expr\Assign @ line 9
+Method Foo::bar:
+    Entry Node: #0 ENTRY
+    Param Nodes:
+        #7 Op Expr\Param @ line 4
+    Return Nodes:
+        #8 Op Terminal\Return_ @ line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #7 Op Expr\Param @ line 4
+            #9 Op Terminal\Echo_ @ line 5
+            #8 Op Terminal\Return_ @ line -1
+        Edges:
+            #9 Op Terminal\Echo_ @ line 5 =={"type":"data"}=> #7 Op Expr\Param @ line 4
+Graph:
+    Nodes:
+        #10 Func script[/foo/bar/baz.php]
+        #11 Func method[Foo::bar]
+        #12 Call Expr\StaticCall @ script[/foo/bar/baz.php] on line 10
+    Edges:
+        #12 Call Expr\StaticCall @ script[/foo/bar/baz.php] on line 10 ==[]=> #11 Func method[Foo::bar]

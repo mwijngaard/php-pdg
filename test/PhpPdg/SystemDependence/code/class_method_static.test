@@ -1,0 +1,42 @@
+<?php
+
+class Foo {
+	public static function bar($arg) {
+		echo $arg;
+	}
+}
+
+Foo::bar('Hello World');
+-----
+Script /foo/bar/baz.php:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #1 Op Terminal\Return_ @ line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #2 Op Stmt\Class_ @ line 3:7
+            #3 Op Stmt\ClassMethod @ line 4:6
+            #4 Op Expr\StaticCall @ line 9
+            #1 Op Terminal\Return_ @ line -1
+Method Foo::bar:
+    Entry Node: #0 ENTRY
+    Param Nodes:
+        #5 Op Expr\Param @ line 4
+    Return Nodes:
+        #6 Op Terminal\Return_ @ line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #5 Op Expr\Param @ line 4
+            #7 Op Terminal\Echo_ @ line 5
+            #6 Op Terminal\Return_ @ line -1
+        Edges:
+            #7 Op Terminal\Echo_ @ line 5 =={"type":"data"}=> #5 Op Expr\Param @ line 4
+Graph:
+    Nodes:
+        #8 Func script[/foo/bar/baz.php]
+        #9 Func method[Foo::bar]
+        #10 Call Expr\StaticCall @ script[/foo/bar/baz.php] on line 9
+    Edges:
+        #10 Call Expr\StaticCall @ script[/foo/bar/baz.php] on line 9 ==[]=> #9 Func method[Foo::bar]

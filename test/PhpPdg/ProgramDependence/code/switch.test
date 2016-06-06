@@ -1,0 +1,44 @@
+<?php
+
+$a = '';
+switch (1) {
+	default:
+	case 1:
+		$a = 'foo';
+		break;
+	case 2:
+	case 3:
+		$a = 'bar';
+		break;
+}
+echo $a;
+-----
+Entry Node: #0 ENTRY
+Return Nodes:
+    #1 Op Terminal\Return_ @ line -1
+Pdg:
+    Nodes:
+        #0 ENTRY
+        #2 Op Expr\Assign @ line 3
+        #3 Op Stmt\Switch_ @ line 4:13
+        #4 Op Expr\Assign @ line 7
+        #5 Op Stmt\Jump @ line 8
+        #6 Op Terminal\Echo_ @ line 14
+        #1 Op Terminal\Return_ @ line -1
+        #7 Op Stmt\Jump @ line -1
+        #8 Op Expr\Assign @ line 11
+        #9 Op Stmt\Jump @ line 12
+        #10 Op Stmt\Jump @ line -1
+    Edges:
+        #4 Op Expr\Assign @ line 7 =={"type":"control","case":1}=> #3 Op Stmt\Switch_ @ line 4:13
+        #4 Op Expr\Assign @ line 7 =={"type":"control","case":null}=> #3 Op Stmt\Switch_ @ line 4:13
+        #5 Op Stmt\Jump @ line 8 =={"type":"control","case":1}=> #3 Op Stmt\Switch_ @ line 4:13
+        #5 Op Stmt\Jump @ line 8 =={"type":"control","case":null}=> #3 Op Stmt\Switch_ @ line 4:13
+        #7 Op Stmt\Jump @ line -1 =={"type":"control","case":2}=> #3 Op Stmt\Switch_ @ line 4:13
+        #8 Op Expr\Assign @ line 11 =={"type":"control","case":2}=> #3 Op Stmt\Switch_ @ line 4:13
+        #8 Op Expr\Assign @ line 11 =={"type":"control","case":3}=> #3 Op Stmt\Switch_ @ line 4:13
+        #9 Op Stmt\Jump @ line 12 =={"type":"control","case":2}=> #3 Op Stmt\Switch_ @ line 4:13
+        #9 Op Stmt\Jump @ line 12 =={"type":"control","case":3}=> #3 Op Stmt\Switch_ @ line 4:13
+        #10 Op Stmt\Jump @ line -1 =={"type":"control","case":null}=> #3 Op Stmt\Switch_ @ line 4:13
+        #6 Op Terminal\Echo_ @ line 14 =={"type":"data"}=> #4 Op Expr\Assign @ line 7
+        #6 Op Terminal\Echo_ @ line 14 =={"type":"data"}=> #8 Op Expr\Assign @ line 11

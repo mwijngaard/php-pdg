@@ -1,0 +1,31 @@
+<?php
+
+$a = '';
+if (true) {
+	$a = 'foo';
+} else {
+	$a = 'bar';
+}
+echo $a;
+-----
+Entry Node: #0 ENTRY
+Return Nodes:
+    #1 Op Terminal\Return_ @ line -1
+Pdg:
+    Nodes:
+        #0 ENTRY
+        #2 Op Expr\Assign @ line 3
+        #3 Op Stmt\JumpIf @ line 4:8
+        #4 Op Expr\Assign @ line 5
+        #5 Op Stmt\Jump @ line 4:8
+        #6 Op Terminal\Echo_ @ line 9
+        #1 Op Terminal\Return_ @ line -1
+        #7 Op Expr\Assign @ line 7
+        #8 Op Stmt\Jump @ line 4:8
+    Edges:
+        #4 Op Expr\Assign @ line 5 =={"type":"control","case":true}=> #3 Op Stmt\JumpIf @ line 4:8
+        #5 Op Stmt\Jump @ line 4:8 =={"type":"control","case":true}=> #3 Op Stmt\JumpIf @ line 4:8
+        #7 Op Expr\Assign @ line 7 =={"type":"control","case":false}=> #3 Op Stmt\JumpIf @ line 4:8
+        #8 Op Stmt\Jump @ line 4:8 =={"type":"control","case":false}=> #3 Op Stmt\JumpIf @ line 4:8
+        #6 Op Terminal\Echo_ @ line 9 =={"type":"data"}=> #4 Op Expr\Assign @ line 5
+        #6 Op Terminal\Echo_ @ line 9 =={"type":"data"}=> #7 Op Expr\Assign @ line 7

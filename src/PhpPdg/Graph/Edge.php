@@ -2,6 +2,8 @@
 
 namespace PhpPdg\Graph;
 
+use PhpPdg\Graph\Node\NodeInterface;
+
 class Edge {
 	private $from_node;
 	private $to_node;

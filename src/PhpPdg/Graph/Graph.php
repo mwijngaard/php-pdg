@@ -2,6 +2,8 @@
 
 namespace PhpPdg\Graph;
 
+use PhpPdg\Graph\Node\NodeInterface;
+
 class Graph implements GraphInterface {
 	/** @var NodeInterface[] */
 	private $nodes = [];
