@@ -31,9 +31,12 @@ class Generator implements GeneratorInterface {
 	}
 
 	private function addNodeControlDependences(GraphInterface $cdg, GraphInterface $pdt, NodeInterface $node_a, NodeInterface $node_from_b_to_l, $case) {
-		$cdg->addEdge($node_from_b_to_l, $node_a, [
+		$attributes = [
 			'case' => $case
-		]);
+		];
+		if ($cdg->hasEdges($node_from_b_to_l, $node_a, $attributes) === false) {    // control dependences could already have been added, e.g. in the case of a switch with fallthrough.
+			$cdg->addEdge($node_from_b_to_l, $node_a, $attributes);
+		}
 
 		// If $node_from_b_to_l equals $node_a, we have found Case 2 from Ferrante et al. (loop dependence) and are done.
 		if ($node_a->getHash() !== $node_from_b_to_l->getHash()) {
