@@ -1,0 +1,36 @@
+<?php
+$a = 1;
+if ($a === 1 && $a === 2) {
+	echo $a;
+}
+-----
+Entry Node: #0 ENTRY
+Return Nodes:
+    #1 Op Terminal\Return_ @ line -1
+Pdg:
+    Nodes:
+        #0 ENTRY
+        #2 Op Expr\Assign @ line 2
+        #3 Op Expr\BinaryOp\Identical @ line 3
+        #4 Op Stmt\JumpIf @ line -1
+        #5 Op Expr\BinaryOp\Identical @ line 3
+        #6 Op Expr\Cast\Bool_ @ line -1
+        #7 Op Stmt\Jump @ line -1
+        #8 Op Stmt\JumpIf @ line 3:5
+        #9 Op Terminal\Echo_ @ line 4
+        #10 Op Stmt\Jump @ line 3:5
+        #1 Op Terminal\Return_ @ line -1
+        #11 Op Stmt\Jump @ line 3:5
+    Edges:
+        #5 Op Expr\BinaryOp\Identical @ line 3 =={"type":"control","case":true}=> #4 Op Stmt\JumpIf @ line -1
+        #5 Op Expr\BinaryOp\Identical @ line 3 =={"type":"data"}=> #2 Op Expr\Assign @ line 2
+        #6 Op Expr\Cast\Bool_ @ line -1 =={"type":"control","case":true}=> #4 Op Stmt\JumpIf @ line -1
+        #6 Op Expr\Cast\Bool_ @ line -1 =={"type":"data"}=> #5 Op Expr\BinaryOp\Identical @ line 3
+        #7 Op Stmt\Jump @ line -1 =={"type":"control","case":true}=> #4 Op Stmt\JumpIf @ line -1
+        #9 Op Terminal\Echo_ @ line 4 =={"type":"control","case":true}=> #8 Op Stmt\JumpIf @ line 3:5
+        #9 Op Terminal\Echo_ @ line 4 =={"type":"data"}=> #2 Op Expr\Assign @ line 2
+        #10 Op Stmt\Jump @ line 3:5 =={"type":"control","case":true}=> #8 Op Stmt\JumpIf @ line 3:5
+        #11 Op Stmt\Jump @ line 3:5 =={"type":"control","case":false}=> #8 Op Stmt\JumpIf @ line 3:5
+        #3 Op Expr\BinaryOp\Identical @ line 3 =={"type":"data"}=> #2 Op Expr\Assign @ line 2
+        #4 Op Stmt\JumpIf @ line -1 =={"type":"data"}=> #3 Op Expr\BinaryOp\Identical @ line 3
+        #8 Op Stmt\JumpIf @ line 3:5 =={"type":"data"}=> #6 Op Expr\Cast\Bool_ @ line -1
