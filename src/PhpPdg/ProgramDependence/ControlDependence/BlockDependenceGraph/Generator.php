@@ -34,7 +34,7 @@ class Generator implements GeneratorInterface {
 		$attributes = [
 			'case' => $case
 		];
-		if ($cdg->hasEdges($node_from_b_to_l, $node_a, $attributes) === false) {    // control dependences could already have been added, e.g. in the case of a switch with fallthrough.
+		if ($cdg->hasEdges($node_from_b_to_l, $node_a, $attributes) === false) {
 			$cdg->addEdge($node_from_b_to_l, $node_a, $attributes);
 		}
 

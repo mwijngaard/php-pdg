@@ -1,0 +1,23 @@
+<?php
+switch (1) {
+	case 1:
+		break;
+	case 1:
+		break;
+}
+-----
+Entry Node: #0 ENTRY
+Return Nodes:
+    #1 Op Terminal\Return_ @ line -1
+Pdg:
+    Nodes:
+        #0 ENTRY
+        #2 Op Stmt\Switch_ @ line 2:7
+        #3 Op Stmt\Jump @ line 4
+        #1 Op Terminal\Return_ @ line -1
+        #4 Op Stmt\Jump @ line 6
+        #5 Op Stmt\Jump @ line -1
+    Edges:
+        #3 Op Stmt\Jump @ line 4 =={"type":"control","case":1}=> #2 Op Stmt\Switch_ @ line 2:7
+        #4 Op Stmt\Jump @ line 6 =={"type":"control","case":1}=> #2 Op Stmt\Switch_ @ line 2:7
+        #5 Op Stmt\Jump @ line -1 =={"type":"control","case":null}=> #2 Op Stmt\Switch_ @ line 2:7
