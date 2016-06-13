@@ -7,7 +7,6 @@ use PHPCfg\Op\Stmt\Function_;
 use PHPCfg\Operand;
 use PHPCfg\Operand\Literal;
 use PhpPdg\Graph\FactoryInterface as GraphFactoryInterface;
-use PhpPdg\Graph\Node\NamedEntryNode;
 use PhpPdg\ProgramDependence\FactoryInterface as PdgFactoryInterface;
 use PhpPdg\CfgBridge\System as CfgBridgeSystem;
 use PhpPdg\SystemDependence\Node\CallNode;
@@ -15,6 +14,9 @@ use PhpPdg\SystemDependence\Node\FuncNode;
 use PHPTypes\State;
 use PHPTypes\Type;
 use PHPTypes\TypeReconstructor;
+use PhpPdg\Graph\Factory as GraphFactory;
+use PhpPdg\ProgramDependence\Factory as PdgFactory;
+use PhpPdg\SystemDependence\Factory as SdgFactory;
 
 class Factory {
 	/** @var GraphFactoryInterface  */
@@ -28,6 +30,11 @@ class Factory {
 		$this->graph_factory = $graph_factory;
 		$this->pdg_factory = $pdg_factory;
 		$this->type_reconstructor = new TypeReconstructor();
+	}
+
+	public static function createDefault() {
+		$graph_factory = new GraphFactory();
+		return new SdgFactory($graph_factory, PdgFactory::createDefault($graph_factory));
 	}
 
 	/**

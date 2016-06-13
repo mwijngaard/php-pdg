@@ -6,18 +6,11 @@ use PHPCfg\Parser;
 use PhpParser\ParserFactory;
 use PhpPdg\CfgBridge\Script;
 use PhpPdg\CfgBridge\System;
-use PhpPdg\Graph\Factory as GraphFactory;
-use PhpPdg\ProgramDependence\Factory as PdgFactory;
 use PhpPdg\SystemDependence\Factory as SdgFactory;
 use PhpPdg\ProgramDependence\Printer\TextPrinter as PdgPrinter;
 use PhpPdg\SystemDependence\Printer\TextPrinter as SdgPrinter;
 use PhpPdg\Graph\Printer\TextPrinter as GraphPrinter;
 use PhpPdg\Graph\Node\Printer\TextPrinter as NodePrinter;
-use PhpPdg\ProgramDependence\ControlDependence\BlockFlowGraph\Generator as BlockCfgGenerator;
-use PhpPdg\ProgramDependence\ControlDependence\BlockDependenceGraph\Generator as BlockCdgGenerator;
-use PhpPdg\ProgramDependence\ControlDependence\PostDominatorTree\Generator as PdgGenerator;
-use PhpPdg\ProgramDependence\ControlDependence\Generator as ControlDependenceGenerator;
-use PhpPdg\ProgramDependence\DataDependence\Generator as DataDependenceGenerator;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase {
 	/** @var  Parser */
@@ -29,14 +22,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
 	protected function setUp() {
 		$this->cfg_parser = new Parser((new ParserFactory())->create(ParserFactory::PREFER_PHP7));
-		$graph_factory = new GraphFactory();
-		$block_cfg_generator = new BlockCfgGenerator($graph_factory);
-		$block_cdg_generator = new BlockCdgGenerator($graph_factory);
-		$pdt_generator = new PdgGenerator($graph_factory);
-		$control_dependence_generator = new ControlDependenceGenerator($block_cfg_generator, $pdt_generator, $block_cdg_generator);
-		$data_dependence_generator = new DataDependenceGenerator();
-		$pdg_factory = new PdgFactory($graph_factory, $control_dependence_generator, $data_dependence_generator);
-		$this->factory = new SdgFactory($graph_factory, $pdg_factory);
+		$this->factory = SdgFactory::createDefault();
 		$node_printer = new NodePrinter();
 		$graph_printer = new GraphPrinter($node_printer);
 		$this->printer = new SdgPrinter(new PdgPrinter($graph_printer, $node_printer), $graph_printer);
