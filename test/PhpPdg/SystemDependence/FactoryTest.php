@@ -53,7 +53,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 
 	public function getCreateAndDumpCases() {
 		/** @var \SplFileInfo $fileInfo */
-		foreach (new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/code')), '/\.test$/') as $fileInfo) {
+		foreach (new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/assets/code')), '/\.test$/') as $fileInfo) {
 			yield $fileInfo->getBasename() => explode('-----', file_get_contents($fileInfo));
 		}
 	}

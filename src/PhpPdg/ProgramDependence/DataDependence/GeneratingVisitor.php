@@ -32,10 +32,9 @@ class GeneratingVisitor extends AbstractVisitor {
 		$this->addOpDataDependenceOps($op, $op_data_dependences_ops, new \SplObjectStorage());
 		foreach ($op_data_dependences_ops as $op_data_dependence_op) {
 			$write_op_node = new OpNode($op_data_dependence_op);
-			$attributes = [
+			$this->target_graph->addEdge($write_op_node, $op_node, [
 				'type' => $this->edge_type
-			];
-			$this->target_graph->addEdge($op_node, $write_op_node, $attributes);
+			]);
 		}
 	}
 

@@ -34,13 +34,15 @@ class Generator implements GeneratorInterface {
 		$attributes = [
 			'case' => $case
 		];
-		if ($cdg->hasEdges($node_from_b_to_l, $node_a, $attributes) === false) {
-			$cdg->addEdge($node_from_b_to_l, $node_a, $attributes);
+		if ($cdg->hasEdges($node_a, $node_from_b_to_l, $attributes) === false) {
+			$cdg->addEdge($node_a, $node_from_b_to_l, $attributes);
 		}
 
 		// If $node_from_b_to_l equals $node_a, we have found Case 2 from Ferrante et al. (loop dependence) and are done.
 		if ($node_a->getHash() !== $node_from_b_to_l->getHash()) {
-			$node_from_b_to_l_parent = $pdt->getEdges($node_from_b_to_l)[0]->getToNode();
+			$parent_node_edges = $pdt->getEdges($node_from_b_to_l);
+			assert(count($parent_node_edges) === 1);
+			$node_from_b_to_l_parent = $parent_node_edges[0]->getToNode();
 			// If $node_from_b_to_l is the parent of $node_a, we have found Case 1 from Ferrante et al. and are done.
 			if ($pdt->hasEdges($node_a, $node_from_b_to_l_parent) === false) {
 				$this->addNodeControlDependences($cdg, $pdt, $node_a, $node_from_b_to_l_parent, $case);

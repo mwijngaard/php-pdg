@@ -7,7 +7,7 @@ namespace Bar {
 }
 
 namespace Foo {
-	Bar\foo('Hello World');
+	foo('Hello World');
 }
 -----
 Script /foo/bar/baz.php:
@@ -18,7 +18,7 @@ Script /foo/bar/baz.php:
         Nodes:
             #0 ENTRY
             #2 Op Stmt\Function_ @ line 4:6
-            #3 Op Expr\FuncCall @ line 10
+            #3 Op Expr\NsFuncCall @ line 10
             #1 Op Terminal\Return_ @ line -1
 Function Bar\foo:
     Entry Node: #0 ENTRY
@@ -33,9 +33,9 @@ Function Bar\foo:
             #6 Op Terminal\Echo_ @ line 5
             #5 Op Terminal\Return_ @ line -1
         Edges:
-            #6 Op Terminal\Echo_ @ line 5 =={"type":"data"}=> #4 Op Expr\Param @ line 4
+            #4 Op Expr\Param @ line 4 =={"type":"data"}=> #6 Op Terminal\Echo_ @ line 5
 Graph:
     Nodes:
         #7 Func script[/foo/bar/baz.php]
         #8 Func function[Bar\foo]
-        #9 Call Expr\FuncCall @ script[/foo/bar/baz.php] on line 10
+        #9 Call Expr\NsFuncCall @ script[/foo/bar/baz.php] on line 10

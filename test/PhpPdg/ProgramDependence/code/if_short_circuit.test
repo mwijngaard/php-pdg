@@ -22,15 +22,15 @@ Pdg:
         #1 Op Terminal\Return_ @ line -1
         #11 Op Stmt\Jump @ line 3:5
     Edges:
-        #5 Op Expr\BinaryOp\Identical @ line 3 =={"type":"control","case":true}=> #4 Op Stmt\JumpIf @ line -1
-        #5 Op Expr\BinaryOp\Identical @ line 3 =={"type":"data"}=> #2 Op Expr\Assign @ line 2
-        #6 Op Expr\Cast\Bool_ @ line -1 =={"type":"control","case":true}=> #4 Op Stmt\JumpIf @ line -1
-        #6 Op Expr\Cast\Bool_ @ line -1 =={"type":"data"}=> #5 Op Expr\BinaryOp\Identical @ line 3
-        #7 Op Stmt\Jump @ line -1 =={"type":"control","case":true}=> #4 Op Stmt\JumpIf @ line -1
-        #9 Op Terminal\Echo_ @ line 4 =={"type":"control","case":true}=> #8 Op Stmt\JumpIf @ line 3:5
-        #9 Op Terminal\Echo_ @ line 4 =={"type":"data"}=> #2 Op Expr\Assign @ line 2
-        #10 Op Stmt\Jump @ line 3:5 =={"type":"control","case":true}=> #8 Op Stmt\JumpIf @ line 3:5
-        #11 Op Stmt\Jump @ line 3:5 =={"type":"control","case":false}=> #8 Op Stmt\JumpIf @ line 3:5
-        #3 Op Expr\BinaryOp\Identical @ line 3 =={"type":"data"}=> #2 Op Expr\Assign @ line 2
-        #4 Op Stmt\JumpIf @ line -1 =={"type":"data"}=> #3 Op Expr\BinaryOp\Identical @ line 3
-        #8 Op Stmt\JumpIf @ line 3:5 =={"type":"data"}=> #6 Op Expr\Cast\Bool_ @ line -1
+        #4 Op Stmt\JumpIf @ line -1 =={"type":"control","case":true}=> #5 Op Expr\BinaryOp\Identical @ line 3
+        #4 Op Stmt\JumpIf @ line -1 =={"type":"control","case":true}=> #6 Op Expr\Cast\Bool_ @ line -1
+        #4 Op Stmt\JumpIf @ line -1 =={"type":"control","case":true}=> #7 Op Stmt\Jump @ line -1
+        #8 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #9 Op Terminal\Echo_ @ line 4
+        #8 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #10 Op Stmt\Jump @ line 3:5
+        #8 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":false}=> #11 Op Stmt\Jump @ line 3:5
+        #2 Op Expr\Assign @ line 2 =={"type":"data"}=> #3 Op Expr\BinaryOp\Identical @ line 3
+        #2 Op Expr\Assign @ line 2 =={"type":"data"}=> #5 Op Expr\BinaryOp\Identical @ line 3
+        #2 Op Expr\Assign @ line 2 =={"type":"data"}=> #9 Op Terminal\Echo_ @ line 4
+        #3 Op Expr\BinaryOp\Identical @ line 3 =={"type":"data"}=> #4 Op Stmt\JumpIf @ line -1
+        #5 Op Expr\BinaryOp\Identical @ line 3 =={"type":"data"}=> #6 Op Expr\Cast\Bool_ @ line -1
+        #6 Op Expr\Cast\Bool_ @ line -1 =={"type":"data"}=> #8 Op Stmt\JumpIf @ line 3:5

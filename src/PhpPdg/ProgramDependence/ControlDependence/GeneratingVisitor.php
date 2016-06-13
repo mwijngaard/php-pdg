@@ -31,14 +31,14 @@ class GeneratingVisitor extends AbstractVisitor {
 
 	public function enterOp(Op $op, Block $block) {
 		$op_node = new OpNode($op);
-		foreach ($this->block_cdg->getEdges(new BlockNode($block)) as $edge) {
-			$to_node = $edge->getToNode();
-			if ($to_node instanceof BlockNode) {
-				$block_children = $to_node->block->children;
+		foreach ($this->block_cdg->getEdges(null, new BlockNode($block)) as $edge) {
+			$from_node = $edge->getFromNode();
+			if ($from_node instanceof BlockNode) {
+				$block_children = $from_node->block->children;
 				$last_child = $block_children[count($block_children) - 1];
-				$to_node = new OpNode($last_child);
+				$from_node = new OpNode($last_child);
 			}
-			$this->target_graph->addEdge($op_node, $to_node, array(
+			$this->target_graph->addEdge($from_node, $op_node, array(
 				'type' => $this->edge_type,
 				'case' => $edge->getAttributes()['case'],
 			));

@@ -1,0 +1,36 @@
+<?php
+
+namespace Foo {
+	if (true) {
+		echo 'foo';
+	}
+}
+
+namespace Bar {
+	if (false) {
+		echo 'bar';
+	}
+}
+-----
+Entry Node: #0 ENTRY
+Return Nodes:
+    #1 Op Terminal\Return_ @ line -1
+Pdg:
+    Nodes:
+        #0 ENTRY
+        #2 Op Stmt\JumpIf @ line 4:6
+        #3 Op Terminal\Echo_ @ line 5
+        #4 Op Stmt\Jump @ line 4:6
+        #5 Op Stmt\JumpIf @ line 10:12
+        #6 Op Terminal\Echo_ @ line 11
+        #7 Op Stmt\Jump @ line 10:12
+        #1 Op Terminal\Return_ @ line -1
+        #8 Op Stmt\Jump @ line 10:12
+        #9 Op Stmt\Jump @ line 4:6
+    Edges:
+        #2 Op Stmt\JumpIf @ line 4:6 =={"type":"control","case":true}=> #3 Op Terminal\Echo_ @ line 5
+        #2 Op Stmt\JumpIf @ line 4:6 =={"type":"control","case":true}=> #4 Op Stmt\Jump @ line 4:6
+        #2 Op Stmt\JumpIf @ line 4:6 =={"type":"control","case":false}=> #9 Op Stmt\Jump @ line 4:6
+        #5 Op Stmt\JumpIf @ line 10:12 =={"type":"control","case":true}=> #6 Op Terminal\Echo_ @ line 11
+        #5 Op Stmt\JumpIf @ line 10:12 =={"type":"control","case":true}=> #7 Op Stmt\Jump @ line 10:12
+        #5 Op Stmt\JumpIf @ line 10:12 =={"type":"control","case":false}=> #8 Op Stmt\Jump @ line 10:12

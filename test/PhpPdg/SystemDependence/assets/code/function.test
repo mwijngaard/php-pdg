@@ -1,7 +1,5 @@
 <?php
 
-namespace Foo;
-
 function foo($arg) {
 	echo $arg;
 }
@@ -15,27 +13,27 @@ Script /foo/bar/baz.php:
     Pdg:
         Nodes:
             #0 ENTRY
-            #2 Op Stmt\Function_ @ line 5:7
-            #3 Op Expr\NsFuncCall @ line 9
+            #2 Op Stmt\Function_ @ line 3:5
+            #3 Op Expr\FuncCall @ line 7
             #1 Op Terminal\Return_ @ line -1
-Function Foo\foo:
+Function foo:
     Entry Node: #0 ENTRY
     Param Nodes:
-        #4 Op Expr\Param @ line 5
+        #4 Op Expr\Param @ line 3
     Return Nodes:
         #5 Op Terminal\Return_ @ line -1
     Pdg:
         Nodes:
             #0 ENTRY
-            #4 Op Expr\Param @ line 5
-            #6 Op Terminal\Echo_ @ line 6
+            #4 Op Expr\Param @ line 3
+            #6 Op Terminal\Echo_ @ line 4
             #5 Op Terminal\Return_ @ line -1
         Edges:
-            #6 Op Terminal\Echo_ @ line 6 =={"type":"data"}=> #4 Op Expr\Param @ line 5
+            #4 Op Expr\Param @ line 3 =={"type":"data"}=> #6 Op Terminal\Echo_ @ line 4
 Graph:
     Nodes:
         #7 Func script[/foo/bar/baz.php]
-        #8 Func function[Foo\foo]
-        #9 Call Expr\NsFuncCall @ script[/foo/bar/baz.php] on line 9
+        #8 Func function[foo]
+        #9 Call Expr\FuncCall @ script[/foo/bar/baz.php] on line 7
     Edges:
-        #9 Call Expr\NsFuncCall @ script[/foo/bar/baz.php] on line 9 ==[]=> #8 Func function[Foo\foo]
+        #9 Call Expr\FuncCall @ script[/foo/bar/baz.php] on line 7 ==[]=> #8 Func function[foo]
