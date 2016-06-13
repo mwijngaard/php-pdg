@@ -4,7 +4,7 @@ namespace PhpPdg\ProgramDependence;
 
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\Graph\Node\NodeInterface;
-use PhpPdg\Graph\Node\EntryNode;
+use PhpPdg\ProgramDependence\Node\EntryNode;
 
 class Func {
 	/** @var  string */
