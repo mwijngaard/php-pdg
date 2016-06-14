@@ -18,7 +18,7 @@ use PhpPdg\Graph\Factory as GraphFactory;
 use PhpPdg\ProgramDependence\Factory as PdgFactory;
 use PhpPdg\SystemDependence\Factory as SdgFactory;
 
-class Factory {
+class Factory implements FactoryInterface {
 	/** @var GraphFactoryInterface  */
 	private $graph_factory;
 	/** @var PdgFactoryInterface  */

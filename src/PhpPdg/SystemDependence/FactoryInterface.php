@@ -2,10 +2,12 @@
 
 namespace PhpPdg\SystemDependence;
 
+use PhpPdg\CfgBridge\System as CfgBridgeSystem;
+
 interface FactoryInterface {
 	/**
-	 * @param CfgSystem $cfg_system
+	 * @param CfgBridgeSystem $cfg_system
 	 * @return System
 	 */
-	public function create(CfgSystem $cfg_system);
+	public function create(CfgBridgeSystem $cfg_system);
 }
