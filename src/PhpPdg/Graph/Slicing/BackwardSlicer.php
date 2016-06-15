@@ -1,13 +1,12 @@
 <?php
 
-namespace PhpPdg\Slicing;
+namespace PhpPdg\Graph\Slicing;
 
 use PhpPdg\Graph\GraphInterface;
-use PhpPdg\Graph\Node\NodeInterface;
 
 class Slicer implements SlicerInterface {
-	public function slice(GraphInterface $source, NodeInterface $slicing_criterion, GraphInterface $target) {
-		$worklist = [$slicing_criterion];
+	public function slice(GraphInterface $source, array $slicing_criterion, GraphInterface $target) {
+		$worklist = $slicing_criterion;
 		while (empty($worklist) === false) {
 			$to_node = array_shift($worklist);
 			foreach ($source->getEdges(null, $to_node) as $incoming_edge) {
