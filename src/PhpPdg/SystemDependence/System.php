@@ -20,4 +20,8 @@ class System {
 	public function __construct(GraphInterface $sdg) {
 		$this->sdg = $sdg;
 	}
+
+	public function getFuncs() {
+		return array_merge($this->scripts, $this->functions, $this->methods, $this->closures);
+	}
 }
