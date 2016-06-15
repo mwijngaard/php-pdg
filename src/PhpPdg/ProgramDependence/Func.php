@@ -11,6 +11,8 @@ class Func {
 	public $name;
 	/** @var  string|null */
 	public $class_name;
+	/** @var  string|null */
+	public $filename;
 	/** @var EntryNode */
 	public $entry_node;
 	/** @var NodeInterface[] */
@@ -20,9 +22,10 @@ class Func {
 	/** @var  GraphInterface */
 	public $pdg;
 
-	public function __construct($name, $class_name = null, NodeInterface $entry_node, GraphInterface $pdg) {
+	public function __construct($name, $class_name, $filename, NodeInterface $entry_node, GraphInterface $pdg) {
 		$this->name = $name;
 		$this->class_name = $class_name;
+		$this->filename = $filename;
 		$this->entry_node = $entry_node;
 		$this->pdg = $pdg;
 	}

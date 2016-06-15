@@ -27,11 +27,11 @@ class Factory implements FactoryInterface {
 		$this->data_dependence_generator = $data_dependence_generator;
 	}
 
-	public function create(CfgFunc $cfg_func) {
+	public function create(CfgFunc $cfg_func, $filename = null) {
 		$pdg = $this->graph_factory->create();
 		$entry_node = new EntryNode();
 		$pdg->addNode($entry_node);
-		$func = new Func($cfg_func->name, $cfg_func->class, $entry_node, $pdg);
+		$func = new Func($cfg_func->name, $cfg_func->class, $filename, $entry_node, $pdg);
 
 		foreach ($cfg_func->params as $param) {
 			$param_node = new OpNode($param);

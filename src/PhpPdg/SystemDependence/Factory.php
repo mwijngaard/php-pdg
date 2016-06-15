@@ -52,7 +52,7 @@ class Factory implements FactoryInterface {
 			$cfg_bridge_script = $cfg_bridge_system->getScript($file_path);
 			$cfg_scripts[] = $cfg_script = $cfg_bridge_script->getScript();
 
-			$pdg_func = $this->pdg_factory->create($cfg_script->main);
+			$pdg_func = $this->pdg_factory->create($cfg_script->main, $file_path);
 			$system->scripts[$file_path] = $pdg_func;
 			$func_node = new FuncNode("script[$file_path]", $pdg_func);
 			$system->sdg->addNode($func_node);
