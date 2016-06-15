@@ -6,7 +6,7 @@ function foo($arg) {
 
 foo('Hello World');
 -----
-Script /foo/bar/baz.php:
+Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
         #1 Op Terminal\Return_ @ line -1
@@ -16,7 +16,7 @@ Script /foo/bar/baz.php:
             #2 Op Stmt\Function_ @ line 3:5
             #3 Op Expr\FuncCall @ line 7
             #1 Op Terminal\Return_ @ line -1
-Function foo:
+Function /foo/bar/baz.php[foo]:
     Entry Node: #0 ENTRY
     Param Nodes:
         #4 Op Expr\Param @ line 3
@@ -32,8 +32,8 @@ Function foo:
             #4 Op Expr\Param @ line 3 =={"type":"data"}=> #6 Op Terminal\Echo_ @ line 4
 Graph:
     Nodes:
-        #7 Func script[/foo/bar/baz.php]
-        #8 Func function[foo]
-        #9 Call Expr\FuncCall @ script[/foo/bar/baz.php] on line 7
+        #7 Func /foo/bar/baz.php[{main}]
+        #8 Func /foo/bar/baz.php[foo]
+        #9 Call Expr\FuncCall @ /foo/bar/baz.php[{main}] line 7
     Edges:
-        #9 Call Expr\FuncCall @ script[/foo/bar/baz.php] on line 7 ==[]=> #8 Func function[foo]
+        #9 Call Expr\FuncCall @ /foo/bar/baz.php[{main}] line 7 ===> #8 Func /foo/bar/baz.php[foo]

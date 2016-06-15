@@ -31,7 +31,7 @@ class Factory implements FactoryInterface {
 		$pdg = $this->graph_factory->create();
 		$entry_node = new EntryNode();
 		$pdg->addNode($entry_node);
-		$func = new Func($cfg_func->name, $cfg_func->class, $filename, $entry_node, $pdg);
+		$func = new Func($cfg_func->name, $cfg_func->class !== null ? $cfg_func->class->value : null, $filename, $entry_node, $pdg);
 
 		foreach ($cfg_func->params as $param) {
 			$param_node = new OpNode($param);

@@ -36,4 +36,11 @@ class Func {
 		}
 		return $this->name;
 	}
+
+	public function getId() {
+		if ($this->filename !== null) {
+			return $this->filename . '[' . $this->getScopedName() . ']';
+		}
+		return $this->getScopedName();
+	}
 }

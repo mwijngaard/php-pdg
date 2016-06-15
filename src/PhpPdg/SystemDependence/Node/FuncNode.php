@@ -6,26 +6,15 @@ use PhpPdg\Graph\Node\AbstractNode;
 use PhpPdg\ProgramDependence\Func;
 
 class FuncNode extends AbstractNode {
-	/** @var string */
-	private $id;
 	/** @var Func  */
 	private $func;
 
 	/**
 	 * FuncNode constructor.
-	 * @param string $id
 	 * @param Func $func
 	 */
-	public function __construct($id, Func $func) {
-		$this->id = $id;
+	public function __construct(Func $func) {
 		$this->func = $func;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getId() {
-		return $this->id;
 	}
 
 	/**
@@ -36,10 +25,10 @@ class FuncNode extends AbstractNode {
 	}
 
 	public function toString() {
-		return 'Func ' . $this->id;
+		return 'Func ' . $this->func->getId();
 	}
 
 	public function getHash() {
-		return $this->id . spl_object_hash($this->func);
+		return $this->func->getId();
 	}
 }

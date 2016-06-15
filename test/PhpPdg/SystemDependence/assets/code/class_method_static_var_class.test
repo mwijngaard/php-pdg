@@ -9,7 +9,7 @@ class Foo {
 $foo = new Foo();
 $foo::bar('Hello World');
 -----
-Script /foo/bar/baz.php:
+Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
         #1 Op Terminal\Return_ @ line -1
@@ -25,7 +25,7 @@ Script /foo/bar/baz.php:
         Edges:
             #4 Op Expr\New_ @ line 9 =={"type":"data"}=> #5 Op Expr\Assign @ line 9
             #5 Op Expr\Assign @ line 9 =={"type":"data"}=> #6 Op Expr\StaticCall @ line 10
-Method Foo::bar:
+Method /foo/bar/baz.php[Foo::bar]:
     Entry Node: #0 ENTRY
     Param Nodes:
         #7 Op Expr\Param @ line 4
@@ -41,8 +41,8 @@ Method Foo::bar:
             #7 Op Expr\Param @ line 4 =={"type":"data"}=> #9 Op Terminal\Echo_ @ line 5
 Graph:
     Nodes:
-        #10 Func script[/foo/bar/baz.php]
-        #11 Func method[Foo::bar]
-        #12 Call Expr\StaticCall @ script[/foo/bar/baz.php] on line 10
+        #10 Func /foo/bar/baz.php[{main}]
+        #11 Func /foo/bar/baz.php[Foo::bar]
+        #12 Call Expr\StaticCall @ /foo/bar/baz.php[{main}] line 10
     Edges:
-        #12 Call Expr\StaticCall @ script[/foo/bar/baz.php] on line 10 ==[]=> #11 Func method[Foo::bar]
+        #12 Call Expr\StaticCall @ /foo/bar/baz.php[{main}] line 10 ===> #11 Func /foo/bar/baz.php[Foo::bar]

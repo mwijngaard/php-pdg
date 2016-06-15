@@ -3,6 +3,7 @@
 namespace PhpPdg\SystemDependence\Printer;
 
 use PhpPdg\Printer\AbstractTextPrinter;
+use PhpPdg\ProgramDependence\Func;
 use PhpPdg\ProgramDependence\Printer\TextPrinter as PdgIndentedPrinterInterface;
 use PhpPdg\Graph\Printer\IndentedPrinterInterface as GraphIndentedPrinterInterface;
 
@@ -21,24 +22,27 @@ class TextPrinter extends AbstractTextPrinter implements IndentedPrinterInterfac
 
 	public function printSystem(System $system, $indent = 0) {
 		$out = '';
-		foreach ($system->scripts as $path => $func) {
-			$out .= $this->printWithIndent(sprintf('Script %s:', $path), $indent);
-			$out .= $this->pdg_printer->printFunc($func, $indent + 4);
-		}
-		foreach ($system->functions as $scoped_name => $func) {
-			$out .= $this->printWithIndent(sprintf('Function %s:', $scoped_name), $indent);
-			$out .= $this->pdg_printer->printFunc($func, $indent + 4);
-		}
-		foreach ($system->methods as $scoped_name => $func) {
-			$out .= $this->printWithIndent(sprintf('Method %s:', $scoped_name), $indent);
-			$out .= $this->pdg_printer->printFunc($func, $indent + 4);
-		}
-		foreach ($system->closures as $scoped_name => $func) {
-			$out .= $this->printWithIndent(sprintf('Closure %s:', $scoped_name), $indent);
-			$out .= $this->pdg_printer->printFunc($func, $indent + 4);
-		}
+		$out .= $this->printFuncsWithPrefix('Script', $system->scripts, $indent);
+		$out .= $this->printFuncsWithPrefix('Function', $system->functions, $indent);
+		$out .= $this->printFuncsWithPrefix('Method', $system->methods, $indent);
+		$out .= $this->printFuncsWithPrefix('Closure', $system->closures, $indent);
 		$out .= $this->printWithIndent('Graph:', $indent);
 		$out .= $this->graph_printer->printGraph($system->sdg, $indent + 4);
+		return $out;
+	}
+
+	/**
+	 * @param string $prefix
+	 * @param Func[] $funcs
+	 * @param int $indent
+	 * @return string
+	 */
+	private function printFuncsWithPrefix($prefix, $funcs, $indent) {
+		$out = '';
+		foreach ($funcs as $func) {
+			$out .= $this->printWithIndent(sprintf('%s %s:', $prefix, $func->getId()), $indent);
+			$out .= $this->pdg_printer->printFunc($func, $indent + 4);
+		}
 		return $out;
 	}
 }

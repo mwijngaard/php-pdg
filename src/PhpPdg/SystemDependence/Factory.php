@@ -54,24 +54,21 @@ class Factory implements FactoryInterface {
 
 			$pdg_func = $this->pdg_factory->create($cfg_script->main, $file_path);
 			$system->scripts[$file_path] = $pdg_func;
-			$func_node = new FuncNode("script[$file_path]", $pdg_func);
+			$func_node = new FuncNode($pdg_func);
 			$system->sdg->addNode($func_node);
 			$pdg_func_lookup[$cfg_script->main] = $func_node;
 
 			foreach ($cfg_script->functions as $cfg_func) {
-				$pdg_func = $this->pdg_factory->create($cfg_func);
+				$pdg_func = $this->pdg_factory->create($cfg_func, $file_path);
 				$scoped_name = $cfg_func->getScopedName();
 				if ($cfg_func->class !== null) {
 					$system->methods[$scoped_name] = $pdg_func;
-					$id = "method[$scoped_name]";
 				} else if (strpos($cfg_func->name, '{anonymous}#') === 0) {
 					$system->closures[$scoped_name] = $pdg_func;
-					$id = "closure[$scoped_name]";
 				} else {
 					$system->functions[$scoped_name] = $pdg_func;
-					$id = "function[$scoped_name]";
 				}
-				$func_node = new FuncNode($id, $pdg_func);
+				$func_node = new FuncNode($pdg_func);
 				$system->sdg->addNode($func_node);
 				$pdg_func_lookup[$cfg_func] = $func_node;
 			}
@@ -85,7 +82,7 @@ class Factory implements FactoryInterface {
 			list($func_call, $containing_cfg_func) = $funcCallPair;
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
 			$func_node = $pdg_func_lookup[$containing_cfg_func];
-			$call_node = new CallNode($func_call, $func_node->getId(), $func_node->getFunc());
+			$call_node = new CallNode($func_call, $func_node->getFunc());
 			$system->sdg->addNode($call_node);
 			if ($func_call->name instanceof Literal) {
 				$name = strtolower($func_call->name->value);
@@ -104,7 +101,7 @@ class Factory implements FactoryInterface {
 			list($ns_func_call, $containing_cfg_func) = $nsFuncCallPair;
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
 			$func_node = $pdg_func_lookup[$containing_cfg_func];
-			$call_node = new CallNode($ns_func_call, $func_node->getId(), $func_node->getFunc());
+			$call_node = new CallNode($ns_func_call, $func_node->getFunc());
 			$system->sdg->addNode($call_node);
 
 			assert($ns_func_call->nsName instanceof Literal); // should always be the case, as otherwise it would be a normal func call
@@ -134,7 +131,7 @@ class Factory implements FactoryInterface {
 			list($method_call, $containing_cfg_func) = $methodCallPair;
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
 			$func_node = $pdg_func_lookup[$containing_cfg_func];
-			$call_node = new CallNode($method_call, $func_node->getId(), $func_node->getFunc());
+			$call_node = new CallNode($method_call, $func_node->getFunc());
 			$system->sdg->addNode($call_node);
 
 			if ($method_call->name instanceof Literal) {
@@ -158,7 +155,7 @@ class Factory implements FactoryInterface {
 			list($static_call, $containing_cfg_func) = $staticCallPair;
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
 			$func_node = $pdg_func_lookup[$containing_cfg_func];
-			$call_node = new CallNode($static_call, $func_node->getId(), $func_node->getFunc());
+			$call_node = new CallNode($static_call, $func_node->getFunc());
 			$system->sdg->addNode($call_node);
 
 			if ($static_call->name instanceof Literal) {

@@ -31,7 +31,8 @@ class TextPrinter extends AbstractTextPrinter implements IndentedPrinterInterfac
 				foreach ($edge->getAttributes() as $key => $value) {
 					$attribute_strings[] = sprintf('%s: %s', $key, $value);
 				}
-				$out .= $this->printWithIndent(sprintf('%s ==%s=> %s', $this->node_printer->printNode($from_node), json_encode($edge->getAttributes()), $this->node_printer->printNode($to_node)), $next_indent);
+				$attributes = $edge->getAttributes();
+				$out .= $this->printWithIndent(sprintf('%s ==%s=> %s', $this->node_printer->printNode($from_node), empty($attributes) === false ? json_encode($attributes) : '', $this->node_printer->printNode($to_node)), $next_indent);
 			}
 		}
 		return $out;
