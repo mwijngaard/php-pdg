@@ -21,6 +21,9 @@ class System {
 		$this->sdg = $sdg;
 	}
 
+	/**
+	 * @return Func[]
+	 */
 	public function getFuncs() {
 		return array_merge($this->scripts, $this->functions, $this->methods, $this->closures);
 	}
