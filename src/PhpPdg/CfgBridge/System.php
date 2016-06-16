@@ -2,24 +2,17 @@
 
 namespace PhpPdg\CfgBridge;
 
+use PHPCfg\Script;
+
 class System {
 	/** @var  Script[] */
 	private $scripts = [];
 
-	/**
-	 * CfgSystem constructor.
-	 * @param Script[] $cfg_bridge_scripts
-	 */
-	public function __construct($cfg_bridge_scripts) {
-		foreach ($cfg_bridge_scripts as $i => $file) {
-			if (($file instanceof Script) === false) {
-				throw new \InvalidArgumentException("Expected cfg_bridge_scripts[$i] to be instance of Script");
-			}
-			if (isset($this->scripts[$file->getFilePath()]) === true) {
-				throw new \InvalidArgumentException("Duplicate file path {$file->getFilePath()} at cfg_bridge_scripts[$i]");
-			}
-			$this->scripts[$file->getFilePath()] = $file;
+	public function addScript($file_path, Script $script) {
+		if (isset($this->scripts[$file_path]) === true) {
+			throw new \InvalidArgumentException("file path `$file_path` already exists");
 		}
+		$this->scripts[$file_path] = $script;
 	}
 
 	/**

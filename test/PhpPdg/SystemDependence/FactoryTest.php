@@ -4,7 +4,6 @@ namespace PhpPdg\SystemDependence;
 
 use PHPCfg\Parser;
 use PhpParser\ParserFactory;
-use PhpPdg\CfgBridge\Script;
 use PhpPdg\CfgBridge\System;
 use PhpPdg\SystemDependence\Factory as SdgFactory;
 use PhpPdg\ProgramDependence\Printer\TextPrinter as PdgPrinter;
@@ -32,8 +31,10 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 	public function testCreateAndDump($contents, $expected) {
 		$file_path = '/foo/bar/baz.php';
 		$script = $this->cfg_parser->parse($contents, $file_path);
-		$system = $this->factory->create(new System([new Script($file_path, $script)]));
-		$actual = $this->printer->printSystem($system);
+		$cfg_system = new System();
+		$cfg_system->addScript($file_path, $script);
+		$pdg_system = $this->factory->create($cfg_system);
+		$actual = $this->printer->printSystem($pdg_system);
 		$this->assertEquals($this->canonicalize($expected), $this->canonicalize($actual));
 	}
 

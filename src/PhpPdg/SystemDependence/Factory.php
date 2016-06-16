@@ -49,8 +49,7 @@ class Factory implements FactoryInterface {
 		$pdg_func_lookup = new \SplObjectStorage();
 		$cfg_scripts = [];
 		foreach ($cfg_bridge_system->getFilePaths() as $file_path) {
-			$cfg_bridge_script = $cfg_bridge_system->getScript($file_path);
-			$cfg_scripts[] = $cfg_script = $cfg_bridge_script->getScript();
+			$cfg_scripts[] = $cfg_script = $cfg_bridge_system->getScript($file_path);
 
 			$pdg_func = $this->pdg_factory->create($cfg_script->main, $file_path);
 			$system->scripts[$file_path] = $pdg_func;
