@@ -6,33 +6,33 @@ foreach ([1,2] as $a) {
 -----
 Entry Node: #0 ENTRY
 Return Nodes:
-    #1 Op Terminal\Return_ @ line -1
+    #1 Op Terminal\Return_ @ unknown line -1
 Pdg:
     Nodes:
         #0 ENTRY
-        #2 Op Expr\Array_ @ line 3
-        #3 Op Iterator\Reset @ line 3:5
-        #4 Op Stmt\Jump @ line 3:5
-        #5 Op Iterator\Valid @ line 3:5
-        #6 Op Stmt\JumpIf @ line 3:5
-        #7 Op Iterator\Value @ line 3:5
-        #8 Op Expr\Assign @ line 3:5
-        #9 Op Terminal\Echo_ @ line 4
-        #10 Op Stmt\Jump @ line -1
-        #11 Op Stmt\Jump @ line 3:5
-        #12 Op Stmt\Jump @ line -1
-        #1 Op Terminal\Return_ @ line -1
+        #2 Op Expr\Array_ @ foo.php line 3
+        #3 Op Iterator\Reset @ foo.php line 3
+        #4 Op Stmt\Jump @ foo.php line 3
+        #5 Op Iterator\Valid @ foo.php line 3
+        #6 Op Stmt\JumpIf @ foo.php line 3
+        #7 Op Iterator\Value @ foo.php line 3
+        #8 Op Expr\Assign @ foo.php line 3
+        #9 Op Terminal\Echo_ @ foo.php line 4
+        #10 Op Stmt\Jump @ foo.php line -1
+        #11 Op Stmt\Jump @ foo.php line 3
+        #12 Op Stmt\Jump @ foo.php line -1
+        #1 Op Terminal\Return_ @ unknown line -1
     Edges:
-        #6 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #5 Op Iterator\Valid @ line 3:5
-        #6 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #6 Op Stmt\JumpIf @ line 3:5
-        #6 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #7 Op Iterator\Value @ line 3:5
-        #6 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #8 Op Expr\Assign @ line 3:5
-        #6 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #9 Op Terminal\Echo_ @ line 4
-        #6 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #10 Op Stmt\Jump @ line -1
-        #6 Op Stmt\JumpIf @ line 3:5 =={"type":"control","case":true}=> #11 Op Stmt\Jump @ line 3:5
-        #2 Op Expr\Array_ @ line 3 =={"type":"data"}=> #3 Op Iterator\Reset @ line 3:5
-        #2 Op Expr\Array_ @ line 3 =={"type":"data"}=> #5 Op Iterator\Valid @ line 3:5
-        #2 Op Expr\Array_ @ line 3 =={"type":"data"}=> #7 Op Iterator\Value @ line 3:5
-        #5 Op Iterator\Valid @ line 3:5 =={"type":"data"}=> #6 Op Stmt\JumpIf @ line 3:5
-        #7 Op Iterator\Value @ line 3:5 =={"type":"data"}=> #8 Op Expr\Assign @ line 3:5
-        #8 Op Expr\Assign @ line 3:5 =={"type":"data"}=> #9 Op Terminal\Echo_ @ line 4
+        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #5 Op Iterator\Valid @ foo.php line 3
+        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #6 Op Stmt\JumpIf @ foo.php line 3
+        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #7 Op Iterator\Value @ foo.php line 3
+        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #8 Op Expr\Assign @ foo.php line 3
+        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #9 Op Terminal\Echo_ @ foo.php line 4
+        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #10 Op Stmt\Jump @ foo.php line -1
+        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #11 Op Stmt\Jump @ foo.php line 3
+        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data"}=> #3 Op Iterator\Reset @ foo.php line 3
+        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data"}=> #5 Op Iterator\Valid @ foo.php line 3
+        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data"}=> #7 Op Iterator\Value @ foo.php line 3
+        #5 Op Iterator\Valid @ foo.php line 3 =={"type":"data"}=> #6 Op Stmt\JumpIf @ foo.php line 3
+        #7 Op Iterator\Value @ foo.php line 3 =={"type":"data"}=> #8 Op Expr\Assign @ foo.php line 3
+        #8 Op Expr\Assign @ foo.php line 3 =={"type":"data"}=> #9 Op Terminal\Echo_ @ foo.php line 4

@@ -14,10 +14,7 @@ class OpNode extends AbstractNode {
 	}
 
 	public function toString() {
-		$startLine = $this->op->getAttribute('startLine', -1);
-		$endLine = $this->op->getAttribute('endLine', -1);
-		$lines = $startLine === $endLine ? $startLine : $startLine . ':' . $endLine;
-		return sprintf('Op %s @ line %s', str_replace("PHPCfg\\Op\\", '', get_class($this->op)), $lines) ;
+		return sprintf('Op %s @ %s line %s', str_replace("PHPCfg\\Op\\", '', get_class($this->op)), $this->op->getFile(), $this->op->getLine()) ;
 	}
 
 	public function getHash() {

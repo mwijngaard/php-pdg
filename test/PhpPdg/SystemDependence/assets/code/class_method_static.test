@@ -11,32 +11,33 @@ Foo::bar('Hello World');
 Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #1 Op Terminal\Return_ @ line -1
+        #1 Op Terminal\Return_ @ unknown line -1
     Pdg:
         Nodes:
             #0 ENTRY
-            #2 Op Stmt\Class_ @ line 3:7
-            #3 Op Stmt\ClassMethod @ line 4:6
-            #4 Op Expr\StaticCall @ line 9
-            #1 Op Terminal\Return_ @ line -1
+            #2 Op Stmt\Class_ @ /foo/bar/baz.php line 3
+            #3 Op Stmt\ClassMethod @ /foo/bar/baz.php line 4
+            #4 Op Expr\StaticCall @ /foo/bar/baz.php line 9
+            #1 Op Terminal\Return_ @ unknown line -1
 Method /foo/bar/baz.php[Foo::bar]:
     Entry Node: #0 ENTRY
     Param Nodes:
-        #5 Op Expr\Param @ line 4
+        #5 Op Expr\Param @ /foo/bar/baz.php line 4
     Return Nodes:
-        #6 Op Terminal\Return_ @ line -1
+        #6 Op Terminal\Return_ @ unknown line -1
     Pdg:
         Nodes:
             #0 ENTRY
-            #5 Op Expr\Param @ line 4
-            #7 Op Terminal\Echo_ @ line 5
-            #6 Op Terminal\Return_ @ line -1
+            #5 Op Expr\Param @ /foo/bar/baz.php line 4
+            #7 Op Terminal\Echo_ @ /foo/bar/baz.php line 5
+            #6 Op Terminal\Return_ @ unknown line -1
         Edges:
-            #5 Op Expr\Param @ line 4 =={"type":"data"}=> #7 Op Terminal\Echo_ @ line 5
+            #5 Op Expr\Param @ /foo/bar/baz.php line 4 =={"type":"data"}=> #7 Op Terminal\Echo_ @ /foo/bar/baz.php line 5
 Graph:
     Nodes:
         #8 Func /foo/bar/baz.php[{main}]
         #9 Func /foo/bar/baz.php[Foo::bar]
-        #10 Call Expr\StaticCall @ /foo/bar/baz.php[{main}] line 9
+        #4 Op Expr\StaticCall @ /foo/bar/baz.php line 9
     Edges:
-        #10 Call Expr\StaticCall @ /foo/bar/baz.php[{main}] line 9 ===> #9 Func /foo/bar/baz.php[Foo::bar]
+        #8 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #4 Op Expr\StaticCall @ /foo/bar/baz.php line 9
+        #4 Op Expr\StaticCall @ /foo/bar/baz.php line 9 =={"type":"call"}=> #9 Func /foo/bar/baz.php[Foo::bar]

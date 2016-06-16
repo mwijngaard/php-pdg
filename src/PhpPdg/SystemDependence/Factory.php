@@ -9,7 +9,7 @@ use PHPCfg\Operand\Literal;
 use PhpPdg\Graph\FactoryInterface as GraphFactoryInterface;
 use PhpPdg\ProgramDependence\FactoryInterface as PdgFactoryInterface;
 use PhpPdg\CfgBridge\System as CfgBridgeSystem;
-use PhpPdg\SystemDependence\Node\CallNode;
+use PhpPdg\ProgramDependence\Node\OpNode;
 use PhpPdg\SystemDependence\Node\FuncNode;
 use PHPTypes\State;
 use PHPTypes\Type;
@@ -80,10 +80,12 @@ class Factory implements FactoryInterface {
 		// link function calls to their functions
 		foreach ($state->funcCalls as $funcCallPair) {
 			list($func_call, $containing_cfg_func) = $funcCallPair;
-			assert(isset($pdg_func_lookup[$containing_cfg_func]));
-			$func_node = $pdg_func_lookup[$containing_cfg_func];
-			$call_node = new CallNode($func_call, $func_node->getFunc());
+			$call_node = new OpNode($func_call);
 			$system->sdg->addNode($call_node);
+			assert(isset($pdg_func_lookup[$containing_cfg_func]));
+			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, [
+				'type' => 'contains'
+			]);
 			if ($func_call->name instanceof Literal) {
 				$name = strtolower($func_call->name->value);
 				if (isset($state->functionLookup[$name]) === true) {
@@ -91,7 +93,9 @@ class Factory implements FactoryInterface {
 					foreach ($state->functionLookup[$name] as $cfg_function) {
 						$cfg_func = $cfg_function->func;
 						assert(isset($pdg_func_lookup[$cfg_func]));
-						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func]);
+						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], [
+							'type' => 'call'
+						]);
 					}
 				}
 			}
@@ -99,11 +103,12 @@ class Factory implements FactoryInterface {
 
 		foreach ($state->nsFuncCalls as $nsFuncCallPair) {
 			list($ns_func_call, $containing_cfg_func) = $nsFuncCallPair;
-			assert(isset($pdg_func_lookup[$containing_cfg_func]));
-			$func_node = $pdg_func_lookup[$containing_cfg_func];
-			$call_node = new CallNode($ns_func_call, $func_node->getFunc());
+			$call_node = new OpNode($ns_func_call);
 			$system->sdg->addNode($call_node);
-
+			assert(isset($pdg_func_lookup[$containing_cfg_func]));
+			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, [
+				'type' => 'contains'
+			]);
 			assert($ns_func_call->nsName instanceof Literal); // should always be the case, as otherwise it would be a normal func call
 			$cfg_functions = null;
 			$nsName = strtolower($ns_func_call->nsName->value);
@@ -122,17 +127,21 @@ class Factory implements FactoryInterface {
 				foreach ($cfg_functions as $cfg_function) {
 					$cfg_func = $cfg_function->func;
 					assert(isset($pdg_func_lookup[$cfg_func]));
-					$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func]);
+					$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], [
+						'type' => 'call'
+					]);
 				}
 			}
 		}
 
 		foreach ($state->methodCalls as $methodCallPair) {
 			list($method_call, $containing_cfg_func) = $methodCallPair;
-			assert(isset($pdg_func_lookup[$containing_cfg_func]));
-			$func_node = $pdg_func_lookup[$containing_cfg_func];
-			$call_node = new CallNode($method_call, $func_node->getFunc());
+			$call_node = new OpNode($method_call);
 			$system->sdg->addNode($call_node);
+			assert(isset($pdg_func_lookup[$containing_cfg_func]));
+			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, [
+				'type' => 'contains'
+			]);
 
 			if ($method_call->name instanceof Literal) {
 				$name = strtolower($method_call->name->value);
@@ -145,7 +154,9 @@ class Factory implements FactoryInterface {
 					foreach ($cfg_methods as $cfg_method) {
 						$cfg_func = $cfg_method->func;
 						assert(isset($pdg_func_lookup[$cfg_func]));
-						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func]);
+						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], [
+							'type' => 'call'
+						]);
 					}
 				}
 			}
@@ -153,10 +164,12 @@ class Factory implements FactoryInterface {
 
 		foreach ($state->staticCalls as $staticCallPair) {
 			list($static_call, $containing_cfg_func) = $staticCallPair;
-			assert(isset($pdg_func_lookup[$containing_cfg_func]));
-			$func_node = $pdg_func_lookup[$containing_cfg_func];
-			$call_node = new CallNode($static_call, $func_node->getFunc());
+			$call_node = new OpNode($static_call);
 			$system->sdg->addNode($call_node);
+			assert(isset($pdg_func_lookup[$containing_cfg_func]));
+			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, [
+				'type' => 'contains'
+			]);
 
 			if ($static_call->name instanceof Literal) {
 				if ($static_call->class instanceof Literal) {
@@ -171,7 +184,9 @@ class Factory implements FactoryInterface {
 					foreach ($cfg_methods as $cfg_method) {
 						$cfg_func = $cfg_method->func;
 						assert(isset($pdg_func_lookup[$cfg_func]));
-						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func]);
+						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], [
+							'type' => 'call'
+						]);
 					}
 				}
 			}

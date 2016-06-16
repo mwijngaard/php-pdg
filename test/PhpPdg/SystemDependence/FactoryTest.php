@@ -31,7 +31,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
 	/** @dataProvider getCreateAndDumpCases */
 	public function testCreateAndDump($contents, $expected) {
 		$file_path = '/foo/bar/baz.php';
-		$script = $this->cfg_parser->parse($contents, pathinfo($file_path, PATHINFO_FILENAME));
+		$script = $this->cfg_parser->parse($contents, $file_path);
 		$system = $this->factory->create(new System([new Script($file_path, $script)]));
 		$actual = $this->printer->printSystem($system);
 		$this->assertEquals($this->canonicalize($expected), $this->canonicalize($actual));
