@@ -9,13 +9,13 @@ use PhpPdg\ProgramDependence\Node\OpNode;
 use PhpPdg\SystemDependence\FactoryInterface as PdgSystemFactoryInterface;
 use PhpPdg\SystemDependence\Slicing\SlicerInterface as PdgSystemSlicerInterface;
 
-class Slicer {
+class PdgBasedSlicer {
 	private $cfg_system_factory;
 	private $pdg_system_factory;
 	private $pdg_system_slicer;
 
 	/**
-	 * Slicer constructor.
+	 * PdgBasedSlicer constructor.
 	 * @param CfgSystemFactoryInterface $cfg_system_factory
 	 * @param PdgSystemFactoryInterface $pdg_system_factory
 	 * @param PdgSystemSlicerInterface $pdg_system_slicer
