@@ -182,4 +182,47 @@ class Graph implements GraphInterface {
 		}
 		return true;
 	}
+
+	/**
+	 * Compute the subgraph that is reachable from $nodes
+	 * @param GraphInterface $graph
+	 * @param NodeInterface[] $nodes
+	 * @return GraphInterface
+	 */
+	public static function reachable(GraphInterface $graph, array $nodes) {
+		// TODO - not used yet
+	}
+
+	/**
+	 * Compute the subgraph that can reach $nodes
+	 * @param GraphInterface $graph
+	 * @param NodeInterface[] $nodes
+	 * @return GraphInterface
+	 */
+	public static function reachableInv(GraphInterface $graph, array $nodes) {
+		$result = new Graph();
+		$seen = [];
+		$worklist = [];
+		foreach ($nodes as $i => $node) {
+			if ($graph->hasNode($node) === false) {
+				throw new \InvalidArgumentException("graph does not contain node `$i`");
+			}
+			$seen[$node->getHash()] = 1;
+			$worklist[] = $node;
+			$result->addNode($node);
+		}
+		while (empty($worklist) === false) {
+			$to_node = array_shift($worklist);
+			foreach ($graph->getEdges(null, $to_node) as $incoming_edge) {
+				$from_node = $incoming_edge->getFromNode();
+				if (isset($seen[$from_node->getHash()]) === false) {
+					$seen[$from_node->getHash()] = 1;
+					$worklist[] = $from_node;
+					$result->addNode($from_node);
+				}
+				$result->addEdge($from_node, $to_node, $incoming_edge->getAttributes());
+			}
+		}
+		return $result;
+	}
 }
