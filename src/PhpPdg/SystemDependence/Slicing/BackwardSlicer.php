@@ -27,8 +27,8 @@ class BackwardSlicer implements SlicerInterface {
 			$func_slicing_criterion = [];
 			if ($func->filename === $slice_file_path) {
 				foreach ($func->pdg->getNodes() as $node) {
-					if ($node instanceof OpNode && $node->op->getLine() === $slice_line_nr) {
-						$func_slicing_criterion[] = $node;
+					if ($node instanceof OpNode && $node->op->getLine() === $slice_line_nr && isset($func_slicing_criterion[$node->getHash()]) === false) {
+						$func_slicing_criterion[$node->getHash()] = $node;
 					}
 				}
 			}
@@ -52,7 +52,9 @@ class BackwardSlicer implements SlicerInterface {
 				assert($containing_func_node instanceof FuncNode);
 				$containing_func = $containing_func_node->getFunc();
 				$func_slicing_criterion = isset($func_slicing_criterions[$containing_func]) === true ? $func_slicing_criterions[$containing_func] : [];
-				$func_slicing_criterion[] = $node;
+				if (isset($func_slicing_criterion[$node->getHash()]) === false) {
+					$func_slicing_criterion[$node->getHash()] = $node;
+				}
 				$func_slicing_criterions[$containing_func] = $func_slicing_criterion;
 			}
 		}
