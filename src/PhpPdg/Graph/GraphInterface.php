@@ -6,15 +6,11 @@ use PhpPdg\Graph\Node\NodeInterface;
 
 interface GraphInterface {
 	/**
-	 * Add a node to the graph
-	 *
 	 * @param NodeInterface $node
 	 */
 	public function addNode(NodeInterface $node);
 
 	/**
-	 * Add an edge to the graph (nodes must already exist)
-	 *
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
 	 * @param array $attributes
@@ -28,52 +24,49 @@ interface GraphInterface {
 	public function hasNode(NodeInterface $node);
 
 	/**
+	 * Whether or not the graph has any edges that match the arguments (all match by default)
+	 *
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
 	 * @param array $filterAttributes
-	 * @param boolean $filterAttributesExact
+	 * @param boolean $filterAttributesExact Should all attributes match
 	 * @return boolean
 	 */
 	public function hasEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false);
 
 	/**
-	 * Return all nodes in the graph
-	 *
 	 * @return NodeInterface[]
 	 */
 	public function getNodes();
 
 	/**
-	 * Return all nodes that from_node has an edge to
+	 * Get edges that match the arguments (all match by default)
 	 *
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
 	 * @param array $filterAttributes
-	 * @param boolean $filterAttributesExact
+	 * @param boolean $filterAttributesExact Should all attributes match
 	 * @return Edge[]
 	 */
 	public function getEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false);
 
 
 	/**
-	 * Delete a single node, and all its connected edges from the graph
+	 * Delete a node and all its connected edges from the graph
 	 *
 	 * @param NodeInterface $node
 	 */
 	public function deleteNode(NodeInterface $node);
 
 	/**
-	 * Delete a single edge from the graph
+	 * Delete edges that match the arguments (all match by default)
 	 *
 	 * @param NodeInterface $from_node
 	 * @param NodeInterface $to_node
 	 * @param array $filterAttributes
-	 * @param boolean $filterAttributesExact
+	 * @param boolean $filterAttributesExact Should all attributes match
 	 */
 	public function deleteEdges(NodeInterface $from_node = null, NodeInterface $to_node = null, array $filterAttributes = [], $filterAttributesExact = false);
 
-	/**
-	 * Clear all nodes and edges from the graph
-	 */
 	public function clear();
 }
