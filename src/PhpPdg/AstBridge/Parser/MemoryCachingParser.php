@@ -35,4 +35,8 @@ class MemoryCachingParser implements FileParserInterface {
 	public function getErrors() {
 		return $this->errors;
 	}
+
+	public function clear() {
+		$this->cache = [];
+	}
 }
