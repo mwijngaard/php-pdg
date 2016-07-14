@@ -4,8 +4,8 @@ namespace PhpPdg\SystemDependence;
 
 interface FactoryInterface {
 	/**
-	 * @param string[] $filenames
+	 * @param string $systempath
 	 * @return System
 	 */
-	public function create(array $filenames);
+	public function create($systempath);
 }

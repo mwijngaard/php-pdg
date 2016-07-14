@@ -43,14 +43,16 @@ class Factory implements FactoryInterface {
 		return new SdgFactory($graph_factory, new CfgWrappedParser((new AstWrappedParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7)))), PdgFactory::createDefault($graph_factory));
 	}
 
-	public function create(array $filenames) {
+	public function create($systempath) {
 		$sdg = $this->graph_factory->create();
 		$system = new System($sdg);
 
 		/** @var FuncNode[]|\SplObjectStorage $pdg_func_lookup */
 		$pdg_func_lookup = new \SplObjectStorage();
 		$cfg_scripts = [];
-		foreach ($filenames as $filename) {
+		/** @var \SplFileInfo $fileinfo */
+		foreach (new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($systempath)), "/.*\\.php$/i") as $fileinfo) {
+			$filename = $fileinfo->getRealPath();
 			$cfg_scripts[] = $cfg_script = $this->cfg_parser->parse($filename);
 
 			$pdg_func = $this->pdg_factory->create($cfg_script->main, $filename);
