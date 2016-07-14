@@ -42,7 +42,7 @@ class FileCachingParser implements FileParserInterface {
 		}
 		$ast = $this->wrapped_parser->parse($filename);
 		$this->errors = $this->wrapped_parser->getErrors();
-		file_put_contents($cache_file, serialize([$ast, $this->errors, $filename, $mtime]));
+		file_put_contents($cache_file, serialize([$ast, $this->errors, $mtime]));
 		return $ast;
 	}
 
