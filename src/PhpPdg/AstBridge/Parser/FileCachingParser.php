@@ -32,11 +32,7 @@ class FileCachingParser implements FileParserInterface {
 			throw new \InvalidArgumentException("No such file: `$filename`");
 		}
 		$mtime = filemtime($filename);
-		$cache_file = $this->cache_dir . '/' . strtr($filename, [
-			'/' => '_',
-			'\\' => '_',
-			':' => '_',
-		]) . '.cache';
+		$cache_file = $this->cache_dir . '/' . md5($filename) . '.cache';
 		if (file_exists($cache_file) === true) {
 			list($ast, $errors, $cached_mtime) = unserialize(file_get_contents($cache_file));
 			if ($mtime === $cached_mtime) {
@@ -46,7 +42,7 @@ class FileCachingParser implements FileParserInterface {
 		}
 		$ast = $this->wrapped_parser->parse($filename);
 		$this->errors = $this->wrapped_parser->getErrors();
-		file_put_contents($cache_file, serialize([$ast, $this->errors, $mtime]));
+		file_put_contents($cache_file, serialize([$ast, $this->errors, $filename, $mtime]));
 		return $ast;
 	}
 
