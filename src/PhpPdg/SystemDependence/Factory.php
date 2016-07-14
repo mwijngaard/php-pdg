@@ -45,7 +45,7 @@ class Factory implements FactoryInterface {
 
 	public function create($systemdir) {
 		if (is_dir($systemdir) === false) {
-			throw new \InvalidArgumentException("No such system `$systemdir`");
+			throw new \InvalidArgumentException("No such system: `$systemdir`");
 		}
 
 		$sdg = $this->graph_factory->create();
