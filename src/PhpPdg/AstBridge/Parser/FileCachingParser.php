@@ -28,12 +28,12 @@ class FileCachingParser implements FileParserInterface {
 	}
 
 	public function parse($filename) {
-		if (file_exists($filename) === false) {
-			throw new \InvalidArgumentException("No such file: `$filename`");
+		$mtime = null;
+		if (file_exists($filename) === true) {
+			$mtime = filemtime($filename);
 		}
-		$mtime = filemtime($filename);
 		$cache_file = $this->cache_dir . '/' . md5($filename) . '.cache';
-		if (file_exists($cache_file) === true) {
+		if (is_file($cache_file) === true) {
 			list($ast, $errors, $cached_mtime) = unserialize(file_get_contents($cache_file));
 			if ($mtime === $cached_mtime) {
 				$this->errors = $errors;
