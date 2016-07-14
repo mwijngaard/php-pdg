@@ -43,7 +43,11 @@ class Factory implements FactoryInterface {
 		return new SdgFactory($graph_factory, new CfgWrappedParser((new AstWrappedParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7)))), PdgFactory::createDefault($graph_factory));
 	}
 
-	public function create($systempath) {
+	public function create($systemdir) {
+		if (is_dir($systemdir) === false) {
+			throw new \InvalidArgumentException("No such system `$systemdir`");
+		}
+
 		$sdg = $this->graph_factory->create();
 		$system = new System($sdg);
 
@@ -51,7 +55,7 @@ class Factory implements FactoryInterface {
 		$pdg_func_lookup = new \SplObjectStorage();
 		$cfg_scripts = [];
 		/** @var \SplFileInfo $fileinfo */
-		foreach (new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($systempath)), "/.*\\.php$/i") as $fileinfo) {
+		foreach (new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($systemdir)), "/.*\\.php$/i") as $fileinfo) {
 			$filename = $fileinfo->getRealPath();
 			$cfg_scripts[] = $cfg_script = $this->cfg_parser->parse($filename);
 
