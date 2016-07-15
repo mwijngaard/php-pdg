@@ -16,12 +16,4 @@ interface NodeInterface {
 	 * @return string
 	 */
 	public function getHash();
-
-	/**
-	 * Checks if 2 nodes are equal. Must be consistent with getHash().
-	 *
-	 * @param NodeInterface $other_node
-	 * @return boolean
-	 */
-	public function equals(NodeInterface $other_node);
 }
