@@ -8,11 +8,13 @@ use PhpPdg\Graph\FactoryInterface as GraphFactoryInterface;
 use PhpPdg\Graph\Factory as GraphFactory;
 use PhpPdg\ProgramDependence\ControlDependence\GeneratorInterface as ControlDependenceGeneratorInterface;
 use PhpPdg\ProgramDependence\ControlDependence\Generator as ControlDependenceGenerator;
+use PhpPdg\ProgramDependence\DataDependence\CombiningGenerator;
 use PhpPdg\ProgramDependence\DataDependence\GeneratorInterface as DataDependenceGeneratorInterface;
 use PhpPdg\ProgramDependence\DataDependence\Generator as DataDependenceGenerator;
 use PhpPdg\ProgramDependence\ControlDependence\BlockFlowGraph\Generator as BlockCfgGenerator;
 use PhpPdg\ProgramDependence\ControlDependence\BlockDependenceGraph\Generator as BlockCdgGenerator;
 use PhpPdg\ProgramDependence\ControlDependence\PostDominatorTree\Generator as PdgGenerator;
+use PhpPdg\ProgramDependence\DataDependence\MaybeGenerator as MaybeDataDependenceGenerator;
 use PhpPdg\ProgramDependence\Node\EntryNode;
 use PhpPdg\ProgramDependence\Node\OpNode;
 
@@ -54,7 +56,10 @@ class Factory implements FactoryInterface {
 		$block_cdg_generator = new BlockCdgGenerator($graph_factory);
 		$pdt_generator = new PdgGenerator($graph_factory);
 		$control_dependence_generator = new ControlDependenceGenerator($block_cfg_generator, $pdt_generator, $block_cdg_generator);
-		$data_dependence_generator = new DataDependenceGenerator();
+		$data_dependence_generator = new CombiningGenerator([
+			new DataDependenceGenerator(),
+			new MaybeDataDependenceGenerator()
+		]);
 		return new self($graph_factory, $control_dependence_generator, $data_dependence_generator);
 	}
 }
