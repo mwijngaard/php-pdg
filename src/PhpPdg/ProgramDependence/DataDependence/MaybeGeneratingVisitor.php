@@ -19,8 +19,6 @@ class MaybeGeneratingVisitor extends AbstractVisitor {
 	 * GeneratingVisitor constructor.
 	 * @param GraphInterface $target_graph
 	 * @param string $edge_type
-	 * @param \SplObjectStorage $block_writes
-	 * @param \SplObjectStorage $block_reads
 	 */
 	public function __construct(GraphInterface $target_graph, $edge_type) {
 		$this->target_graph = $target_graph;
