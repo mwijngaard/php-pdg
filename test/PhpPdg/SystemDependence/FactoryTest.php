@@ -14,7 +14,7 @@ use PhpPdg\Graph\Node\Printer\TextPrinter as NodePrinter;
 class FactoryTest extends \PHPUnit_Framework_TestCase {
 	/** @var  Parser */
 	private $cfg_parser;
-	/** @var  Factory */
+	/** @var  SdgFactory */
 	private $factory;
 	/** @var  SdgPrinter */
 	private $printer;

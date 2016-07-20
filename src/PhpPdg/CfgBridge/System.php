@@ -8,29 +8,29 @@ class System {
 	/** @var  Script[] */
 	private $scripts = [];
 
-	public function addScript($file_path, Script $script) {
-		if (isset($this->scripts[$file_path]) === true) {
-			throw new \InvalidArgumentException("file path `$file_path` already exists");
+	public function addScript($filename, Script $script) {
+		if (isset($this->scripts[$filename]) === true) {
+			throw new \InvalidArgumentException("CFG with filename `$filename` already exists");
 		}
-		$this->scripts[$file_path] = $script;
+		$this->scripts[$filename] = $script;
 	}
 
 	/**
 	 * @return string[]
 	 */
-	public function getFilePaths() {
+	public function getFilenames() {
 		return array_keys($this->scripts);
 	}
 
 	/**
-	 * @param string $file_path
+	 * @param string $filename
 	 * @return Script
 	 * @throws \InvalidArgumentException
 	 */
-	public function getScript($file_path) {
-		if (isset($this->scripts[$file_path]) === false) {
-			throw new \InvalidArgumentException("No such file");
+	public function getScript($filename) {
+		if (isset($this->scripts[$filename]) === false) {
+			throw new \InvalidArgumentException("No CFG with filename `$filename`");
 		}
-		return $this->scripts[$file_path];
+		return $this->scripts[$filename];
 	}
 }

@@ -45,7 +45,7 @@ class PdgBasedSlicer {
 			}
 		}
 		$sliced_ast_system = new AstSystem();
-		foreach ($ast_system->getFilePaths() as $file_path) {
+		foreach ($ast_system->getFilenames() as $file_path) {
 			if (isset($file_line_nrs[$file_path]) === true) {
 				$traverser = new NodeTraverser();
 				$traverser->addVisitor(new SlicingVisitor($file_line_nrs[$file_path]));

@@ -2,10 +2,14 @@
 
 namespace PhpPdg\SystemDependence;
 
+use PhpPdg\CfgBridge\System as CfgSystem;
+
 interface FactoryInterface {
 	/**
-	 * @param string $systemdir
+	 * Creates an SDG from a collection of CFG Scripts
+	 *
+	 * @param CfgSystem $cfg_system
 	 * @return System
 	 */
-	public function create($systemdir);
+	public function create(CfgSystem $cfg_system);
 }

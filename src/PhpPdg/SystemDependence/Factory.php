@@ -2,52 +2,49 @@
 
 namespace PhpPdg\SystemDependence;
 
+use PHPCfg\Op\Expr\MethodCall;
+use PHPCfg\Op\Expr\StaticCall;
+use PHPCfg\Op\Stmt\Class_;
 use PHPCfg\Op\Stmt\ClassMethod;
 use PHPCfg\Op\Stmt\Function_;
 use PHPCfg\Operand;
 use PHPCfg\Operand\Literal;
-use PhpParser\ParserFactory;
-use PhpPdg\CfgBridge\Parser\FileParserInterface;
-use PhpPdg\AstBridge\Parser\WrappedParser as AstWrappedParser;
-use PhpPdg\CfgBridge\Parser\WrappedParser as CfgWrappedParser;
+use PhpPdg\CfgBridge\System as CfgSystem;
 use PhpPdg\Graph\FactoryInterface as GraphFactoryInterface;
+use PhpPdg\Graph\GraphInterface;
 use PhpPdg\ProgramDependence\FactoryInterface as PdgFactoryInterface;
 use PhpPdg\ProgramDependence\Node\OpNode;
+use PhpPdg\SystemDependence\Node\BuiltinFuncNode;
 use PhpPdg\SystemDependence\Node\FuncNode;
+use PhpPdg\SystemDependence\Node\UndefinedFuncNode;
+use PhpPdg\SystemDependence\Node\UndefinedNsFuncNode;
+use PHPTypes\InternalArgInfo;
 use PHPTypes\State;
 use PHPTypes\Type;
 use PHPTypes\TypeReconstructor;
 use PhpPdg\Graph\Factory as GraphFactory;
 use PhpPdg\ProgramDependence\Factory as PdgFactory;
-use PhpPdg\SystemDependence\Factory as SdgFactory;
 
 class Factory implements FactoryInterface {
 	/** @var GraphFactoryInterface  */
 	private $graph_factory;
-	/** @var FileParserInterface  */
-	private $cfg_parser;
 	/** @var PdgFactoryInterface  */
 	private $pdg_factory;
 	/** @var  TypeReconstructor */
 	private $type_reconstructor;
 
-	public function __construct(GraphFactoryInterface $graph_factory, FileParserInterface $cfg_parser, PdgFactoryInterface $pdg_factory) {
+	public function __construct(GraphFactoryInterface $graph_factory, PdgFactoryInterface $pdg_factory) {
 		$this->graph_factory = $graph_factory;
-		$this->cfg_parser = $cfg_parser;
 		$this->pdg_factory = $pdg_factory;
 		$this->type_reconstructor = new TypeReconstructor();
 	}
 
 	public static function createDefault() {
 		$graph_factory = new GraphFactory();
-		return new SdgFactory($graph_factory, new CfgWrappedParser((new AstWrappedParser((new ParserFactory())->create(ParserFactory::PREFER_PHP7)))), PdgFactory::createDefault($graph_factory));
+		return new self($graph_factory, PdgFactory::createDefault($graph_factory));
 	}
 
-	public function create($systemdir) {
-		if (is_dir($systemdir) === false) {
-			throw new \InvalidArgumentException("No such system: `$systemdir`");
-		}
-
+	public function create(CfgSystem $cfg_system) {
 		$sdg = $this->graph_factory->create();
 		$system = new System($sdg);
 
@@ -55,9 +52,8 @@ class Factory implements FactoryInterface {
 		$pdg_func_lookup = new \SplObjectStorage();
 		$cfg_scripts = [];
 		/** @var \SplFileInfo $fileinfo */
-		foreach (new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($systemdir)), "/.*\\.php$/i") as $fileinfo) {
-			$filename = $fileinfo->getRealPath();
-			$cfg_scripts[] = $cfg_script = $this->cfg_parser->parse($filename);
+		foreach ($cfg_system->getFilenames() as $filename) {
+			$cfg_scripts[] = $cfg_script = $cfg_system->getScript($filename);
 
 			$pdg_func = $this->pdg_factory->create($cfg_script->main, $filename);
 			$system->scripts[$filename] = $pdg_func;
@@ -90,19 +86,26 @@ class Factory implements FactoryInterface {
 			$call_node = new OpNode($func_call);
 			$system->sdg->addNode($call_node);
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
-			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, [
-				'type' => 'contains'
-			]);
+			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, ['type' => 'contains']);
 			if ($func_call->name instanceof Literal) {
 				$name = strtolower($func_call->name->value);
 				if (isset($state->functionLookup[$name]) === true) {
-					/** @var Function_ $cfg_function */
-					foreach ($state->functionLookup[$name] as $cfg_function) {
-						$cfg_func = $cfg_function->func;
-						assert(isset($pdg_func_lookup[$cfg_func]));
-						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], [
-							'type' => 'call'
-						]);
+					$this->linkFunctions($sdg, $call_node, $state->functionLookup[$name], $pdg_func_lookup);
+				}
+				// take monkey-patching into account and also link builtin functions
+				if (isset($state->internalTypeInfo->functions[$name]) === true) {
+					$builtin_func_node = new BuiltinFuncNode($name, null);
+					if ($sdg->hasNode($builtin_func_node) === false) {
+						$sdg->addNode($builtin_func_node);
+						$sdg->addEdge($call_node, $builtin_func_node, ['type' => 'call']);
+					}
+				}
+				// if we haven't linked anything yet, this is most likely a vendor function (because we know its name).
+				if ($sdg->hasEdges($call_node, null, ['type' => 'call']) === false) {
+					$undefined_func_node = new UndefinedFuncNode($name, null);
+					if ($sdg->hasNode($undefined_func_node) === false) {
+						$sdg->addNode($undefined_func_node);
+						$sdg->addEdge($call_node, $undefined_func_node, ['type' => 'call']);
 					}
 				}
 			}
@@ -113,87 +116,91 @@ class Factory implements FactoryInterface {
 			$call_node = new OpNode($ns_func_call);
 			$system->sdg->addNode($call_node);
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
-			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, [
-				'type' => 'contains'
-			]);
-			assert($ns_func_call->nsName instanceof Literal); // should always be the case, as otherwise it would be a normal func call
-			$cfg_functions = null;
+			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, ['type' => 'contains']);
+
+			// should always be the case, as otherwise it would be a normal func call
+			assert($ns_func_call->name instanceof Literal);
+			assert($ns_func_call->nsName instanceof Literal);
+
+			$name = strtolower($ns_func_call->name->value);
 			$nsName = strtolower($ns_func_call->nsName->value);
+
 			if (isset($state->functionLookup[$nsName]) === true) {
-				$cfg_functions = $state->functionLookup[$nsName];
+				$this->linkFunctions($sdg, $call_node, $state->functionLookup[$nsName], $pdg_func_lookup);
 			} else {
-				assert($ns_func_call->name instanceof Literal);
 				$name = strtolower($ns_func_call->name->value);
 				if (isset($state->functionLookup[$name]) === true) {
-					$cfg_functions = $state->functionLookup[$name];
+					$this->linkFunctions($sdg, $call_node, $state->functionLookup[$name], $pdg_func_lookup);
+				}
+				// take monkey-patching into account and also link builtin functions
+				if (isset($state->internalTypeInfo->functions[$name]) === true) {
+					$builtin_func_node = new BuiltinFuncNode($name, null);
+					if ($sdg->hasNode($builtin_func_node) === false) {
+						$sdg->addNode($builtin_func_node);
+						$sdg->addEdge($call_node, $builtin_func_node, ['type' => 'call']);
+					}
 				}
 			}
-
-			if ($cfg_functions !== null) {
-				/** @var Function_ $cfg_function */
-				foreach ($cfg_functions as $cfg_function) {
-					$cfg_func = $cfg_function->func;
-					assert(isset($pdg_func_lookup[$cfg_func]));
-					$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], [
-						'type' => 'call'
-					]);
+			// if we haven't linked anything yet, this is most likely a vendor function (because we know its name) but
+			// we still do not know if it refers to the namespaced or regular variant, so store both.
+			if ($sdg->hasEdges($call_node, null, ['type' => 'call']) === false) {
+				$undefined_ns_func_node = new UndefinedNsFuncNode($name, $nsName);
+				if ($sdg->hasNode($undefined_ns_func_node) === false) {
+					$sdg->addNode($undefined_ns_func_node);
+					$sdg->addEdge($call_node, $undefined_ns_func_node, ['type' => 'call']);
 				}
 			}
 		}
 
 		foreach ($state->methodCalls as $methodCallPair) {
+			/** @var MethodCall $method_call */
 			list($method_call, $containing_cfg_func) = $methodCallPair;
 			$call_node = new OpNode($method_call);
 			$system->sdg->addNode($call_node);
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
-			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, [
-				'type' => 'contains'
-			]);
+			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, ['type' => 'contains']);
 
 			if ($method_call->name instanceof Literal) {
-				$name = strtolower($method_call->name->value);
-				$var_type = $method_call->var->type;
-				if ($var_type->type === Type::TYPE_OBJECT) {
-					$class_name = strtolower($var_type->userType);
-					$cfg_methods = $this->resolveClassMethods($state, $class_name, $name);
-
-					/** @var ClassMethod $cfg_method */
-					foreach ($cfg_methods as $cfg_method) {
-						$cfg_func = $cfg_method->func;
-						assert(isset($pdg_func_lookup[$cfg_func]));
-						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], [
-							'type' => 'call'
-						]);
+				$methodname = strtolower($method_call->name->value);
+				$classname = $this->resolveClassName($method_call->var);
+				if ($classname !== null) {
+					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup);
+					if (empty($nodes) === false) {
+						$this->addCallEdges($sdg, $call_node, $nodes);
+					} else {
+						$nodes = $this->resolvePolymorphicMethodCall($state, $classname, '__call', $pdg_func_lookup);
+						if (empty($nodes) === false) {
+							$this->addCallEdges($sdg, $call_node, $nodes);
+						} else {
+							$this->addNodeAndCallEdge($sdg, $call_node, new UndefinedFuncNode($methodname, $classname));
+						}
 					}
 				}
 			}
 		}
 
 		foreach ($state->staticCalls as $staticCallPair) {
+			/** @var StaticCall $static_call */
 			list($static_call, $containing_cfg_func) = $staticCallPair;
 			$call_node = new OpNode($static_call);
 			$system->sdg->addNode($call_node);
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
-			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, [
-				'type' => 'contains'
-			]);
+			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, ['type' => 'contains']);
 
 			if ($static_call->name instanceof Literal) {
-				if ($static_call->class instanceof Literal) {
-					$class_name = strtolower($static_call->class->value);
-				} else {
-					$class_name = $this->resolveClassNameFromType($static_call->class->type);
-				}
-				if ($class_name !== null) {
-					$name = strtolower($static_call->name->value);
-					$cfg_methods = $this->resolveClassMethods($state, $class_name, $name);
-					/** @var ClassMethod $cfg_method */
-					foreach ($cfg_methods as $cfg_method) {
-						$cfg_func = $cfg_method->func;
-						assert(isset($pdg_func_lookup[$cfg_func]));
-						$system->sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], [
-							'type' => 'call'
-						]);
+				$methodname = strtolower($static_call->name->value);
+				$classname = $this->resolveClassName($static_call->class);
+				if ($classname !== null) {
+					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup);
+					if (empty($nodes) === false) {
+						$this->addCallEdges($sdg, $call_node, $nodes);
+					} else {
+						$nodes = $this->resolvePolymorphicMethodCall($state, $classname, '__callStatic', $pdg_func_lookup);
+						if (empty($nodes) === false) {
+							$this->addCallEdges($sdg, $call_node, $nodes);
+						} else {
+							$this->addNodeAndCallEdge($sdg, $call_node, new UndefinedFuncNode($methodname, $classname));
+						}
 					}
 				}
 			}
@@ -202,34 +209,106 @@ class Factory implements FactoryInterface {
 		return $system;
 	}
 
-	/**
-	 * @param Type $type
-	 * @return string|null
-	 */
-	private function resolveClassNameFromType(Type $type) {
-		if ($type->type === Type::TYPE_OBJECT) {
-			return strtolower($type->userType);
+	private function linkFunctions(GraphInterface $sdg, $call_node, $cfg_functions, \SplObjectStorage $pdg_func_lookup) {
+		/** @var Function_ $cfg_function */
+		foreach ($cfg_functions as $cfg_function) {
+			$cfg_func = $cfg_function->func;
+			assert(isset($pdg_func_lookup[$cfg_func]));
+			$sdg->addEdge($call_node, $pdg_func_lookup[$cfg_func], ['type' => 'call']);
 		}
-		return null;
 	}
 
-	/**
-	 * @param State $state
-	 * @param string $class_name
-	 * @param string $method_name
-	 * @return ClassMethod[]
-	 */
-	private function resolveClassMethods(State $state, $class_name, $method_name) {
-		$methods = [];
-		if (isset($state->classResolves[$class_name]) === true) {
-			foreach ($state->classResolves[$class_name] as $class) {
-				foreach ($class->stmts->children as $op) {
-					if ($op instanceof ClassMethod && strtolower($op->func->name) === $method_name) {
-						$methods[] = $op;
+	private function resolveClassName(Operand $class) {
+		$classname = null;
+		if (is_object($class->type) === true && $class->type instanceof Type) {
+			/** @var Type $classType */
+			$classType = $class->type;
+			switch ($classType->type) {
+				case Type::TYPE_STRING:
+					if ($class instanceof Literal) {
+						$classname = $class->value;
 					}
+					break;
+				case Type::TYPE_OBJECT:
+					$classname = $classType->userType;
+			}
+		}
+		if ($classname !== null) {
+			$classname = strtolower($classname);
+		}
+		return $classname;
+	}
+
+	private function resolvePolymorphicMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup) {
+		$nodes = [];
+		if (isset($state->classResolvedBy[$classname]) === true) {
+			foreach ($state->classResolvedBy[$classname] as $sclassname) {
+				foreach ($this->resolveMethodCall($state, $sclassname, $methodname, $pdg_func_lookup) as $node) {
+					$nodes[] = $node;
 				}
 			}
 		}
-		return $methods;
+		return $nodes;
+	}
+
+	private function resolveMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup) {
+		$nodes = [];
+
+		// try resolve in system
+		if (isset($state->methodLookup[$classname]) === true) {
+			$classmethods = $state->methodLookup[$classname];
+			if (isset($classmethods[$methodname]) === true) {
+				/** @var ClassMethod $classmethod */
+				foreach ($classmethods[$methodname] as $classmethod) {
+					$func = $classmethod->getFunc();
+					assert(isset($pdg_func_lookup[$func]));
+					$nodes[] = $pdg_func_lookup[$func];
+				}
+			}
+		}
+
+		// try resolve in builtins - we do this as well to support monkey patching
+		$node = $this->resolveBuiltinMethodCall($state->internalTypeInfo, $classname, $methodname);
+		if ($node !== null) {
+			$nodes[] = $node;
+		}
+
+		// if not resolved yet, try resolving on parent class
+		if (empty($nodes) === true && isset($state->classExtends[$classname]) === true) {
+			foreach ($state->classExtends[$classname] as $pclassname) {
+				foreach ($this->resolveMethodCall($state, $pclassname, $methodname, $pdg_func_lookup) as $node) {
+					$nodes[] = $node;
+				}
+			}
+		}
+		return $nodes;
+	}
+
+	private function resolveBuiltinMethodCall(InternalArgInfo $internalArgInfo, $classname, $methodname) {
+		$node = null;
+		if (isset($internalArgInfo->methods[$classname][$methodname]) === true) {
+			$node = new BuiltinFuncNode($classname, $methodname);
+		}
+		if (isset($internalArgInfo->classExtends[$classname]) === true) {
+			$node = $this->resolveBuiltinMethodCall($internalArgInfo, $internalArgInfo->classExtends[$classname], $methodname);
+		}
+		return $node;
+	}
+
+	private function addNodeAndCallEdge(GraphInterface $sdg, $source_node, $target_node) {
+		if ($sdg->hasNode($target_node) === false) {
+			$sdg->addNode($target_node);
+			$this->addCallEdge($sdg, $source_node, $target_node);
+		}
+	}
+
+	private function addCallEdges(GraphInterface $sdg, $source_node, $target_nodes) {
+		foreach ($target_nodes as $target_node) {
+			$this->addCallEdge($sdg, $source_node, $target_node);
+		}
+	}
+
+	private function addCallEdge(GraphInterface $sdg, $source_node, $target_node) {
+		$sdg->addEdge($source_node, $target_node, ['type' => 'call']);
 	}
 }

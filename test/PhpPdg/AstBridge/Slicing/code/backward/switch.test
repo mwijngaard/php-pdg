@@ -1,0 +1,35 @@
+<?php
+
+function add($a, $b) {
+	return $a + $b;
+}
+
+function multiply($a, $b) {
+	return $a * $b;
+}
+
+switch (true) {
+	case 1:
+		echo 'foo';
+		break;
+	case 2:
+		echo multiply(2, 4);
+		break;
+	case 3:
+		echo add(2, 4);
+		break;
+}
+-----
+8
+-----
+<?php
+
+function multiply($a, $b)
+{
+    return $a * $b;
+}
+
+switch (true) {
+    case 2:
+        echo multiply(2, 4);
+}

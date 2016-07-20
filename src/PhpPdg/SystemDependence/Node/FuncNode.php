@@ -2,10 +2,10 @@
 
 namespace PhpPdg\SystemDependence\Node;
 
-use PhpPdg\Graph\Node\AbstractNode;
+use PhpPdg\Graph\Node\NodeInterface;
 use PhpPdg\ProgramDependence\Func;
 
-class FuncNode extends AbstractNode {
+class FuncNode implements NodeInterface {
 	/** @var Func  */
 	private $func;
 

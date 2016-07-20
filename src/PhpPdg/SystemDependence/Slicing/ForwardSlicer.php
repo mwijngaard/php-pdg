@@ -2,6 +2,10 @@
 
 namespace PhpPdg\SystemDependence\Slicing;
 
+use PHPCfg\Op\Expr\FuncCall;
+use PHPCfg\Op\Expr\MethodCall;
+use PHPCfg\Op\Expr\NsFuncCall;
+use PHPCfg\Op\Expr\StaticCall;
 use PhpPdg\Graph\Edge;
 use PhpPdg\Graph\Graph;
 use PhpPdg\Graph\Node\NodeInterface;
@@ -10,9 +14,9 @@ use PhpPdg\ProgramDependence\Node\OpNode;
 use PhpPdg\SystemDependence\Node\FuncNode;
 use PhpPdg\SystemDependence\System;
 
-class BackwardSlicer implements SlicerInterface {
+class ForwardSlicer implements SlicerInterface {
 	/**
-	 * Create a backward slice of an SDG using a slicing criterion consisting of file path and line nr
+	 * Create a forward slice of an SDG using a slicing criterion consisting of file path and line nr
 	 *
 	 * @param System $system
 	 * @param string $slice_file_path
@@ -33,30 +37,26 @@ class BackwardSlicer implements SlicerInterface {
 			}
 			if (empty($func_slicing_criterion) === false) {
 				$func_slicing_criterions[$func] = $func_slicing_criterion;
-				$sdg_slicing_criterion[] = new FuncNode($func);
+				$sliced_pdg = Graph::reachable($func->pdg, $func_slicing_criterion);
+				foreach ($sliced_pdg->getNodes() as $node) {
+					if ($node instanceof OpNode) {
+						$op = $node->op;
+						if (($op instanceof FuncCall || $node instanceof NsFuncCall || $node instanceof MethodCall || $node instanceof StaticCall)) {
+							$sdg_slicing_criterion[] = $node;
+						}
+					}
+				}
 				break;
 			}
 		}
-		$sliced_sdg = Graph::reachableInv($system->sdg, $sdg_slicing_criterion);
+		$sliced_sdg = Graph::reachable($system->sdg, $sdg_slicing_criterion);
+		$sliced_system = new System($sliced_sdg);
 		foreach ($sliced_sdg->getNodes() as $node) {
-			if ($node instanceof OpNode) {
-				/** @var Edge[] $contains_edges */
-				$contains_edges = $sliced_sdg->getEdges(null, $node, [
-					'type' => 'contains'
-				]);
-				assert(count($contains_edges) === 1);
-				/** @var FuncNode $containing_func_node */
-				$containing_func_node = $contains_edges[0]->getFromNode();
-				assert($containing_func_node instanceof FuncNode);
-				$containing_func = $containing_func_node->getFunc();
-				$func_slicing_criterion = isset($func_slicing_criterions[$containing_func]) === true ? $func_slicing_criterions[$containing_func] : [];
-				if (isset($func_slicing_criterion[$node->getHash()]) === false) {
-					$func_slicing_criterion[$node->getHash()] = $node;
-				}
-				$func_slicing_criterions[$containing_func] = $func_slicing_criterion;
+			if ($node instanceof FuncNode) {
+				$func = $node->getFunc();
+				$func_slicing_criterions[$func] = [$func->entry_node];
 			}
 		}
-		$sliced_system = new System($sliced_sdg);
 		$sliced_system->scripts = $this->sliceFuncs($system->scripts, $func_slicing_criterions);
 		$sliced_system->functions = $this->sliceFuncs($system->functions, $func_slicing_criterions);
 		$sliced_system->methods = $this->sliceFuncs($system->methods, $func_slicing_criterions);
@@ -73,7 +73,7 @@ class BackwardSlicer implements SlicerInterface {
 		$result = [];
 		foreach ($funcList as $key => $func) {
 			if (isset($func_slicing_criterions[$func]) === true) {
-				$sliced_pdg = Graph::reachableInv($func->pdg, $func_slicing_criterions[$func]);
+				$sliced_pdg = Graph::reachable($func->pdg, $func_slicing_criterions[$func]);
 				$result[$key] = new Func($func->name, $func->class_name, $func->filename, $func->entry_node, $sliced_pdg);
 			}
 		}

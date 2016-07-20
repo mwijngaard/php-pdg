@@ -39,5 +39,7 @@ Graph:
         #7 Func /foo/bar/baz.php[{main}]
         #8 Func /foo/bar/baz.php[Bar\foo]
         #3 Op Expr\NsFuncCall @ /foo/bar/baz.php line 10
+        #9 Undefined NsFunc foo|foo\foo
     Edges:
         #7 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #3 Op Expr\NsFuncCall @ /foo/bar/baz.php line 10
+        #3 Op Expr\NsFuncCall @ /foo/bar/baz.php line 10 =={"type":"call"}=> #9 Undefined NsFunc foo|foo\foo

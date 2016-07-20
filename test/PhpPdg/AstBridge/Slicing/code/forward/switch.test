@@ -20,7 +20,7 @@ switch (true) {
 		break;
 }
 -----
-8
+16
 -----
 <?php
 
