@@ -166,11 +166,11 @@ class Factory implements FactoryInterface {
 				if ($classname !== null) {
 					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup);
 					if (empty($nodes) === false) {
-						$this->addCallEdges($sdg, $call_node, $nodes);
+						$this->addNodesAndCallEdges($sdg, $call_node, $nodes);
 					} else {
 						$nodes = $this->resolvePolymorphicMethodCall($state, $classname, '__call', $pdg_func_lookup);
 						if (empty($nodes) === false) {
-							$this->addCallEdges($sdg, $call_node, $nodes);
+							$this->addNodesAndCallEdges($sdg, $call_node, $nodes);
 						} else {
 							$this->addNodeAndCallEdge($sdg, $call_node, new UndefinedFuncNode($methodname, $classname));
 						}
@@ -193,11 +193,11 @@ class Factory implements FactoryInterface {
 				if ($classname !== null) {
 					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup);
 					if (empty($nodes) === false) {
-						$this->addCallEdges($sdg, $call_node, $nodes);
+						$this->addNodesAndCallEdges($sdg, $call_node, $nodes);
 					} else {
 						$nodes = $this->resolvePolymorphicMethodCall($state, $classname, '__callStatic', $pdg_func_lookup);
 						if (empty($nodes) === false) {
-							$this->addCallEdges($sdg, $call_node, $nodes);
+							$this->addNodesAndCallEdges($sdg, $call_node, $nodes);
 						} else {
 							$this->addNodeAndCallEdge($sdg, $call_node, new UndefinedFuncNode($methodname, $classname));
 						}
@@ -291,20 +291,16 @@ class Factory implements FactoryInterface {
 		return $node;
 	}
 
+	private function addNodesAndCallEdges(GraphInterface $sdg, $source_node, $target_nodes) {
+		foreach ($target_nodes as $target_node) {
+			$this->addNodeAndCallEdge($sdg, $source_node, $target_node);
+		}
+	}
+
 	private function addNodeAndCallEdge(GraphInterface $sdg, $source_node, $target_node) {
 		if ($sdg->hasNode($target_node) === false) {
 			$sdg->addNode($target_node);
-			$this->addCallEdge($sdg, $source_node, $target_node);
 		}
-	}
-
-	private function addCallEdges(GraphInterface $sdg, $source_node, $target_nodes) {
-		foreach ($target_nodes as $target_node) {
-			$this->addCallEdge($sdg, $source_node, $target_node);
-		}
-	}
-
-	private function addCallEdge(GraphInterface $sdg, $source_node, $target_node) {
 		$sdg->addEdge($source_node, $target_node, ['type' => 'call']);
 	}
 }
