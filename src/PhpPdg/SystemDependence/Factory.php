@@ -248,39 +248,35 @@ class Factory implements FactoryInterface {
 				}
 			}
 		}
-		return $nodes;
+		return array_unique($nodes, SORT_REGULAR);
 	}
 
 	private function resolveMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup) {
 		$nodes = [];
 
 		// try resolve in system
-		if (isset($state->methodLookup[$classname]) === true) {
-			$classmethods = $state->methodLookup[$classname];
-			if (isset($classmethods[$methodname]) === true) {
-				/** @var ClassMethod $classmethod */
-				foreach ($classmethods[$methodname] as $classmethod) {
-					$func = $classmethod->getFunc();
-					assert(isset($pdg_func_lookup[$func]));
-					$nodes[] = $pdg_func_lookup[$func];
+		if (isset($state->classLookup[$classname]) === true) {
+			foreach ($state->classLookup[$classname] as $class) {
+				if (isset($state->methodLookup[$class][$methodname]) === true) {
+					/** @var ClassMethod $method */
+					foreach ($state->methodLookup[$class][$methodname] as $method) {
+						$func = $method->getFunc();
+						assert(isset($pdg_func_lookup[$func]));
+						$nodes[] = $pdg_func_lookup[$func];
+					}
+				} else if ($class->extends !== null) {
+					foreach ($this->resolveMethodCall($state, strtolower($class->extends->value), $methodname, $pdg_func_lookup) as $node) {
+						$nodes[] = $node;
+					}
 				}
 			}
 		}
 
-		// try resolve in builtins - we do this as well to support monkey patching
 		$node = $this->resolveBuiltinMethodCall($state->internalTypeInfo, $classname, $methodname);
 		if ($node !== null) {
 			$nodes[] = $node;
 		}
 
-		// if not resolved yet, try resolving on parent class
-		if (empty($nodes) === true && isset($state->classExtends[$classname]) === true) {
-			foreach ($state->classExtends[$classname] as $pclassname) {
-				foreach ($this->resolveMethodCall($state, $pclassname, $methodname, $pdg_func_lookup) as $node) {
-					$nodes[] = $node;
-				}
-			}
-		}
 		return $nodes;
 	}
 
