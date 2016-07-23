@@ -164,16 +164,11 @@ class Factory implements FactoryInterface {
 				$methodname = strtolower($method_call->name->value);
 				$classname = $this->resolveClassName($method_call->var);
 				if ($classname !== null) {
-					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup);
+					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup, false);
 					if (empty($nodes) === false) {
 						$this->ensureNodesAndCallEdgesAdded($sdg, $call_node, $nodes);
 					} else {
-						$nodes = $this->resolvePolymorphicMethodCall($state, $classname, '__call', $pdg_func_lookup);
-						if (empty($nodes) === false) {
-							$this->ensureNodesAndCallEdgesAdded($sdg, $call_node, $nodes);
-						} else {
-							$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($methodname, $classname));
-						}
+						$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($methodname, $classname));
 					}
 				}
 			}
@@ -191,16 +186,11 @@ class Factory implements FactoryInterface {
 				$methodname = strtolower($static_call->name->value);
 				$classname = $this->resolveClassName($static_call->class);
 				if ($classname !== null) {
-					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup);
+					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup, true);
 					if (empty($nodes) === false) {
 						$this->ensureNodesAndCallEdgesAdded($sdg, $call_node, $nodes);
 					} else {
-						$nodes = $this->resolvePolymorphicMethodCall($state, $classname, '__callStatic', $pdg_func_lookup);
-						if (empty($nodes) === false) {
-							$this->ensureNodesAndCallEdgesAdded($sdg, $call_node, $nodes);
-						} else {
-							$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($methodname, $classname));
-						}
+						$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($methodname, $classname));
 					}
 				}
 			}
@@ -239,16 +229,22 @@ class Factory implements FactoryInterface {
 		return $classname;
 	}
 
-	private function resolvePolymorphicMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup) {
-		$nodes = [];
+	private function resolvePolymorphicMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup, $is_static_call) {
+		$allnodes = [];
 		if (isset($state->classResolvedBy[$classname]) === true) {
 			foreach ($state->classResolvedBy[$classname] as $sclassname) {
-				foreach ($this->resolveMethodCall($state, $sclassname, $methodname, $pdg_func_lookup) as $node) {
-					$nodes[] = $node;
+				$classnodes = $this->resolveMethodCall($state, $sclassname, $methodname, $pdg_func_lookup);
+				if (!empty($classnodes)) {
+					$allnodes = array_merge($allnodes, $classnodes);
+				} else {
+					$classnodes = $this->resolveMethodCall($state, $sclassname, $is_static_call ? '__callStatic' : '__call', $pdg_func_lookup);
+					if (!empty($classnodes)) {
+						$allnodes = array_merge($allnodes, $classnodes);
+					}
 				}
 			}
 		}
-		return array_unique($nodes, SORT_REGULAR);
+		return array_unique($allnodes, SORT_REGULAR);
 	}
 
 	private function resolveMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup) {
