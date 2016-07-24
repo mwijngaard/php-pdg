@@ -29,6 +29,6 @@ class FuncNode implements NodeInterface {
 	}
 
 	public function getHash() {
-		return $this->func->getId();
+		return 'FUNC-' . $this->func->getId() . '-' . spl_object_hash($this->func);
 	}
 }
