@@ -87,6 +87,7 @@ class Factory implements FactoryInterface {
 			$system->sdg->addNode($call_node);
 			assert(isset($pdg_func_lookup[$containing_cfg_func]));
 			$system->sdg->addEdge($pdg_func_lookup[$containing_cfg_func], $call_node, ['type' => 'contains']);
+
 			if ($func_call->name instanceof Literal) {
 				$name = strtolower($func_call->name->value);
 				if (isset($state->functionLookup[$name]) === true) {
@@ -94,19 +95,11 @@ class Factory implements FactoryInterface {
 				}
 				// take monkey-patching into account and also link builtin functions
 				if (isset($state->internalTypeInfo->functions[$name]) === true) {
-					$builtin_func_node = new BuiltinFuncNode($name, null);
-					if ($sdg->hasNode($builtin_func_node) === false) {
-						$sdg->addNode($builtin_func_node);
-						$sdg->addEdge($call_node, $builtin_func_node, ['type' => 'call']);
-					}
+					$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new BuiltinFuncNode($name, null));
 				}
 				// if we haven't linked anything yet, this is most likely a vendor function (because we know its name).
 				if ($sdg->hasEdges($call_node, null, ['type' => 'call']) === false) {
-					$undefined_func_node = new UndefinedFuncNode($name, null);
-					if ($sdg->hasNode($undefined_func_node) === false) {
-						$sdg->addNode($undefined_func_node);
-						$sdg->addEdge($call_node, $undefined_func_node, ['type' => 'call']);
-					}
+					$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($name, null));
 				}
 			}
 		}
@@ -128,26 +121,16 @@ class Factory implements FactoryInterface {
 			if (isset($state->functionLookup[$nsName]) === true) {
 				$this->linkFunctions($sdg, $call_node, $state->functionLookup[$nsName], $pdg_func_lookup);
 			} else {
-				$name = strtolower($ns_func_call->name->value);
 				if (isset($state->functionLookup[$name]) === true) {
 					$this->linkFunctions($sdg, $call_node, $state->functionLookup[$name], $pdg_func_lookup);
 				}
 				// take monkey-patching into account and also link builtin functions
 				if (isset($state->internalTypeInfo->functions[$name]) === true) {
-					$builtin_func_node = new BuiltinFuncNode($name, null);
-					if ($sdg->hasNode($builtin_func_node) === false) {
-						$sdg->addNode($builtin_func_node);
-						$sdg->addEdge($call_node, $builtin_func_node, ['type' => 'call']);
-					}
+					$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new BuiltinFuncNode($name, null));
 				}
-			}
-			// if we haven't linked anything yet, this is most likely a vendor function (because we know its name) but
-			// we still do not know if it refers to the namespaced or regular variant, so store both.
-			if ($sdg->hasEdges($call_node, null, ['type' => 'call']) === false) {
-				$undefined_ns_func_node = new UndefinedNsFuncNode($name, $nsName);
-				if ($sdg->hasNode($undefined_ns_func_node) === false) {
-					$sdg->addNode($undefined_ns_func_node);
-					$sdg->addEdge($call_node, $undefined_ns_func_node, ['type' => 'call']);
+				// if we haven't linked anything yet, this is most likely a vendor function (because we know its name).
+				if ($sdg->hasEdges($call_node, null, ['type' => 'call']) === false) {
+					$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($name, null));
 				}
 			}
 		}
