@@ -9,6 +9,8 @@ $a = new A();
 unset($a->foo);
 unset($a->bar);
 unset($a->foo, $a->baz);
+$b = 'foo';
+unset($b);
 -----
 Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
@@ -29,6 +31,8 @@ Script /foo/bar/baz.php[{main}]:
             #11 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11
             #12 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11
             #13 Op Terminal\Unset_ @ /foo/bar/baz.php line 11
+            #14 Op Expr\Assign @ /foo/bar/baz.php line 12
+            #15 Op Terminal\Unset_ @ /foo/bar/baz.php line 13
             #1 Op Terminal\Return_ @ unknown line -1
         Edges:
             #5 Op Expr\New_ @ /foo/bar/baz.php line 8 =={"type":"data"}=> #6 Op Expr\Assign @ /foo/bar/baz.php line 8
@@ -43,22 +47,22 @@ Script /foo/bar/baz.php[{main}]:
 Method /foo/bar/baz.php[A::__unset]:
     Entry Node: #0 ENTRY
     Param Nodes:
-        #14 Op Expr\Param @ /foo/bar/baz.php line 5
+        #16 Op Expr\Param @ /foo/bar/baz.php line 5
     Return Nodes:
-        #15 Op Terminal\Return_ @ unknown line -1
+        #17 Op Terminal\Return_ @ unknown line -1
     Pdg:
         Nodes:
             #0 ENTRY
-            #14 Op Expr\Param @ /foo/bar/baz.php line 5
-            #15 Op Terminal\Return_ @ unknown line -1
+            #16 Op Expr\Param @ /foo/bar/baz.php line 5
+            #17 Op Terminal\Return_ @ unknown line -1
 Graph:
     Nodes:
-        #16 Func /foo/bar/baz.php[{main}]
-        #17 Func /foo/bar/baz.php[A::__unset]
+        #18 Func /foo/bar/baz.php[{main}]
+        #19 Func /foo/bar/baz.php[A::__unset]
         #10 Op Terminal\Unset_ @ /foo/bar/baz.php line 10
         #13 Op Terminal\Unset_ @ /foo/bar/baz.php line 11
     Edges:
-        #16 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op Terminal\Unset_ @ /foo/bar/baz.php line 10
-        #16 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #13 Op Terminal\Unset_ @ /foo/bar/baz.php line 11
-        #10 Op Terminal\Unset_ @ /foo/bar/baz.php line 10 =={"type":"call"}=> #17 Func /foo/bar/baz.php[A::__unset]
-        #13 Op Terminal\Unset_ @ /foo/bar/baz.php line 11 =={"type":"call"}=> #17 Func /foo/bar/baz.php[A::__unset]
+        #18 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op Terminal\Unset_ @ /foo/bar/baz.php line 10
+        #18 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #13 Op Terminal\Unset_ @ /foo/bar/baz.php line 11
+        #10 Op Terminal\Unset_ @ /foo/bar/baz.php line 10 =={"type":"call"}=> #19 Func /foo/bar/baz.php[A::__unset]
+        #13 Op Terminal\Unset_ @ /foo/bar/baz.php line 11 =={"type":"call"}=> #19 Func /foo/bar/baz.php[A::__unset]

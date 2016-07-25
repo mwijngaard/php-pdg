@@ -196,7 +196,7 @@ class Factory implements FactoryInterface {
 					$op = $node->op;
 					if ($op instanceof Isset_) {
 						foreach ($op->vars as $var) {
-							if ($var instanceof Operand\Temporary && $var->ops[0] instanceof PropertyFetch) {
+							if ($var instanceof Operand\Temporary && isset($var->ops[0]) === true && $var->ops[0] instanceof PropertyFetch) {
 								$fetch = $var->ops[0];
 								$handledPropFetches->attach($fetch);
 								$classname = $this->resolveClassName($fetch->var);
@@ -207,7 +207,7 @@ class Factory implements FactoryInterface {
 						}
 					} else if ($op instanceof Unset_) {
 						foreach ($op->exprs as $expr) {
-							if ($expr instanceof Operand\Temporary && $expr->ops[0] instanceof PropertyFetch) {
+							if ($expr instanceof Operand\Temporary && isset($expr->ops[0]) === true && $expr->ops[0] instanceof PropertyFetch) {
 								$fetch = $expr->ops[0];
 								$handledPropFetches->attach($fetch);
 								$classname = $this->resolveClassName($fetch->var);
@@ -217,7 +217,7 @@ class Factory implements FactoryInterface {
 							}
 						}
 					} else if ($op instanceof Assign || $op instanceof AssignRef || $op instanceof AssignOp) {
-						if ($op->var instanceof Operand\Temporary && $op->var->ops[0] instanceof PropertyFetch) {
+						if ($op->var instanceof Operand\Temporary && isset($op->var->ops[0]) === true && $op->var->ops[0] instanceof PropertyFetch) {
 							$fetch = $op->var->ops[0];
 							$handledPropFetches->attach($fetch);
 							$classname = $this->resolveClassName($fetch->var);
