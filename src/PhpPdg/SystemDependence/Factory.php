@@ -295,7 +295,9 @@ class Factory implements FactoryInterface {
 		$classnames = [];
 		switch ($type->type) {
 			case Type::TYPE_OBJECT:
-				$classnames[] = strtolower($type->userType);
+				if ($type->userType !== null) {
+					$classnames[] = strtolower($type->userType);
+				}
 				break;
 			case Type::TYPE_UNION:
 				foreach ($type->subTypes as $subType) {
