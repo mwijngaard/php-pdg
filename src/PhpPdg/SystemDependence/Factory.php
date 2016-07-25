@@ -152,8 +152,8 @@ class Factory implements FactoryInterface {
 
 			if ($method_call->name instanceof Literal) {
 				$methodname = strtolower($method_call->name->value);
-				$classname = $this->resolveClassName($method_call->var);
-				if ($classname !== null) {
+				$classnames = $this->resolveClassNames($method_call->var);
+				foreach ($classnames as $classname) {
 					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup, false);
 					if (empty($nodes) === false) {
 						$this->ensureNodesAndCallEdgesAdded($sdg, $call_node, $nodes);
@@ -174,8 +174,8 @@ class Factory implements FactoryInterface {
 
 			if ($static_call->name instanceof Literal) {
 				$methodname = strtolower($static_call->name->value);
-				$classname = $this->resolveClassName($static_call->class);
-				if ($classname !== null) {
+				$classnames = $this->resolveClassNames($static_call->class);
+				foreach ($classnames as $classname) {
 					$nodes = $this->resolvePolymorphicMethodCall($state, $classname, $methodname, $pdg_func_lookup, true);
 					if (empty($nodes) === false) {
 						$this->ensureNodesAndCallEdgesAdded($sdg, $call_node, $nodes);
@@ -199,9 +199,11 @@ class Factory implements FactoryInterface {
 							if ($var instanceof Operand\Temporary && isset($var->ops[0]) === true && $var->ops[0] instanceof PropertyFetch) {
 								$fetch = $var->ops[0];
 								$handledPropFetches->attach($fetch);
-								$classname = $this->resolveClassName($fetch->var);
-								if ($classname !== null && $fetch->name instanceof Literal) {
-									$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingIsset($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+								if ($fetch->name instanceof Literal) {
+									$classnames = $this->resolveClassNames($fetch->var);
+									foreach ($classnames as $classname) {
+										$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingIsset($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+									}
 								}
 							}
 						}
@@ -210,9 +212,11 @@ class Factory implements FactoryInterface {
 							if ($expr instanceof Operand\Temporary && isset($expr->ops[0]) === true && $expr->ops[0] instanceof PropertyFetch) {
 								$fetch = $expr->ops[0];
 								$handledPropFetches->attach($fetch);
-								$classname = $this->resolveClassName($fetch->var);
-								if ($classname !== null && $fetch->name instanceof Literal) {
-									$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingUnset($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+								if ($fetch->name instanceof Literal) {
+									$classnames = $this->resolveClassNames($fetch->var);
+									foreach ($classnames as $classname) {
+										$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingUnset($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+									}
 								}
 							}
 						}
@@ -220,9 +224,11 @@ class Factory implements FactoryInterface {
 						if ($op->var instanceof Operand\Temporary && isset($op->var->ops[0]) === true && $op->var->ops[0] instanceof PropertyFetch) {
 							$fetch = $op->var->ops[0];
 							$handledPropFetches->attach($fetch);
-							$classname = $this->resolveClassName($fetch->var);
-							if ($classname !== null && $fetch->name instanceof Literal) {
-								$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingSet($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+							if ($fetch->name instanceof Literal) {
+								$classnames = $this->resolveClassNames($fetch->var);
+								foreach ($classnames as $classname) {
+									$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingSet($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+								}
 							}
 						}
 					} else if ($op instanceof PropertyFetch) {
@@ -241,9 +247,11 @@ class Factory implements FactoryInterface {
 				$nodes = [];
 				$fetch = $node->op;
 				if ($handledPropFetches->contains($fetch) === false) {
-					$classname = $this->resolveClassName($fetch->var);
-					if ($classname !== null && $fetch->name instanceof Literal) {
-						$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingGet($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+					if ($fetch->name instanceof Literal) {
+						$classnames = $this->resolveClassNames($fetch->var);
+						foreach ($classnames as $classname) {
+							$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingGet($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+						}
 					}
 				}
 
@@ -267,25 +275,36 @@ class Factory implements FactoryInterface {
 		}
 	}
 
-	private function resolveClassName(Operand $class) {
-		$classname = null;
-		if (is_object($class->type) === true && $class->type instanceof Type) {
-			/** @var Type $classType */
-			$classType = $class->type;
-			switch ($classType->type) {
-				case Type::TYPE_STRING:
-					if ($class instanceof Literal) {
-						$classname = $class->value;
-					}
-					break;
-				case Type::TYPE_OBJECT:
-					$classname = $classType->userType;
+	private function resolveClassNames(Operand $operand) {
+		$classnames = [];
+		if (is_object($operand->type) === true && $operand->type instanceof Type) {
+			/** @var Type $type */
+			$type = $operand->type;
+			if ($type->type === Type::TYPE_STRING) {
+				if ($operand instanceof Literal) {
+					$classnames[] = strtolower($operand->value);
+				}
+			} else {
+				$classnames = array_merge($classnames, $this->resolveClassNamesFromUserTypes($type));
 			}
 		}
-		if ($classname !== null) {
-			$classname = strtolower($classname);
+		return $classnames;
+	}
+
+	private function resolveClassNamesFromUserTypes(Type $type) {
+		$classnames = [];
+		switch ($type->type) {
+			case Type::TYPE_OBJECT:
+				$classnames[] = strtolower($type->userType);
+				break;
+			case Type::TYPE_UNION:
+				foreach ($type->subTypes as $subType) {
+					$classnames = array_merge($classnames, $this->resolveClassNamesFromUserTypes($subType));
+				}
+				break;
+
 		}
-		return $classname;
+		return $classnames;
 	}
 
 	private function resolvePolymorphicMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup, $is_static_call) {
