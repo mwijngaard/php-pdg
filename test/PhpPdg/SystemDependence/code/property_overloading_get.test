@@ -1,0 +1,48 @@
+<?php
+
+class A {
+	public $foo;
+	public function __get($name) {}
+}
+$a = new A();
+$a->foo;
+$a->bar;
+-----
+Script /foo/bar/baz.php[{main}]:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #1 Op Terminal\Return_ @ unknown line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #2 Op Stmt\Class_ @ /foo/bar/baz.php line 3
+            #3 Op Stmt\Property @ /foo/bar/baz.php line 4
+            #4 Op Stmt\ClassMethod @ /foo/bar/baz.php line 5
+            #5 Op Expr\New_ @ /foo/bar/baz.php line 7
+            #6 Op Expr\Assign @ /foo/bar/baz.php line 7
+            #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 8
+            #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
+            #1 Op Terminal\Return_ @ unknown line -1
+        Edges:
+            #5 Op Expr\New_ @ /foo/bar/baz.php line 7 =={"type":"data"}=> #6 Op Expr\Assign @ /foo/bar/baz.php line 7
+            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data"}=> #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 8
+            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data"}=> #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
+Method /foo/bar/baz.php[A::__get]:
+    Entry Node: #0 ENTRY
+    Param Nodes:
+        #9 Op Expr\Param @ /foo/bar/baz.php line 5
+    Return Nodes:
+        #10 Op Terminal\Return_ @ unknown line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #9 Op Expr\Param @ /foo/bar/baz.php line 5
+            #10 Op Terminal\Return_ @ unknown line -1
+Graph:
+    Nodes:
+        #11 Func /foo/bar/baz.php[{main}]
+        #12 Func /foo/bar/baz.php[A::__get]
+        #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
+    Edges:
+        #11 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
+        #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9 =={"type":"call"}=> #12 Func /foo/bar/baz.php[A::__get]

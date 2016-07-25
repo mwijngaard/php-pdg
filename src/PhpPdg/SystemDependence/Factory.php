@@ -2,17 +2,23 @@
 
 namespace PhpPdg\SystemDependence;
 
+use PHPCfg\Op\Expr\Assign;
+use PHPCfg\Op\Expr\AssignRef;
+use PHPCfg\Op\Expr\Isset_;
 use PHPCfg\Op\Expr\MethodCall;
+use PHPCfg\Op\Expr\PropertyFetch;
 use PHPCfg\Op\Expr\StaticCall;
 use PHPCfg\Op\Stmt\Class_;
 use PHPCfg\Op\Stmt\ClassMethod;
 use PHPCfg\Op\Stmt\Function_;
+use PHPCfg\Op\Terminal\Unset_;
 use PHPCfg\Operand;
 use PHPCfg\Operand\Literal;
 use PhpPdg\CfgBridge\System as CfgSystem;
 use PhpPdg\Graph\FactoryInterface as GraphFactoryInterface;
 use PhpPdg\Graph\GraphInterface;
 use PhpPdg\ProgramDependence\FactoryInterface as PdgFactoryInterface;
+use PhpPdg\ProgramDependence\Func;
 use PhpPdg\ProgramDependence\Node\OpNode;
 use PhpPdg\SystemDependence\Node\BuiltinFuncNode;
 use PhpPdg\SystemDependence\Node\FuncNode;
@@ -179,6 +185,75 @@ class Factory implements FactoryInterface {
 			}
 		}
 
+		/** @var Func $pdg_func */
+		foreach (array_merge($system->scripts, $system->functions, $system->methods, $system->closures) as $pdg_func) {
+			$handledPropFetches = new \SplObjectStorage();
+			$propFetchNodes = [];
+			foreach ($pdg_func->pdg->getNodes() as $node) {
+				$nodes = [];
+				if ($node instanceof OpNode) {
+					$op = $node->op;
+					if ($op instanceof Isset_) {
+						foreach ($op->vars as $var) {
+							if ($var instanceof Operand\Temporary && $var->ops[0] instanceof PropertyFetch) {
+								$fetch = $var->ops[0];
+								$handledPropFetches->attach($fetch);
+								$classname = $this->resolveClassName($fetch->var);
+								if ($classname !== null && $fetch->name instanceof Literal) {
+									$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingIsset($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+								}
+							}
+						}
+					} else if ($op instanceof Unset_) {
+						foreach ($op->exprs as $expr) {
+							if ($expr instanceof Operand\Temporary && $expr->ops[0] instanceof PropertyFetch) {
+								$fetch = $expr->ops[0];
+								$handledPropFetches->attach($fetch);
+								$classname = $this->resolveClassName($fetch->var);
+								if ($classname !== null && $fetch->name instanceof Literal) {
+									$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingUnset($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+								}
+							}
+						}
+					} else if ($op instanceof Assign || $op instanceof AssignRef) {
+						if ($op->var instanceof Operand\Temporary && $op->var->ops[0] instanceof PropertyFetch) {
+							$fetch = $op->var->ops[0];
+							$handledPropFetches->attach($fetch);
+							$classname = $this->resolveClassName($fetch->var);
+							if ($classname !== null && $fetch->name instanceof Literal) {
+								$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingSet($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+							}
+						}
+					} else if ($op instanceof PropertyFetch) {
+						$propFetchNodes[] = $node;
+					}
+				}
+
+				if (empty($nodes) === false) {
+					$sdg->addNode($node);
+					$sdg->addEdge(new FuncNode($pdg_func), $node, ['type' => 'contains']);
+					$this->ensureNodesAndCallEdgesAdded($sdg, $node, $nodes);
+				}
+			}
+
+			foreach ($propFetchNodes as $node) {
+				$nodes = [];
+				$fetch = $node->op;
+				if ($handledPropFetches->contains($fetch) === false) {
+					$classname = $this->resolveClassName($fetch->var);
+					if ($classname !== null && $fetch->name instanceof Literal) {
+						$nodes = array_merge($nodes, $this->resolvePolymorphicPropertyOverloadingGet($state, $classname, strtolower($fetch->name->value), $pdg_func_lookup));
+					}
+				}
+
+				if (empty($nodes) === false) {
+					$sdg->addNode($node);
+					$sdg->addEdge(new FuncNode($pdg_func), $node, ['type' => 'contains']);
+					$this->ensureNodesAndCallEdgesAdded($sdg, $node, $nodes);
+				}
+			}
+		}
+
 		return $system;
 	}
 
@@ -217,11 +292,11 @@ class Factory implements FactoryInterface {
 		if (isset($state->classResolvedBy[$classname]) === true) {
 			foreach ($state->classResolvedBy[$classname] as $sclassname) {
 				$classnodes = $this->resolveMethodCall($state, $sclassname, $methodname, $pdg_func_lookup);
-				if (!empty($classnodes)) {
+				if (empty($classnodes) === false) {
 					$allnodes = array_merge($allnodes, $classnodes);
 				} else {
-					$classnodes = $this->resolveMethodCall($state, $sclassname, $is_static_call ? '__callStatic' : '__call', $pdg_func_lookup);
-					if (!empty($classnodes)) {
+					$classnodes = $this->resolveMethodCall($state, $sclassname, $is_static_call === true ? '__callStatic' : '__call', $pdg_func_lookup);
+					if (empty($classnodes) === false) {
 						$allnodes = array_merge($allnodes, $classnodes);
 					}
 				}
@@ -268,6 +343,70 @@ class Factory implements FactoryInterface {
 			$node = $this->resolveBuiltinMethodCall($internalArgInfo, $internalArgInfo->classExtends[$classname], $methodname);
 		}
 		return $node;
+	}
+
+	private function resolvePolymorphicPropertyOverloadingIsset(State $state, $classname, $propname, $pdg_func_lookup) {
+		$nodes = [];
+		if (isset($state->classResolvedBy[$classname]) === true) {
+			foreach ($state->classResolvedBy[$classname] as $sclassname) {
+				if ($this->hasProperty($state, $sclassname, $propname) === false) {
+					$nodes = array_merge($nodes, $this->resolveMethodCall($state, $sclassname, '__isset', $pdg_func_lookup));
+				}
+			}
+		}
+		return $nodes;
+	}
+
+	private function resolvePolymorphicPropertyOverloadingUnset(State $state, $classname, $propname, $pdg_func_lookup) {
+		$nodes = [];
+		if (isset($state->classResolvedBy[$classname]) === true) {
+			foreach ($state->classResolvedBy[$classname] as $sclassname) {
+				if ($this->hasProperty($state, $sclassname, $propname) === false) {
+					$nodes = array_merge($nodes, $this->resolveMethodCall($state, $sclassname, '__unset', $pdg_func_lookup));
+				}
+			}
+		}
+		return $nodes;
+	}
+
+	private function resolvePolymorphicPropertyOverloadingSet(State $state, $classname, $propname, $pdg_func_lookup) {
+		$nodes = [];
+		if (isset($state->classResolvedBy[$classname]) === true) {
+			foreach ($state->classResolvedBy[$classname] as $sclassname) {
+				if ($this->hasProperty($state, $sclassname, $propname) === false) {
+					$nodes = array_merge($nodes, $this->resolveMethodCall($state, $sclassname, '__set', $pdg_func_lookup));
+				}
+			}
+		}
+		return $nodes;
+	}
+
+	private function resolvePolymorphicPropertyOverloadingGet(State $state, $classname, $propname, $pdg_func_lookup) {
+		$nodes = [];
+		if (isset($state->classResolvedBy[$classname]) === true) {
+			foreach ($state->classResolvedBy[$classname] as $sclassname) {
+				if ($this->hasProperty($state, $sclassname, $propname) === false) {
+					$nodes = array_merge($nodes, $this->resolveMethodCall($state, $sclassname, '__get', $pdg_func_lookup));
+				}
+			}
+		}
+		return $nodes;
+	}
+
+	private function hasProperty(State $state, $classname, $propname) {
+		if (isset($state->classLookup[$classname]) === true) {
+			foreach ($state->classLookup[$classname] as $class) {
+				if (isset($state->propertyLookup[$class][$propname]) === true) {
+					return true;
+				} else if ($class->extends !== null) {
+					if ($this->hasProperty($state, strtolower($class->extends->value), $propname) === true) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	private function ensureNodesAndCallEdgesAdded(GraphInterface $sdg, $source_node, $target_nodes) {
