@@ -14,6 +14,7 @@ use PHPCfg\Op\Stmt\Function_;
 use PHPCfg\Op\Terminal\Unset_;
 use PHPCfg\Operand;
 use PHPCfg\Operand\Literal;
+use PhpParser\Node\Expr\AssignOp;
 use PhpPdg\CfgBridge\System as CfgSystem;
 use PhpPdg\Graph\FactoryInterface as GraphFactoryInterface;
 use PhpPdg\Graph\GraphInterface;
@@ -215,7 +216,7 @@ class Factory implements FactoryInterface {
 								}
 							}
 						}
-					} else if ($op instanceof Assign || $op instanceof AssignRef) {
+					} else if ($op instanceof Assign || $op instanceof AssignRef || $op instanceof AssignOp) {
 						if ($op->var instanceof Operand\Temporary && $op->var->ops[0] instanceof PropertyFetch) {
 							$fetch = $op->var->ops[0];
 							$handledPropFetches->attach($fetch);
