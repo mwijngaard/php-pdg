@@ -1,0 +1,72 @@
+<?php
+
+class A {
+	public function foo() {}
+}
+
+class B extends A {
+	public function foo() {}
+}
+
+class C extends B {
+	public function foo() {}
+}
+
+$b = new B();
+$b->foo();
+-----
+Script /foo/bar/baz.php[{main}]:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #1 Op Terminal\Return_ @ unknown line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #2 Op Stmt\Class_ @ /foo/bar/baz.php line 3
+            #3 Op Stmt\ClassMethod @ /foo/bar/baz.php line 4
+            #4 Op Stmt\Class_ @ /foo/bar/baz.php line 7
+            #5 Op Stmt\ClassMethod @ /foo/bar/baz.php line 8
+            #6 Op Stmt\Class_ @ /foo/bar/baz.php line 11
+            #7 Op Stmt\ClassMethod @ /foo/bar/baz.php line 12
+            #8 Op Expr\New_ @ /foo/bar/baz.php line 15
+            #9 Op Expr\Assign @ /foo/bar/baz.php line 15
+            #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16
+            #1 Op Terminal\Return_ @ unknown line -1
+        Edges:
+            #8 Op Expr\New_ @ /foo/bar/baz.php line 15 =={"type":"data"}=> #9 Op Expr\Assign @ /foo/bar/baz.php line 15
+            #9 Op Expr\Assign @ /foo/bar/baz.php line 15 =={"type":"data"}=> #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16
+Method /foo/bar/baz.php[A::foo]:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #11 Op Terminal\Return_ @ unknown line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #11 Op Terminal\Return_ @ unknown line -1
+Method /foo/bar/baz.php[B::foo]:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #12 Op Terminal\Return_ @ unknown line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #12 Op Terminal\Return_ @ unknown line -1
+Method /foo/bar/baz.php[C::foo]:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #13 Op Terminal\Return_ @ unknown line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #13 Op Terminal\Return_ @ unknown line -1
+Graph:
+    Nodes:
+        #14 Func /foo/bar/baz.php[{main}]
+        #15 Func /foo/bar/baz.php[A::foo]
+        #16 Func /foo/bar/baz.php[B::foo]
+        #17 Func /foo/bar/baz.php[C::foo]
+        #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16
+    Edges:
+        #14 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16
+        #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16 =={"type":"call"}=> #16 Func /foo/bar/baz.php[B::foo]
+        #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16 =={"type":"call"}=> #17 Func /foo/bar/baz.php[C::foo]

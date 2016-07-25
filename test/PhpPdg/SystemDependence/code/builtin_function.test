@@ -1,0 +1,21 @@
+<?php
+
+strrev('foo');
+-----
+Script /foo/bar/baz.php[{main}]:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #1 Op Terminal\Return_ @ unknown line -1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #2 Op Expr\FuncCall @ /foo/bar/baz.php line 3
+            #1 Op Terminal\Return_ @ unknown line -1
+Graph:
+    Nodes:
+        #3 Func /foo/bar/baz.php[{main}]
+        #2 Op Expr\FuncCall @ /foo/bar/baz.php line 3
+        #4 Builtin Func
+    Edges:
+        #3 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #2 Op Expr\FuncCall @ /foo/bar/baz.php line 3
+        #2 Op Expr\FuncCall @ /foo/bar/baz.php line 3 =={"type":"call"}=> #4 Builtin Func
