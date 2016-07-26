@@ -39,18 +39,16 @@ class GeneratingVisitor extends AbstractVisitor {
 				continue;
 			}
 
-			$operandPath = [$variableName];
 			if (is_array($operand) === true) {
 				foreach ($operand as $i => $arrayOperand) {
 					if ($arrayOperand !== null) {
-						$arrayOperandPath = array_merge($operandPath, [$i]);
 						$writeOps = $this->resolveOperandWriteOps($arrayOperand);
-						$this->addDataDependenceEdges($op_node, $writeOps, $arrayOperandPath);
+						$this->addDataDependenceEdges($op_node, $writeOps, $variableName . ':' . $i);
 					}
 				}
 			} else {
 				$writeOps = $this->resolveOperandWriteOps($operand);
-				$this->addDataDependenceEdges($op_node, $writeOps, $operandPath);
+				$this->addDataDependenceEdges($op_node, $writeOps, $variableName);
 			}
 		}
 	}
@@ -87,7 +85,7 @@ class GeneratingVisitor extends AbstractVisitor {
 			$writeOpNode = new OpNode($writeOp);
 			$this->target_graph->addEdge($writeOpNode, $opNode, [
 				'type' => $this->edge_type,
-				'operand' => implode(':', $operandPath)
+				'operand' => $operandPath
 			]);
 		}
 	}
