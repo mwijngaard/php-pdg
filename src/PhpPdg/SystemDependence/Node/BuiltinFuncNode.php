@@ -37,7 +37,13 @@ class BuiltinFuncNode implements NodeInterface {
 		return $this->class_name;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getId() {
-
+		if ($this->class_name !== null) {
+			return $this->class_name . '::' . $this->name;
+		}
+		return $this->name;
 	}
 }
