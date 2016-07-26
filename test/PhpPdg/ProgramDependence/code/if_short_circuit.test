@@ -28,9 +28,9 @@ Pdg:
         #8 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #9 Op Terminal\Echo_ @ foo.php line 4
         #8 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #10 Op Stmt\Jump @ foo.php line 3
         #8 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":false}=> #11 Op Stmt\Jump @ foo.php line 3
-        #2 Op Expr\Assign @ foo.php line 2 =={"type":"data"}=> #3 Op Expr\BinaryOp\Identical @ foo.php line 3
-        #2 Op Expr\Assign @ foo.php line 2 =={"type":"data"}=> #5 Op Expr\BinaryOp\Identical @ foo.php line 3
-        #2 Op Expr\Assign @ foo.php line 2 =={"type":"data"}=> #9 Op Terminal\Echo_ @ foo.php line 4
-        #3 Op Expr\BinaryOp\Identical @ foo.php line 3 =={"type":"data"}=> #4 Op Stmt\JumpIf @ unknown line -1
-        #5 Op Expr\BinaryOp\Identical @ foo.php line 3 =={"type":"data"}=> #6 Op Expr\Cast\Bool_ @ unknown line -1
-        #6 Op Expr\Cast\Bool_ @ unknown line -1 =={"type":"data"}=> #8 Op Stmt\JumpIf @ foo.php line 3
+        #2 Op Expr\Assign @ foo.php line 2 =={"type":"data","operand":"left"}=> #3 Op Expr\BinaryOp\Identical @ foo.php line 3
+        #2 Op Expr\Assign @ foo.php line 2 =={"type":"data","operand":"left"}=> #5 Op Expr\BinaryOp\Identical @ foo.php line 3
+        #2 Op Expr\Assign @ foo.php line 2 =={"type":"data","operand":"expr"}=> #9 Op Terminal\Echo_ @ foo.php line 4
+        #3 Op Expr\BinaryOp\Identical @ foo.php line 3 =={"type":"data","operand":"cond"}=> #4 Op Stmt\JumpIf @ unknown line -1
+        #5 Op Expr\BinaryOp\Identical @ foo.php line 3 =={"type":"data","operand":"expr"}=> #6 Op Expr\Cast\Bool_ @ unknown line -1
+        #6 Op Expr\Cast\Bool_ @ unknown line -1 =={"type":"data","operand":"cond"}=> #8 Op Stmt\JumpIf @ foo.php line 3

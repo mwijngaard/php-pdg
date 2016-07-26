@@ -60,8 +60,8 @@ Method /foo/bar/baz.php[C::bar]:
             #12 Op Expr\MethodCall @ /foo/bar/baz.php line 16
             #11 Op Terminal\Return_ @ /foo/bar/baz.php line 16
         Edges:
-            #10 Op Expr\Param @ /foo/bar/baz.php line 15 =={"type":"data"}=> #12 Op Expr\MethodCall @ /foo/bar/baz.php line 16
-            #12 Op Expr\MethodCall @ /foo/bar/baz.php line 16 =={"type":"data"}=> #11 Op Terminal\Return_ @ /foo/bar/baz.php line 16
+            #10 Op Expr\Param @ /foo/bar/baz.php line 15 =={"type":"data","operand":"var"}=> #12 Op Expr\MethodCall @ /foo/bar/baz.php line 16
+            #12 Op Expr\MethodCall @ /foo/bar/baz.php line 16 =={"type":"data","operand":"expr"}=> #11 Op Terminal\Return_ @ /foo/bar/baz.php line 16
 Graph:
     Nodes:
         #13 Func /foo/bar/baz.php[{main}]

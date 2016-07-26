@@ -29,7 +29,7 @@ Function /foo/bar/baz.php[foo]:
             #6 Op Terminal\Echo_ @ /foo/bar/baz.php line 4
             #5 Op Terminal\Return_ @ unknown line -1
         Edges:
-            #4 Op Expr\Param @ /foo/bar/baz.php line 3 =={"type":"data"}=> #6 Op Terminal\Echo_ @ /foo/bar/baz.php line 4
+            #4 Op Expr\Param @ /foo/bar/baz.php line 3 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ /foo/bar/baz.php line 4
 Graph:
     Nodes:
         #7 Func /foo/bar/baz.php[{main}]

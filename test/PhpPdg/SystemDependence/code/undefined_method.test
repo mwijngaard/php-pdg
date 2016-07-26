@@ -15,8 +15,8 @@ Script /foo/bar/baz.php[{main}]:
             #4 Op Expr\MethodCall @ /foo/bar/baz.php line 4
             #1 Op Terminal\Return_ @ unknown line -1
         Edges:
-            #2 Op Expr\New_ @ /foo/bar/baz.php line 3 =={"type":"data"}=> #3 Op Expr\Assign @ /foo/bar/baz.php line 3
-            #3 Op Expr\Assign @ /foo/bar/baz.php line 3 =={"type":"data"}=> #4 Op Expr\MethodCall @ /foo/bar/baz.php line 4
+            #2 Op Expr\New_ @ /foo/bar/baz.php line 3 =={"type":"data","operand":"expr"}=> #3 Op Expr\Assign @ /foo/bar/baz.php line 3
+            #3 Op Expr\Assign @ /foo/bar/baz.php line 3 =={"type":"data","operand":"var"}=> #4 Op Expr\MethodCall @ /foo/bar/baz.php line 4
 Graph:
     Nodes:
         #5 Func /foo/bar/baz.php[{main}]

@@ -40,5 +40,5 @@ Pdg:
         #3 Op Stmt\Switch_ @ foo.php line 4 =={"type":"control","case":2}=> #9 Op Stmt\Jump @ foo.php line 12
         #3 Op Stmt\Switch_ @ foo.php line 4 =={"type":"control","case":3}=> #9 Op Stmt\Jump @ foo.php line 12
         #3 Op Stmt\Switch_ @ foo.php line 4 =={"type":"control","case":null}=> #10 Op Stmt\Jump @ unknown line -1
-        #4 Op Expr\Assign @ foo.php line 7 =={"type":"data"}=> #6 Op Terminal\Echo_ @ foo.php line 14
-        #8 Op Expr\Assign @ foo.php line 11 =={"type":"data"}=> #6 Op Terminal\Echo_ @ foo.php line 14
+        #4 Op Expr\Assign @ foo.php line 7 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 14
+        #8 Op Expr\Assign @ foo.php line 11 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 14

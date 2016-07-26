@@ -30,9 +30,9 @@ Pdg:
         #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #9 Op Terminal\Echo_ @ foo.php line 4
         #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #10 Op Stmt\Jump @ foo.php line -1
         #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #11 Op Stmt\Jump @ foo.php line 3
-        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data"}=> #3 Op Iterator\Reset @ foo.php line 3
-        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data"}=> #5 Op Iterator\Valid @ foo.php line 3
-        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data"}=> #7 Op Iterator\Value @ foo.php line 3
-        #5 Op Iterator\Valid @ foo.php line 3 =={"type":"data"}=> #6 Op Stmt\JumpIf @ foo.php line 3
-        #7 Op Iterator\Value @ foo.php line 3 =={"type":"data"}=> #8 Op Expr\Assign @ foo.php line 3
-        #8 Op Expr\Assign @ foo.php line 3 =={"type":"data"}=> #9 Op Terminal\Echo_ @ foo.php line 4
+        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data","operand":"var"}=> #3 Op Iterator\Reset @ foo.php line 3
+        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data","operand":"var"}=> #5 Op Iterator\Valid @ foo.php line 3
+        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data","operand":"var"}=> #7 Op Iterator\Value @ foo.php line 3
+        #5 Op Iterator\Valid @ foo.php line 3 =={"type":"data","operand":"cond"}=> #6 Op Stmt\JumpIf @ foo.php line 3
+        #7 Op Iterator\Value @ foo.php line 3 =={"type":"data","operand":"expr"}=> #8 Op Expr\Assign @ foo.php line 3
+        #8 Op Expr\Assign @ foo.php line 3 =={"type":"data","operand":"expr"}=> #9 Op Terminal\Echo_ @ foo.php line 4

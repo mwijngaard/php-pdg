@@ -24,9 +24,9 @@ Script /foo/bar/baz.php[{main}]:
             #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
             #1 Op Terminal\Return_ @ unknown line -1
         Edges:
-            #5 Op Expr\New_ @ /foo/bar/baz.php line 7 =={"type":"data"}=> #6 Op Expr\Assign @ /foo/bar/baz.php line 7
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data"}=> #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 8
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data"}=> #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
+            #5 Op Expr\New_ @ /foo/bar/baz.php line 7 =={"type":"data","operand":"expr"}=> #6 Op Expr\Assign @ /foo/bar/baz.php line 7
+            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 8
+            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
 Method /foo/bar/baz.php[A::__get]:
     Entry Node: #0 ENTRY
     Param Nodes:

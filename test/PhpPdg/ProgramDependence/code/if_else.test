@@ -27,5 +27,5 @@ Pdg:
         #3 Op Stmt\JumpIf @ foo.php line 4 =={"type":"control","case":true}=> #5 Op Stmt\Jump @ foo.php line 4
         #3 Op Stmt\JumpIf @ foo.php line 4 =={"type":"control","case":false}=> #7 Op Expr\Assign @ foo.php line 7
         #3 Op Stmt\JumpIf @ foo.php line 4 =={"type":"control","case":false}=> #8 Op Stmt\Jump @ foo.php line 4
-        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data"}=> #6 Op Terminal\Echo_ @ foo.php line 9
-        #7 Op Expr\Assign @ foo.php line 7 =={"type":"data"}=> #6 Op Terminal\Echo_ @ foo.php line 9
+        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 9
+        #7 Op Expr\Assign @ foo.php line 7 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 9

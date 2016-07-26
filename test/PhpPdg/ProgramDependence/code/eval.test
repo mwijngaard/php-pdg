@@ -49,18 +49,18 @@ Pdg:
         #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #11 Op Expr\Assign @ foo.php line 12
         #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #12 Op Stmt\Jump @ foo.php line 6
         #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":false}=> #17 Op Stmt\Jump @ foo.php line 6
-        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data"}=> #9 Op Terminal\Echo_ @ foo.php line 10
-        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data"}=> #13 Op Terminal\Echo_ @ foo.php line 14
-        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data"}=> #14 Op Terminal\Echo_ @ foo.php line 15
+        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data","operand":"expr"}=> #9 Op Terminal\Echo_ @ foo.php line 10
+        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data","operand":"expr"}=> #13 Op Terminal\Echo_ @ foo.php line 14
+        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data","operand":"expr"}=> #14 Op Terminal\Echo_ @ foo.php line 15
         #3 Op Expr\Assign @ foo.php line 4 =={"type":"maybe data"}=> #8 Op Expr\Eval_ @ foo.php line 9
-        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data"}=> #10 Op Terminal\Echo_ @ foo.php line 11
-        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data"}=> #15 Op Terminal\Echo_ @ foo.php line 16
-        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data"}=> #16 Op Terminal\Echo_ @ foo.php line 17
+        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data","operand":"expr"}=> #10 Op Terminal\Echo_ @ foo.php line 11
+        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data","operand":"expr"}=> #15 Op Terminal\Echo_ @ foo.php line 16
+        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data","operand":"expr"}=> #16 Op Terminal\Echo_ @ foo.php line 17
         #7 Op Expr\Assign @ foo.php line 8 =={"type":"maybe data"}=> #8 Op Expr\Eval_ @ foo.php line 9
-        #11 Op Expr\Assign @ foo.php line 12 =={"type":"data"}=> #13 Op Terminal\Echo_ @ foo.php line 14
-        #11 Op Expr\Assign @ foo.php line 12 =={"type":"data"}=> #14 Op Terminal\Echo_ @ foo.php line 15
-        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data"}=> #15 Op Terminal\Echo_ @ foo.php line 16
-        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data"}=> #16 Op Terminal\Echo_ @ foo.php line 17
+        #11 Op Expr\Assign @ foo.php line 12 =={"type":"data","operand":"expr"}=> #13 Op Terminal\Echo_ @ foo.php line 14
+        #11 Op Expr\Assign @ foo.php line 12 =={"type":"data","operand":"expr"}=> #14 Op Terminal\Echo_ @ foo.php line 15
+        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data","operand":"expr"}=> #15 Op Terminal\Echo_ @ foo.php line 16
+        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data","operand":"expr"}=> #16 Op Terminal\Echo_ @ foo.php line 17
         #8 Op Expr\Eval_ @ foo.php line 9 =={"type":"maybe data"}=> #9 Op Terminal\Echo_ @ foo.php line 10
         #8 Op Expr\Eval_ @ foo.php line 9 =={"type":"maybe data"}=> #10 Op Terminal\Echo_ @ foo.php line 11
         #8 Op Expr\Eval_ @ foo.php line 9 =={"type":"maybe data"}=> #15 Op Terminal\Echo_ @ foo.php line 16

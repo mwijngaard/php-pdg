@@ -8,6 +8,7 @@ use PHPCfg\Op;
 use PHPCfg\Op\Phi;
 use PHPCfg\Operand;
 use PhpPdg\Graph\GraphInterface;
+use PhpPdg\Graph\Node\NodeInterface;
 use PhpPdg\ProgramDependence\Node\OpNode;
 
 class GeneratingVisitor extends AbstractVisitor {
@@ -28,55 +29,66 @@ class GeneratingVisitor extends AbstractVisitor {
 
 	public function enterOp(Op $op, Block $block) {
 		$op_node = new OpNode($op);
-		$op_data_dependences_ops = new \SplObjectStorage();
-		$this->addOpDataDependenceOps($op, $op_data_dependences_ops, new \SplObjectStorage());
-		foreach ($op_data_dependences_ops as $op_data_dependence_op) {
-			$write_op_node = new OpNode($op_data_dependence_op);
-			$this->target_graph->addEdge($write_op_node, $op_node, [
-				'type' => $this->edge_type
-			]);
-		}
-	}
-
-	private function addOpDataDependenceOps(Op $op, \SplObjectStorage $result, \SplObjectStorage $seen_phis) {
-		foreach ($op->getVariableNames() as $variable_name) {
-			// since the CFG is in SSA form, we only need to look at non-write variables
-			if ($op->isWriteVariable($variable_name) === true) {
+		foreach ($op->getVariableNames() as $variableName) {
+			if ($op->isWriteVariable($variableName) === true) {
 				continue;
 			}
 
-			/** @var Operand $operand */
-			$operand = $op->$variable_name;
+			$operand = $op->$variableName;
 			if ($operand === null) {
 				continue;
 			}
 
-			$this->addOperandDataDependenceOps($operand, $result, $seen_phis);
+			$operandPath = [$variableName];
+			if (is_array($operand) === true) {
+				foreach ($operand as $i => $arrayOperand) {
+					if ($arrayOperand !== null) {
+						$arrayOperandPath = array_merge($operandPath, [$i]);
+						$writeOps = $this->resolveOperandWriteOps($arrayOperand);
+						$this->addDataDependenceEdges($op_node, $writeOps, $arrayOperandPath);
+					}
+				}
+			} else {
+				$writeOps = $this->resolveOperandWriteOps($operand);
+				$this->addDataDependenceEdges($op_node, $writeOps, $operandPath);
+			}
 		}
 	}
 
-	/**
-	 * @param Operand|array $operand
-	 * @return array
-	 */
-	private function addOperandDataDependenceOps($operand, \SplObjectStorage $result, \SplObjectStorage $seen_phis) {
-		if (is_null($operand) === false) {
-			if (is_array($operand) === true) {
-				foreach ($operand as $operand_entry) {
-					$this->addOperandDataDependenceOps($operand_entry, $result, $seen_phis);
-				}
-			} else {
-				foreach ($operand->ops as $write_op) {
-					if ($write_op instanceof Phi) {
-						if ($seen_phis->contains($write_op) === false) {
-							$seen_phis->attach($write_op);
-							$this->addOpDataDependenceOps($write_op, $result, $seen_phis);
-						}
-					} else {
-						$result->attach($write_op);
+	private function resolveOperandWriteOps(Operand $operand) {
+		$result = new \SplObjectStorage();
+		$seenPhis = new \SplObjectStorage();
+
+		$worklist = [$operand];
+		while (!empty($worklist)) {
+			$operand = array_shift($worklist);
+
+			foreach ($operand->ops as $writeOp) {
+				if ($writeOp instanceof Phi) {
+					if ($seenPhis->contains($writeOp) === false) {
+						$seenPhis->attach($writeOp);
+						$worklist = array_merge($worklist, $writeOp->vars);
 					}
+				} else if ($result->contains($writeOp) === false) {
+					$result->attach($writeOp);
 				}
 			}
+		}
+		return $result;
+	}
+
+	/**
+	 * @param NodeInterface $opNode
+	 * @param \SplObjectStorage|Op[] $writeOps
+	 * @param $operandPath
+	 */
+	private function addDataDependenceEdges(NodeInterface $opNode, \SplObjectStorage $writeOps, $operandPath) {
+		foreach ($writeOps as $writeOp) {
+			$writeOpNode = new OpNode($writeOp);
+			$this->target_graph->addEdge($writeOpNode, $opNode, [
+				'type' => $this->edge_type,
+				'operand' => implode(':', $operandPath)
+			]);
 		}
 	}
 }

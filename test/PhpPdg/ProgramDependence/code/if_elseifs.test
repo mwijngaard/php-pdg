@@ -39,7 +39,7 @@ Pdg:
         #10 Op Stmt\JumpIf @ foo.php line 8 =={"type":"control","case":true}=> #11 Op Expr\Assign @ foo.php line 9
         #10 Op Stmt\JumpIf @ foo.php line 8 =={"type":"control","case":true}=> #12 Op Stmt\Jump @ foo.php line 8
         #10 Op Stmt\JumpIf @ foo.php line 8 =={"type":"control","case":false}=> #13 Op Stmt\Jump @ foo.php line 4
-        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data"}=> #6 Op Terminal\Echo_ @ foo.php line 11
-        #8 Op Expr\Assign @ foo.php line 7 =={"type":"data"}=> #6 Op Terminal\Echo_ @ foo.php line 11
-        #11 Op Expr\Assign @ foo.php line 9 =={"type":"data"}=> #6 Op Terminal\Echo_ @ foo.php line 11
-        #2 Op Expr\Assign @ foo.php line 3 =={"type":"data"}=> #6 Op Terminal\Echo_ @ foo.php line 11
+        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 11
+        #8 Op Expr\Assign @ foo.php line 7 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 11
+        #11 Op Expr\Assign @ foo.php line 9 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 11
+        #2 Op Expr\Assign @ foo.php line 3 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 11
