@@ -36,8 +36,8 @@ Graph:
         #8 Func /foo/bar/baz.php[{main}]
         #9 Func /foo/bar/baz.php[SplObjectStorage::count]
         #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8
-        #10 Builtin Func
+        #10 Builtin Func count::splobjectstorage
     Edges:
         #8 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8
         #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8 =={"type":"call"}=> #9 Func /foo/bar/baz.php[SplObjectStorage::count]
-        #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8 =={"type":"call"}=> #10 Builtin Func
+        #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8 =={"type":"call"}=> #10 Builtin Func count::splobjectstorage

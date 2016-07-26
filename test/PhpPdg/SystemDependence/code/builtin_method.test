@@ -21,7 +21,7 @@ Graph:
     Nodes:
         #5 Func /foo/bar/baz.php[{main}]
         #4 Op Expr\MethodCall @ /foo/bar/baz.php line 4
-        #6 Builtin Func
+        #6 Builtin Func count::splobjectstorage
     Edges:
         #5 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #4 Op Expr\MethodCall @ /foo/bar/baz.php line 4
-        #4 Op Expr\MethodCall @ /foo/bar/baz.php line 4 =={"type":"call"}=> #6 Builtin Func
+        #4 Op Expr\MethodCall @ /foo/bar/baz.php line 4 =={"type":"call"}=> #6 Builtin Func count::splobjectstorage

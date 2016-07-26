@@ -15,7 +15,7 @@ Graph:
     Nodes:
         #3 Func /foo/bar/baz.php[{main}]
         #2 Op Expr\FuncCall @ /foo/bar/baz.php line 3
-        #4 Builtin Func
+        #4 Builtin Func strrev
     Edges:
         #3 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #2 Op Expr\FuncCall @ /foo/bar/baz.php line 3
-        #2 Op Expr\FuncCall @ /foo/bar/baz.php line 3 =={"type":"call"}=> #4 Builtin Func
+        #2 Op Expr\FuncCall @ /foo/bar/baz.php line 3 =={"type":"call"}=> #4 Builtin Func strrev
