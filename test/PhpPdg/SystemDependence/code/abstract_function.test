@@ -1,0 +1,53 @@
+<?php
+
+abstract class A {
+    abstract public function foo();
+}
+
+class B extends A {
+    public function foo() {}
+}
+
+$b = new B();
+-----
+Script /foo/bar/baz.php[{main}]:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #1 Op[Terminal_Return]@-1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #2 Op[Stmt_Class]@3
+            #3 Op[Stmt_ClassMethod]@4
+            #4 Op[Stmt_Class]@7
+            #5 Op[Stmt_ClassMethod]@8
+            #6 Op[Expr_New]@11
+            #7 Op[Expr_Assign]@11
+            #1 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #2 Op[Stmt_Class]@3
+            #0 ENTRY =={"type":"control"}=> #4 Op[Stmt_Class]@7
+            #0 ENTRY =={"type":"control"}=> #6 Op[Expr_New]@11
+            #0 ENTRY =={"type":"control"}=> #7 Op[Expr_Assign]@11
+            #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+            #6 Op[Expr_New]@11 =={"type":"data","operand":"expr"}=> #7 Op[Expr_Assign]@11
+Method /foo/bar/baz.php[A::foo]:
+    Entry Node: #0 ENTRY
+    Pdg:
+        Nodes:
+            #0 ENTRY
+Method /foo/bar/baz.php[B::foo]:
+    Entry Node: #0 ENTRY
+    Return Nodes:
+        #8 Op[Terminal_Return]@-1
+    Pdg:
+        Nodes:
+            #0 ENTRY
+            #8 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #8 Op[Terminal_Return]@-1
+Graph:
+    Nodes:
+        #9 Func /foo/bar/baz.php[{main}]
+        #10 Func /foo/bar/baz.php[A::foo]
+        #11 Func /foo/bar/baz.php[B::foo]

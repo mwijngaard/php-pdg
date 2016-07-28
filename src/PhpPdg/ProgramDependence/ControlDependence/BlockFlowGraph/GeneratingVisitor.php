@@ -29,7 +29,9 @@ class GeneratingVisitor extends AbstractVisitor {
 	}
 
 	public function enterFunc(Func $func) {
-		$this->acceptableBlocks->attach($func->cfg);
+		if ($func->cfg !== null) {
+			$this->acceptableBlocks->attach($func->cfg);
+		}
 	}
 
 	public function enterBlock(Block $block, Block $prior = null) {
