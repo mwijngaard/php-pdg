@@ -14,10 +14,10 @@ class OpNode extends AbstractNode {
 	}
 
 	public function toString() {
-		return sprintf('Op %s @ %s line %s', str_replace("PHPCfg\\Op\\", '', get_class($this->op)), $this->op->getFile(), $this->op->getLine()) ;
+		return sprintf('Op[%s]@%d', $this->op->getType(), $this->op->getLine());
 	}
 
 	public function getHash() {
-		return 'OP(' . spl_object_hash($this->op) . ')';
+		return sprintf('OP[%s]@%d(%s)', $this->op->getType(), $this->op->getLine(), spl_object_hash($this->op));
 	}
 }
