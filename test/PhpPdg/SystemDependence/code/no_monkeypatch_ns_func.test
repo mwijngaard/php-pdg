@@ -9,26 +9,32 @@ namespace Foo {
 Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #1 Op Terminal\Return_ @ unknown line -1
+        #1 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #2 Op Stmt\Function_ @ /foo/bar/baz.php line 4
-            #3 Op Expr\NsFuncCall @ /foo/bar/baz.php line 6
-            #1 Op Terminal\Return_ @ unknown line -1
+            #2 Op[Stmt_Function]@4
+            #3 Op[Expr_NsFuncCall]@6
+            #1 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #2 Op[Stmt_Function]@4
+            #0 ENTRY =={"type":"control"}=> #3 Op[Expr_NsFuncCall]@6
+            #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
 Function /foo/bar/baz.php[Foo\strrev]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #4 Op Terminal\Return_ @ unknown line -1
+        #4 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #4 Op Terminal\Return_ @ unknown line -1
+            #4 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #4 Op[Terminal_Return]@-1
 Graph:
     Nodes:
         #5 Func /foo/bar/baz.php[{main}]
         #6 Func /foo/bar/baz.php[Foo\strrev]
-        #3 Op Expr\NsFuncCall @ /foo/bar/baz.php line 6
+        #3 Op[Expr_NsFuncCall]@6
     Edges:
-        #5 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #3 Op Expr\NsFuncCall @ /foo/bar/baz.php line 6
-        #3 Op Expr\NsFuncCall @ /foo/bar/baz.php line 6 =={"type":"call"}=> #6 Func /foo/bar/baz.php[Foo\strrev]
+        #5 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #3 Op[Expr_NsFuncCall]@6
+        #3 Op[Expr_NsFuncCall]@6 =={"type":"call"}=> #6 Func /foo/bar/baz.php[Foo\strrev]

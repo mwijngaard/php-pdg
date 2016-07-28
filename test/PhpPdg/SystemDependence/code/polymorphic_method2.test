@@ -18,55 +18,68 @@ $b->foo();
 Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #1 Op Terminal\Return_ @ unknown line -1
+        #1 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #2 Op Stmt\Class_ @ /foo/bar/baz.php line 3
-            #3 Op Stmt\ClassMethod @ /foo/bar/baz.php line 4
-            #4 Op Stmt\Class_ @ /foo/bar/baz.php line 7
-            #5 Op Stmt\ClassMethod @ /foo/bar/baz.php line 8
-            #6 Op Stmt\Class_ @ /foo/bar/baz.php line 11
-            #7 Op Stmt\ClassMethod @ /foo/bar/baz.php line 12
-            #8 Op Expr\New_ @ /foo/bar/baz.php line 15
-            #9 Op Expr\Assign @ /foo/bar/baz.php line 15
-            #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16
-            #1 Op Terminal\Return_ @ unknown line -1
+            #2 Op[Stmt_Class]@3
+            #3 Op[Stmt_ClassMethod]@4
+            #4 Op[Stmt_Class]@7
+            #5 Op[Stmt_ClassMethod]@8
+            #6 Op[Stmt_Class]@11
+            #7 Op[Stmt_ClassMethod]@12
+            #8 Op[Expr_New]@15
+            #9 Op[Expr_Assign]@15
+            #10 Op[Expr_MethodCall]@16
+            #1 Op[Terminal_Return]@-1
         Edges:
-            #8 Op Expr\New_ @ /foo/bar/baz.php line 15 =={"type":"data","operand":"expr"}=> #9 Op Expr\Assign @ /foo/bar/baz.php line 15
-            #9 Op Expr\Assign @ /foo/bar/baz.php line 15 =={"type":"data","operand":"var"}=> #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16
+            #0 ENTRY =={"type":"control"}=> #2 Op[Stmt_Class]@3
+            #0 ENTRY =={"type":"control"}=> #4 Op[Stmt_Class]@7
+            #0 ENTRY =={"type":"control"}=> #6 Op[Stmt_Class]@11
+            #0 ENTRY =={"type":"control"}=> #8 Op[Expr_New]@15
+            #0 ENTRY =={"type":"control"}=> #9 Op[Expr_Assign]@15
+            #0 ENTRY =={"type":"control"}=> #10 Op[Expr_MethodCall]@16
+            #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+            #8 Op[Expr_New]@15 =={"type":"data","operand":"expr"}=> #9 Op[Expr_Assign]@15
+            #9 Op[Expr_Assign]@15 =={"type":"data","operand":"var"}=> #10 Op[Expr_MethodCall]@16
 Method /foo/bar/baz.php[A::foo]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #11 Op Terminal\Return_ @ unknown line -1
+        #11 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #11 Op Terminal\Return_ @ unknown line -1
+            #11 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #11 Op[Terminal_Return]@-1
 Method /foo/bar/baz.php[B::foo]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #12 Op Terminal\Return_ @ unknown line -1
+        #12 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #12 Op Terminal\Return_ @ unknown line -1
+            #12 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #12 Op[Terminal_Return]@-1
 Method /foo/bar/baz.php[C::foo]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #13 Op Terminal\Return_ @ unknown line -1
+        #13 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #13 Op Terminal\Return_ @ unknown line -1
+            #13 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #13 Op[Terminal_Return]@-1
 Graph:
     Nodes:
         #14 Func /foo/bar/baz.php[{main}]
         #15 Func /foo/bar/baz.php[A::foo]
         #16 Func /foo/bar/baz.php[B::foo]
         #17 Func /foo/bar/baz.php[C::foo]
-        #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16
+        #10 Op[Expr_MethodCall]@16
     Edges:
-        #14 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16
-        #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16 =={"type":"call"}=> #16 Func /foo/bar/baz.php[B::foo]
-        #10 Op Expr\MethodCall @ /foo/bar/baz.php line 16 =={"type":"call"}=> #17 Func /foo/bar/baz.php[C::foo]
+        #14 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op[Expr_MethodCall]@16
+        #10 Op[Expr_MethodCall]@16 =={"type":"call"}=> #16 Func /foo/bar/baz.php[B::foo]
+        #10 Op[Expr_MethodCall]@16 =={"type":"call"}=> #17 Func /foo/bar/baz.php[C::foo]

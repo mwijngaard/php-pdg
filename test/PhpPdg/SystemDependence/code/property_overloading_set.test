@@ -13,62 +13,78 @@ $a->quux++;
 Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #1 Op Terminal\Return_ @ unknown line -1
+        #1 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #2 Op Stmt\Class_ @ /foo/bar/baz.php line 3
-            #3 Op Stmt\Property @ /foo/bar/baz.php line 4
-            #4 Op Stmt\ClassMethod @ /foo/bar/baz.php line 5
-            #5 Op Expr\New_ @ /foo/bar/baz.php line 7
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7
-            #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 8
-            #8 Op Expr\Assign @ /foo/bar/baz.php line 8
-            #9 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
-            #10 Op Expr\Assign @ /foo/bar/baz.php line 9
-            #11 Op Expr\PropertyFetch @ /foo/bar/baz.php line 10
-            #12 Op Expr\BinaryOp\BitwiseAnd @ /foo/bar/baz.php line 10
-            #13 Op Expr\Assign @ /foo/bar/baz.php line 10
-            #14 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11
-            #15 Op Expr\BinaryOp\Plus @ /foo/bar/baz.php line 11
-            #16 Op Expr\Assign @ /foo/bar/baz.php line 11
-            #1 Op Terminal\Return_ @ unknown line -1
+            #2 Op[Stmt_Class]@3
+            #3 Op[Stmt_Property]@4
+            #4 Op[Stmt_ClassMethod]@5
+            #5 Op[Expr_New]@7
+            #6 Op[Expr_Assign]@7
+            #7 Op[Expr_PropertyFetch]@8
+            #8 Op[Expr_Assign]@8
+            #9 Op[Expr_PropertyFetch]@9
+            #10 Op[Expr_Assign]@9
+            #11 Op[Expr_PropertyFetch]@10
+            #12 Op[Expr_BinaryOp_BitwiseAnd]@10
+            #13 Op[Expr_Assign]@10
+            #14 Op[Expr_PropertyFetch]@11
+            #15 Op[Expr_BinaryOp_Plus]@11
+            #16 Op[Expr_Assign]@11
+            #1 Op[Terminal_Return]@-1
         Edges:
-            #5 Op Expr\New_ @ /foo/bar/baz.php line 7 =={"type":"data","operand":"expr"}=> #6 Op Expr\Assign @ /foo/bar/baz.php line 7
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 8
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #9 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #11 Op Expr\PropertyFetch @ /foo/bar/baz.php line 10
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #14 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11
-            #11 Op Expr\PropertyFetch @ /foo/bar/baz.php line 10 =={"type":"data","operand":"left"}=> #12 Op Expr\BinaryOp\BitwiseAnd @ /foo/bar/baz.php line 10
-            #13 Op Expr\Assign @ /foo/bar/baz.php line 10 =={"type":"data","operand":"left"}=> #12 Op Expr\BinaryOp\BitwiseAnd @ /foo/bar/baz.php line 10
-            #12 Op Expr\BinaryOp\BitwiseAnd @ /foo/bar/baz.php line 10 =={"type":"data","operand":"expr"}=> #13 Op Expr\Assign @ /foo/bar/baz.php line 10
-            #14 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11 =={"type":"data","operand":"left"}=> #15 Op Expr\BinaryOp\Plus @ /foo/bar/baz.php line 11
-            #16 Op Expr\Assign @ /foo/bar/baz.php line 11 =={"type":"data","operand":"left"}=> #15 Op Expr\BinaryOp\Plus @ /foo/bar/baz.php line 11
-            #15 Op Expr\BinaryOp\Plus @ /foo/bar/baz.php line 11 =={"type":"data","operand":"expr"}=> #16 Op Expr\Assign @ /foo/bar/baz.php line 11
+            #0 ENTRY =={"type":"control"}=> #2 Op[Stmt_Class]@3
+            #0 ENTRY =={"type":"control"}=> #5 Op[Expr_New]@7
+            #0 ENTRY =={"type":"control"}=> #6 Op[Expr_Assign]@7
+            #0 ENTRY =={"type":"control"}=> #7 Op[Expr_PropertyFetch]@8
+            #0 ENTRY =={"type":"control"}=> #8 Op[Expr_Assign]@8
+            #0 ENTRY =={"type":"control"}=> #9 Op[Expr_PropertyFetch]@9
+            #0 ENTRY =={"type":"control"}=> #10 Op[Expr_Assign]@9
+            #0 ENTRY =={"type":"control"}=> #11 Op[Expr_PropertyFetch]@10
+            #0 ENTRY =={"type":"control"}=> #12 Op[Expr_BinaryOp_BitwiseAnd]@10
+            #0 ENTRY =={"type":"control"}=> #13 Op[Expr_Assign]@10
+            #0 ENTRY =={"type":"control"}=> #14 Op[Expr_PropertyFetch]@11
+            #0 ENTRY =={"type":"control"}=> #15 Op[Expr_BinaryOp_Plus]@11
+            #0 ENTRY =={"type":"control"}=> #16 Op[Expr_Assign]@11
+            #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+            #5 Op[Expr_New]@7 =={"type":"data","operand":"expr"}=> #6 Op[Expr_Assign]@7
+            #6 Op[Expr_Assign]@7 =={"type":"data","operand":"var"}=> #7 Op[Expr_PropertyFetch]@8
+            #6 Op[Expr_Assign]@7 =={"type":"data","operand":"var"}=> #9 Op[Expr_PropertyFetch]@9
+            #6 Op[Expr_Assign]@7 =={"type":"data","operand":"var"}=> #11 Op[Expr_PropertyFetch]@10
+            #6 Op[Expr_Assign]@7 =={"type":"data","operand":"var"}=> #14 Op[Expr_PropertyFetch]@11
+            #11 Op[Expr_PropertyFetch]@10 =={"type":"data","operand":"left"}=> #12 Op[Expr_BinaryOp_BitwiseAnd]@10
+            #13 Op[Expr_Assign]@10 =={"type":"data","operand":"left"}=> #12 Op[Expr_BinaryOp_BitwiseAnd]@10
+            #12 Op[Expr_BinaryOp_BitwiseAnd]@10 =={"type":"data","operand":"expr"}=> #13 Op[Expr_Assign]@10
+            #14 Op[Expr_PropertyFetch]@11 =={"type":"data","operand":"left"}=> #15 Op[Expr_BinaryOp_Plus]@11
+            #16 Op[Expr_Assign]@11 =={"type":"data","operand":"left"}=> #15 Op[Expr_BinaryOp_Plus]@11
+            #15 Op[Expr_BinaryOp_Plus]@11 =={"type":"data","operand":"expr"}=> #16 Op[Expr_Assign]@11
 Method /foo/bar/baz.php[A::__set]:
     Entry Node: #0 ENTRY
     Param Nodes:
-        #17 Op Expr\Param @ /foo/bar/baz.php line 5
-        #18 Op Expr\Param @ /foo/bar/baz.php line 5
+        #17 Op[Expr_Param]@5
+        #18 Op[Expr_Param]@5
     Return Nodes:
-        #19 Op Terminal\Return_ @ unknown line -1
+        #19 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #17 Op Expr\Param @ /foo/bar/baz.php line 5
-            #18 Op Expr\Param @ /foo/bar/baz.php line 5
-            #19 Op Terminal\Return_ @ unknown line -1
+            #17 Op[Expr_Param]@5
+            #18 Op[Expr_Param]@5
+            #19 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #19 Op[Terminal_Return]@-1
 Graph:
     Nodes:
         #20 Func /foo/bar/baz.php[{main}]
         #21 Func /foo/bar/baz.php[A::__set]
-        #10 Op Expr\Assign @ /foo/bar/baz.php line 9
-        #13 Op Expr\Assign @ /foo/bar/baz.php line 10
-        #16 Op Expr\Assign @ /foo/bar/baz.php line 11
+        #10 Op[Expr_Assign]@9
+        #13 Op[Expr_Assign]@10
+        #16 Op[Expr_Assign]@11
     Edges:
-        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op Expr\Assign @ /foo/bar/baz.php line 9
-        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #13 Op Expr\Assign @ /foo/bar/baz.php line 10
-        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #16 Op Expr\Assign @ /foo/bar/baz.php line 11
-        #10 Op Expr\Assign @ /foo/bar/baz.php line 9 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]
-        #13 Op Expr\Assign @ /foo/bar/baz.php line 10 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]
-        #16 Op Expr\Assign @ /foo/bar/baz.php line 11 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]
+        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op[Expr_Assign]@9
+        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #13 Op[Expr_Assign]@10
+        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #16 Op[Expr_Assign]@11
+        #10 Op[Expr_Assign]@9 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]
+        #13 Op[Expr_Assign]@10 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]
+        #16 Op[Expr_Assign]@11 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]

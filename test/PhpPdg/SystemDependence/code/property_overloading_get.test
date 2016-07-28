@@ -11,38 +11,46 @@ $a->bar;
 Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #1 Op Terminal\Return_ @ unknown line -1
+        #1 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #2 Op Stmt\Class_ @ /foo/bar/baz.php line 3
-            #3 Op Stmt\Property @ /foo/bar/baz.php line 4
-            #4 Op Stmt\ClassMethod @ /foo/bar/baz.php line 5
-            #5 Op Expr\New_ @ /foo/bar/baz.php line 7
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7
-            #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 8
-            #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
-            #1 Op Terminal\Return_ @ unknown line -1
+            #2 Op[Stmt_Class]@3
+            #3 Op[Stmt_Property]@4
+            #4 Op[Stmt_ClassMethod]@5
+            #5 Op[Expr_New]@7
+            #6 Op[Expr_Assign]@7
+            #7 Op[Expr_PropertyFetch]@8
+            #8 Op[Expr_PropertyFetch]@9
+            #1 Op[Terminal_Return]@-1
         Edges:
-            #5 Op Expr\New_ @ /foo/bar/baz.php line 7 =={"type":"data","operand":"expr"}=> #6 Op Expr\Assign @ /foo/bar/baz.php line 7
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 8
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
+            #0 ENTRY =={"type":"control"}=> #2 Op[Stmt_Class]@3
+            #0 ENTRY =={"type":"control"}=> #5 Op[Expr_New]@7
+            #0 ENTRY =={"type":"control"}=> #6 Op[Expr_Assign]@7
+            #0 ENTRY =={"type":"control"}=> #7 Op[Expr_PropertyFetch]@8
+            #0 ENTRY =={"type":"control"}=> #8 Op[Expr_PropertyFetch]@9
+            #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+            #5 Op[Expr_New]@7 =={"type":"data","operand":"expr"}=> #6 Op[Expr_Assign]@7
+            #6 Op[Expr_Assign]@7 =={"type":"data","operand":"var"}=> #7 Op[Expr_PropertyFetch]@8
+            #6 Op[Expr_Assign]@7 =={"type":"data","operand":"var"}=> #8 Op[Expr_PropertyFetch]@9
 Method /foo/bar/baz.php[A::__get]:
     Entry Node: #0 ENTRY
     Param Nodes:
-        #9 Op Expr\Param @ /foo/bar/baz.php line 5
+        #9 Op[Expr_Param]@5
     Return Nodes:
-        #10 Op Terminal\Return_ @ unknown line -1
+        #10 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #9 Op Expr\Param @ /foo/bar/baz.php line 5
-            #10 Op Terminal\Return_ @ unknown line -1
+            #9 Op[Expr_Param]@5
+            #10 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #10 Op[Terminal_Return]@-1
 Graph:
     Nodes:
         #11 Func /foo/bar/baz.php[{main}]
         #12 Func /foo/bar/baz.php[A::__get]
-        #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
+        #8 Op[Expr_PropertyFetch]@9
     Edges:
-        #11 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
-        #8 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9 =={"type":"call"}=> #12 Func /foo/bar/baz.php[A::__get]
+        #11 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #8 Op[Expr_PropertyFetch]@9
+        #8 Op[Expr_PropertyFetch]@9 =={"type":"call"}=> #12 Func /foo/bar/baz.php[A::__get]

@@ -19,49 +19,58 @@ echo $b;
 -----
 Entry Node: #0 ENTRY
 Return Nodes:
-    #1 Op Terminal\Return_ @ unknown line -1
+    #1 Op[Terminal_Return]@-1
 Pdg:
     Nodes:
         #0 ENTRY
-        #2 Op Expr\Assign @ foo.php line 3
-        #3 Op Expr\Assign @ foo.php line 4
-        #4 Op Expr\Assign @ foo.php line 5
-        #5 Op Stmt\JumpIf @ foo.php line 6
-        #6 Op Expr\Assign @ foo.php line 7
-        #7 Op Expr\Assign @ foo.php line 8
-        #8 Op Expr\Eval_ @ foo.php line 9
-        #9 Op Terminal\Echo_ @ foo.php line 10
-        #10 Op Terminal\Echo_ @ foo.php line 11
-        #11 Op Expr\Assign @ foo.php line 12
-        #12 Op Stmt\Jump @ foo.php line 6
-        #13 Op Terminal\Echo_ @ foo.php line 14
-        #14 Op Terminal\Echo_ @ foo.php line 15
-        #15 Op Terminal\Echo_ @ foo.php line 16
-        #16 Op Terminal\Echo_ @ foo.php line 17
-        #1 Op Terminal\Return_ @ unknown line -1
-        #17 Op Stmt\Jump @ foo.php line 6
+        #2 Op[Expr_Assign]@3
+        #3 Op[Expr_Assign]@4
+        #4 Op[Expr_Assign]@5
+        #5 Op[Stmt_JumpIf]@6
+        #6 Op[Expr_Assign]@7
+        #7 Op[Expr_Assign]@8
+        #8 Op[Expr_Eval]@9
+        #9 Op[Terminal_Echo]@10
+        #10 Op[Terminal_Echo]@11
+        #11 Op[Expr_Assign]@12
+        #12 Op[Stmt_Jump]@6
+        #13 Op[Terminal_Echo]@14
+        #14 Op[Terminal_Echo]@15
+        #15 Op[Terminal_Echo]@16
+        #16 Op[Terminal_Echo]@17
+        #1 Op[Terminal_Return]@-1
+        #17 Op[Stmt_Jump]@6
     Edges:
-        #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #6 Op Expr\Assign @ foo.php line 7
-        #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #7 Op Expr\Assign @ foo.php line 8
-        #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #8 Op Expr\Eval_ @ foo.php line 9
-        #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #9 Op Terminal\Echo_ @ foo.php line 10
-        #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #10 Op Terminal\Echo_ @ foo.php line 11
-        #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #11 Op Expr\Assign @ foo.php line 12
-        #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #12 Op Stmt\Jump @ foo.php line 6
-        #5 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":false}=> #17 Op Stmt\Jump @ foo.php line 6
-        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data","operand":"expr"}=> #9 Op Terminal\Echo_ @ foo.php line 10
-        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data","operand":"expr"}=> #13 Op Terminal\Echo_ @ foo.php line 14
-        #3 Op Expr\Assign @ foo.php line 4 =={"type":"data","operand":"expr"}=> #14 Op Terminal\Echo_ @ foo.php line 15
-        #3 Op Expr\Assign @ foo.php line 4 =={"type":"maybe data"}=> #8 Op Expr\Eval_ @ foo.php line 9
-        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data","operand":"expr"}=> #10 Op Terminal\Echo_ @ foo.php line 11
-        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data","operand":"expr"}=> #15 Op Terminal\Echo_ @ foo.php line 16
-        #7 Op Expr\Assign @ foo.php line 8 =={"type":"data","operand":"expr"}=> #16 Op Terminal\Echo_ @ foo.php line 17
-        #7 Op Expr\Assign @ foo.php line 8 =={"type":"maybe data"}=> #8 Op Expr\Eval_ @ foo.php line 9
-        #11 Op Expr\Assign @ foo.php line 12 =={"type":"data","operand":"expr"}=> #13 Op Terminal\Echo_ @ foo.php line 14
-        #11 Op Expr\Assign @ foo.php line 12 =={"type":"data","operand":"expr"}=> #14 Op Terminal\Echo_ @ foo.php line 15
-        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data","operand":"expr"}=> #15 Op Terminal\Echo_ @ foo.php line 16
-        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data","operand":"expr"}=> #16 Op Terminal\Echo_ @ foo.php line 17
-        #8 Op Expr\Eval_ @ foo.php line 9 =={"type":"maybe data"}=> #9 Op Terminal\Echo_ @ foo.php line 10
-        #8 Op Expr\Eval_ @ foo.php line 9 =={"type":"maybe data"}=> #10 Op Terminal\Echo_ @ foo.php line 11
-        #8 Op Expr\Eval_ @ foo.php line 9 =={"type":"maybe data"}=> #15 Op Terminal\Echo_ @ foo.php line 16
-        #8 Op Expr\Eval_ @ foo.php line 9 =={"type":"maybe data"}=> #16 Op Terminal\Echo_ @ foo.php line 17
+        #0 ENTRY =={"type":"control"}=> #2 Op[Expr_Assign]@3
+        #0 ENTRY =={"type":"control"}=> #3 Op[Expr_Assign]@4
+        #0 ENTRY =={"type":"control"}=> #4 Op[Expr_Assign]@5
+        #0 ENTRY =={"type":"control"}=> #5 Op[Stmt_JumpIf]@6
+        #0 ENTRY =={"type":"control"}=> #13 Op[Terminal_Echo]@14
+        #0 ENTRY =={"type":"control"}=> #14 Op[Terminal_Echo]@15
+        #0 ENTRY =={"type":"control"}=> #15 Op[Terminal_Echo]@16
+        #0 ENTRY =={"type":"control"}=> #16 Op[Terminal_Echo]@17
+        #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+        #5 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #6 Op[Expr_Assign]@7
+        #5 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #7 Op[Expr_Assign]@8
+        #5 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #8 Op[Expr_Eval]@9
+        #5 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #9 Op[Terminal_Echo]@10
+        #5 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #10 Op[Terminal_Echo]@11
+        #5 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #11 Op[Expr_Assign]@12
+        #5 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #12 Op[Stmt_Jump]@6
+        #5 Op[Stmt_JumpIf]@6 =={"case":false,"type":"control"}=> #17 Op[Stmt_Jump]@6
+        #3 Op[Expr_Assign]@4 =={"type":"data","operand":"expr"}=> #9 Op[Terminal_Echo]@10
+        #3 Op[Expr_Assign]@4 =={"type":"data","operand":"expr"}=> #13 Op[Terminal_Echo]@14
+        #3 Op[Expr_Assign]@4 =={"type":"data","operand":"expr"}=> #14 Op[Terminal_Echo]@15
+        #3 Op[Expr_Assign]@4 =={"type":"maybe data"}=> #8 Op[Expr_Eval]@9
+        #7 Op[Expr_Assign]@8 =={"type":"data","operand":"expr"}=> #10 Op[Terminal_Echo]@11
+        #7 Op[Expr_Assign]@8 =={"type":"data","operand":"expr"}=> #15 Op[Terminal_Echo]@16
+        #7 Op[Expr_Assign]@8 =={"type":"data","operand":"expr"}=> #16 Op[Terminal_Echo]@17
+        #7 Op[Expr_Assign]@8 =={"type":"maybe data"}=> #8 Op[Expr_Eval]@9
+        #11 Op[Expr_Assign]@12 =={"type":"data","operand":"expr"}=> #13 Op[Terminal_Echo]@14
+        #11 Op[Expr_Assign]@12 =={"type":"data","operand":"expr"}=> #14 Op[Terminal_Echo]@15
+        #4 Op[Expr_Assign]@5 =={"type":"data","operand":"expr"}=> #15 Op[Terminal_Echo]@16
+        #4 Op[Expr_Assign]@5 =={"type":"data","operand":"expr"}=> #16 Op[Terminal_Echo]@17
+        #8 Op[Expr_Eval]@9 =={"type":"maybe data"}=> #9 Op[Terminal_Echo]@10
+        #8 Op[Expr_Eval]@9 =={"type":"maybe data"}=> #10 Op[Terminal_Echo]@11
+        #8 Op[Expr_Eval]@9 =={"type":"maybe data"}=> #15 Op[Terminal_Echo]@16
+        #8 Op[Expr_Eval]@9 =={"type":"maybe data"}=> #16 Op[Terminal_Echo]@17

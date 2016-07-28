@@ -15,55 +15,70 @@ isset($b);
 Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #1 Op Terminal\Return_ @ unknown line -1
+        #1 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #2 Op Stmt\Class_ @ /foo/bar/baz.php line 3
-            #3 Op Stmt\Property @ /foo/bar/baz.php line 4
-            #4 Op Stmt\ClassMethod @ /foo/bar/baz.php line 5
-            #5 Op Expr\New_ @ /foo/bar/baz.php line 8
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 8
-            #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
-            #8 Op Expr\Isset_ @ /foo/bar/baz.php line 9
-            #9 Op Expr\PropertyFetch @ /foo/bar/baz.php line 10
-            #10 Op Expr\Isset_ @ /foo/bar/baz.php line 10
-            #11 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11
-            #12 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11
-            #13 Op Expr\Isset_ @ /foo/bar/baz.php line 11
-            #14 Op Expr\Assign @ /foo/bar/baz.php line 12
-            #15 Op Expr\Isset_ @ /foo/bar/baz.php line 13
-            #1 Op Terminal\Return_ @ unknown line -1
+            #2 Op[Stmt_Class]@3
+            #3 Op[Stmt_Property]@4
+            #4 Op[Stmt_ClassMethod]@5
+            #5 Op[Expr_New]@8
+            #6 Op[Expr_Assign]@8
+            #7 Op[Expr_PropertyFetch]@9
+            #8 Op[Expr_Isset]@9
+            #9 Op[Expr_PropertyFetch]@10
+            #10 Op[Expr_Isset]@10
+            #11 Op[Expr_PropertyFetch]@11
+            #12 Op[Expr_PropertyFetch]@11
+            #13 Op[Expr_Isset]@11
+            #14 Op[Expr_Assign]@12
+            #15 Op[Expr_Isset]@13
+            #1 Op[Terminal_Return]@-1
         Edges:
-            #5 Op Expr\New_ @ /foo/bar/baz.php line 8 =={"type":"data","operand":"expr"}=> #6 Op Expr\Assign @ /foo/bar/baz.php line 8
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 8 =={"type":"data","operand":"var"}=> #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 8 =={"type":"data","operand":"var"}=> #9 Op Expr\PropertyFetch @ /foo/bar/baz.php line 10
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 8 =={"type":"data","operand":"var"}=> #11 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11
-            #6 Op Expr\Assign @ /foo/bar/baz.php line 8 =={"type":"data","operand":"var"}=> #12 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11
-            #7 Op Expr\PropertyFetch @ /foo/bar/baz.php line 9 =={"type":"data","operand":"vars:0"}=> #8 Op Expr\Isset_ @ /foo/bar/baz.php line 9
-            #9 Op Expr\PropertyFetch @ /foo/bar/baz.php line 10 =={"type":"data","operand":"vars:0"}=> #10 Op Expr\Isset_ @ /foo/bar/baz.php line 10
-            #11 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11 =={"type":"data","operand":"vars:0"}=> #13 Op Expr\Isset_ @ /foo/bar/baz.php line 11
-            #12 Op Expr\PropertyFetch @ /foo/bar/baz.php line 11 =={"type":"data","operand":"vars:1"}=> #13 Op Expr\Isset_ @ /foo/bar/baz.php line 11
-            #14 Op Expr\Assign @ /foo/bar/baz.php line 12 =={"type":"data","operand":"vars:0"}=> #15 Op Expr\Isset_ @ /foo/bar/baz.php line 13
+            #0 ENTRY =={"type":"control"}=> #2 Op[Stmt_Class]@3
+            #0 ENTRY =={"type":"control"}=> #5 Op[Expr_New]@8
+            #0 ENTRY =={"type":"control"}=> #6 Op[Expr_Assign]@8
+            #0 ENTRY =={"type":"control"}=> #7 Op[Expr_PropertyFetch]@9
+            #0 ENTRY =={"type":"control"}=> #8 Op[Expr_Isset]@9
+            #0 ENTRY =={"type":"control"}=> #9 Op[Expr_PropertyFetch]@10
+            #0 ENTRY =={"type":"control"}=> #10 Op[Expr_Isset]@10
+            #0 ENTRY =={"type":"control"}=> #11 Op[Expr_PropertyFetch]@11
+            #0 ENTRY =={"type":"control"}=> #12 Op[Expr_PropertyFetch]@11
+            #0 ENTRY =={"type":"control"}=> #13 Op[Expr_Isset]@11
+            #0 ENTRY =={"type":"control"}=> #14 Op[Expr_Assign]@12
+            #0 ENTRY =={"type":"control"}=> #15 Op[Expr_Isset]@13
+            #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+            #5 Op[Expr_New]@8 =={"type":"data","operand":"expr"}=> #6 Op[Expr_Assign]@8
+            #6 Op[Expr_Assign]@8 =={"type":"data","operand":"var"}=> #7 Op[Expr_PropertyFetch]@9
+            #6 Op[Expr_Assign]@8 =={"type":"data","operand":"var"}=> #9 Op[Expr_PropertyFetch]@10
+            #6 Op[Expr_Assign]@8 =={"type":"data","operand":"var"}=> #11 Op[Expr_PropertyFetch]@11
+            #6 Op[Expr_Assign]@8 =={"type":"data","operand":"var"}=> #12 Op[Expr_PropertyFetch]@11
+            #7 Op[Expr_PropertyFetch]@9 =={"type":"data","operand":"vars:0"}=> #8 Op[Expr_Isset]@9
+            #9 Op[Expr_PropertyFetch]@10 =={"type":"data","operand":"vars:0"}=> #10 Op[Expr_Isset]@10
+            #11 Op[Expr_PropertyFetch]@11 =={"type":"data","operand":"vars:0"}=> #13 Op[Expr_Isset]@11
+            #12 Op[Expr_PropertyFetch]@11 =={"type":"data","operand":"vars:1"}=> #13 Op[Expr_Isset]@11
+            #14 Op[Expr_Assign]@12 =={"type":"data","operand":"vars:0"}=> #15 Op[Expr_Isset]@13
 Method /foo/bar/baz.php[A::__isset]:
     Entry Node: #0 ENTRY
     Param Nodes:
-        #16 Op Expr\Param @ /foo/bar/baz.php line 5
+        #16 Op[Expr_Param]@5
     Return Nodes:
-        #17 Op Terminal\Return_ @ unknown line -1
+        #17 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #16 Op Expr\Param @ /foo/bar/baz.php line 5
-            #17 Op Terminal\Return_ @ unknown line -1
+            #16 Op[Expr_Param]@5
+            #17 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #17 Op[Terminal_Return]@-1
 Graph:
     Nodes:
         #18 Func /foo/bar/baz.php[{main}]
         #19 Func /foo/bar/baz.php[A::__isset]
-        #10 Op Expr\Isset_ @ /foo/bar/baz.php line 10
-        #13 Op Expr\Isset_ @ /foo/bar/baz.php line 11
+        #10 Op[Expr_Isset]@10
+        #13 Op[Expr_Isset]@11
     Edges:
-        #18 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op Expr\Isset_ @ /foo/bar/baz.php line 10
-        #18 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #13 Op Expr\Isset_ @ /foo/bar/baz.php line 11
-        #10 Op Expr\Isset_ @ /foo/bar/baz.php line 10 =={"type":"call"}=> #19 Func /foo/bar/baz.php[A::__isset]
-        #13 Op Expr\Isset_ @ /foo/bar/baz.php line 11 =={"type":"call"}=> #19 Func /foo/bar/baz.php[A::__isset]
+        #18 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op[Expr_Isset]@10
+        #18 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #13 Op[Expr_Isset]@11
+        #10 Op[Expr_Isset]@10 =={"type":"call"}=> #19 Func /foo/bar/baz.php[A::__isset]
+        #13 Op[Expr_Isset]@11 =={"type":"call"}=> #19 Func /foo/bar/baz.php[A::__isset]

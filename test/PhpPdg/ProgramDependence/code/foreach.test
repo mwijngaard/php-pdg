@@ -6,33 +6,40 @@ foreach ([1,2] as $a) {
 -----
 Entry Node: #0 ENTRY
 Return Nodes:
-    #1 Op Terminal\Return_ @ unknown line -1
+    #1 Op[Terminal_Return]@-1
 Pdg:
     Nodes:
         #0 ENTRY
-        #2 Op Expr\Array_ @ foo.php line 3
-        #3 Op Iterator\Reset @ foo.php line 3
-        #4 Op Stmt\Jump @ foo.php line 3
-        #5 Op Iterator\Valid @ foo.php line 3
-        #6 Op Stmt\JumpIf @ foo.php line 3
-        #7 Op Iterator\Value @ foo.php line 3
-        #8 Op Expr\Assign @ foo.php line 3
-        #9 Op Terminal\Echo_ @ foo.php line 4
-        #10 Op Stmt\Jump @ foo.php line -1
-        #11 Op Stmt\Jump @ foo.php line 3
-        #12 Op Stmt\Jump @ foo.php line -1
-        #1 Op Terminal\Return_ @ unknown line -1
+        #2 Op[Expr_Array]@3
+        #3 Op[Iterator_Reset]@3
+        #4 Op[Stmt_Jump]@3
+        #5 Op[Iterator_Valid]@3
+        #6 Op[Stmt_JumpIf]@3
+        #7 Op[Iterator_Value]@3
+        #8 Op[Expr_Assign]@3
+        #9 Op[Terminal_Echo]@4
+        #10 Op[Stmt_Jump]@-1
+        #11 Op[Stmt_Jump]@3
+        #12 Op[Stmt_Jump]@-1
+        #1 Op[Terminal_Return]@-1
     Edges:
-        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #5 Op Iterator\Valid @ foo.php line 3
-        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #6 Op Stmt\JumpIf @ foo.php line 3
-        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #7 Op Iterator\Value @ foo.php line 3
-        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #8 Op Expr\Assign @ foo.php line 3
-        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #9 Op Terminal\Echo_ @ foo.php line 4
-        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #10 Op Stmt\Jump @ foo.php line -1
-        #6 Op Stmt\JumpIf @ foo.php line 3 =={"type":"control","case":true}=> #11 Op Stmt\Jump @ foo.php line 3
-        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data","operand":"var"}=> #3 Op Iterator\Reset @ foo.php line 3
-        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data","operand":"var"}=> #5 Op Iterator\Valid @ foo.php line 3
-        #2 Op Expr\Array_ @ foo.php line 3 =={"type":"data","operand":"var"}=> #7 Op Iterator\Value @ foo.php line 3
-        #5 Op Iterator\Valid @ foo.php line 3 =={"type":"data","operand":"cond"}=> #6 Op Stmt\JumpIf @ foo.php line 3
-        #7 Op Iterator\Value @ foo.php line 3 =={"type":"data","operand":"expr"}=> #8 Op Expr\Assign @ foo.php line 3
-        #8 Op Expr\Assign @ foo.php line 3 =={"type":"data","operand":"expr"}=> #9 Op Terminal\Echo_ @ foo.php line 4
+        #0 ENTRY =={"type":"control"}=> #2 Op[Expr_Array]@3
+        #0 ENTRY =={"type":"control"}=> #3 Op[Iterator_Reset]@3
+        #0 ENTRY =={"type":"control"}=> #4 Op[Stmt_Jump]@3
+        #0 ENTRY =={"type":"control"}=> #5 Op[Iterator_Valid]@3
+        #0 ENTRY =={"type":"control"}=> #6 Op[Stmt_JumpIf]@3
+        #0 ENTRY =={"type":"control"}=> #12 Op[Stmt_Jump]@-1
+        #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+        #6 Op[Stmt_JumpIf]@3 =={"case":true,"type":"control"}=> #5 Op[Iterator_Valid]@3
+        #6 Op[Stmt_JumpIf]@3 =={"case":true,"type":"control"}=> #6 Op[Stmt_JumpIf]@3
+        #6 Op[Stmt_JumpIf]@3 =={"case":true,"type":"control"}=> #7 Op[Iterator_Value]@3
+        #6 Op[Stmt_JumpIf]@3 =={"case":true,"type":"control"}=> #8 Op[Expr_Assign]@3
+        #6 Op[Stmt_JumpIf]@3 =={"case":true,"type":"control"}=> #9 Op[Terminal_Echo]@4
+        #6 Op[Stmt_JumpIf]@3 =={"case":true,"type":"control"}=> #10 Op[Stmt_Jump]@-1
+        #6 Op[Stmt_JumpIf]@3 =={"case":true,"type":"control"}=> #11 Op[Stmt_Jump]@3
+        #2 Op[Expr_Array]@3 =={"type":"data","operand":"var"}=> #3 Op[Iterator_Reset]@3
+        #2 Op[Expr_Array]@3 =={"type":"data","operand":"var"}=> #5 Op[Iterator_Valid]@3
+        #2 Op[Expr_Array]@3 =={"type":"data","operand":"var"}=> #7 Op[Iterator_Value]@3
+        #5 Op[Iterator_Valid]@3 =={"type":"data","operand":"cond"}=> #6 Op[Stmt_JumpIf]@3
+        #7 Op[Iterator_Value]@3 =={"type":"data","operand":"expr"}=> #8 Op[Expr_Assign]@3
+        #8 Op[Expr_Assign]@3 =={"type":"data","operand":"expr"}=> #9 Op[Terminal_Echo]@4

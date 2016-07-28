@@ -10,34 +10,41 @@ $a->count();
 Script /foo/bar/baz.php[{main}]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #1 Op Terminal\Return_ @ unknown line -1
+        #1 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #2 Op Stmt\Class_ @ /foo/bar/baz.php line 3
-            #3 Op Stmt\ClassMethod @ /foo/bar/baz.php line 4
-            #4 Op Expr\New_ @ /foo/bar/baz.php line 7
-            #5 Op Expr\Assign @ /foo/bar/baz.php line 7
-            #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8
-            #1 Op Terminal\Return_ @ unknown line -1
+            #2 Op[Stmt_Class]@3
+            #3 Op[Stmt_ClassMethod]@4
+            #4 Op[Expr_New]@7
+            #5 Op[Expr_Assign]@7
+            #6 Op[Expr_MethodCall]@8
+            #1 Op[Terminal_Return]@-1
         Edges:
-            #4 Op Expr\New_ @ /foo/bar/baz.php line 7 =={"type":"data","operand":"expr"}=> #5 Op Expr\Assign @ /foo/bar/baz.php line 7
-            #5 Op Expr\Assign @ /foo/bar/baz.php line 7 =={"type":"data","operand":"var"}=> #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8
+            #0 ENTRY =={"type":"control"}=> #2 Op[Stmt_Class]@3
+            #0 ENTRY =={"type":"control"}=> #4 Op[Expr_New]@7
+            #0 ENTRY =={"type":"control"}=> #5 Op[Expr_Assign]@7
+            #0 ENTRY =={"type":"control"}=> #6 Op[Expr_MethodCall]@8
+            #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+            #4 Op[Expr_New]@7 =={"type":"data","operand":"expr"}=> #5 Op[Expr_Assign]@7
+            #5 Op[Expr_Assign]@7 =={"type":"data","operand":"var"}=> #6 Op[Expr_MethodCall]@8
 Method /foo/bar/baz.php[SplObjectStorage::count]:
     Entry Node: #0 ENTRY
     Return Nodes:
-        #7 Op Terminal\Return_ @ unknown line -1
+        #7 Op[Terminal_Return]@-1
     Pdg:
         Nodes:
             #0 ENTRY
-            #7 Op Terminal\Return_ @ unknown line -1
+            #7 Op[Terminal_Return]@-1
+        Edges:
+            #0 ENTRY =={"type":"control"}=> #7 Op[Terminal_Return]@-1
 Graph:
     Nodes:
         #8 Func /foo/bar/baz.php[{main}]
         #9 Func /foo/bar/baz.php[SplObjectStorage::count]
-        #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8
+        #6 Op[Expr_MethodCall]@8
         #10 Builtin Func count::splobjectstorage
     Edges:
-        #8 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8
-        #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8 =={"type":"call"}=> #9 Func /foo/bar/baz.php[SplObjectStorage::count]
-        #6 Op Expr\MethodCall @ /foo/bar/baz.php line 8 =={"type":"call"}=> #10 Builtin Func count::splobjectstorage
+        #8 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #6 Op[Expr_MethodCall]@8
+        #6 Op[Expr_MethodCall]@8 =={"type":"call"}=> #9 Func /foo/bar/baz.php[SplObjectStorage::count]
+        #6 Op[Expr_MethodCall]@8 =={"type":"call"}=> #10 Builtin Func count::splobjectstorage

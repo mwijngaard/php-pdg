@@ -12,34 +12,38 @@ echo $a;
 -----
 Entry Node: #0 ENTRY
 Return Nodes:
-    #1 Op Terminal\Return_ @ unknown line -1
+    #1 Op[Terminal_Return]@-1
 Pdg:
     Nodes:
         #0 ENTRY
-        #2 Op Expr\Assign @ foo.php line 3
-        #3 Op Stmt\JumpIf @ foo.php line 4
-        #4 Op Expr\Assign @ foo.php line 5
-        #5 Op Stmt\Jump @ foo.php line 4
-        #6 Op Terminal\Echo_ @ foo.php line 11
-        #1 Op Terminal\Return_ @ unknown line -1
-        #7 Op Stmt\JumpIf @ foo.php line 6
-        #8 Op Expr\Assign @ foo.php line 7
-        #9 Op Stmt\Jump @ foo.php line 6
-        #10 Op Stmt\JumpIf @ foo.php line 8
-        #11 Op Expr\Assign @ foo.php line 9
-        #12 Op Stmt\Jump @ foo.php line 8
-        #13 Op Stmt\Jump @ foo.php line 4
+        #2 Op[Expr_Assign]@3
+        #3 Op[Stmt_JumpIf]@4
+        #4 Op[Expr_Assign]@5
+        #5 Op[Stmt_Jump]@4
+        #6 Op[Terminal_Echo]@11
+        #1 Op[Terminal_Return]@-1
+        #7 Op[Stmt_JumpIf]@6
+        #8 Op[Expr_Assign]@7
+        #9 Op[Stmt_Jump]@6
+        #10 Op[Stmt_JumpIf]@8
+        #11 Op[Expr_Assign]@9
+        #12 Op[Stmt_Jump]@8
+        #13 Op[Stmt_Jump]@4
     Edges:
-        #3 Op Stmt\JumpIf @ foo.php line 4 =={"type":"control","case":true}=> #4 Op Expr\Assign @ foo.php line 5
-        #3 Op Stmt\JumpIf @ foo.php line 4 =={"type":"control","case":true}=> #5 Op Stmt\Jump @ foo.php line 4
-        #3 Op Stmt\JumpIf @ foo.php line 4 =={"type":"control","case":false}=> #7 Op Stmt\JumpIf @ foo.php line 6
-        #7 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #8 Op Expr\Assign @ foo.php line 7
-        #7 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":true}=> #9 Op Stmt\Jump @ foo.php line 6
-        #7 Op Stmt\JumpIf @ foo.php line 6 =={"type":"control","case":false}=> #10 Op Stmt\JumpIf @ foo.php line 8
-        #10 Op Stmt\JumpIf @ foo.php line 8 =={"type":"control","case":true}=> #11 Op Expr\Assign @ foo.php line 9
-        #10 Op Stmt\JumpIf @ foo.php line 8 =={"type":"control","case":true}=> #12 Op Stmt\Jump @ foo.php line 8
-        #10 Op Stmt\JumpIf @ foo.php line 8 =={"type":"control","case":false}=> #13 Op Stmt\Jump @ foo.php line 4
-        #4 Op Expr\Assign @ foo.php line 5 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 11
-        #8 Op Expr\Assign @ foo.php line 7 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 11
-        #11 Op Expr\Assign @ foo.php line 9 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 11
-        #2 Op Expr\Assign @ foo.php line 3 =={"type":"data","operand":"expr"}=> #6 Op Terminal\Echo_ @ foo.php line 11
+        #0 ENTRY =={"type":"control"}=> #2 Op[Expr_Assign]@3
+        #0 ENTRY =={"type":"control"}=> #3 Op[Stmt_JumpIf]@4
+        #0 ENTRY =={"type":"control"}=> #6 Op[Terminal_Echo]@11
+        #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
+        #3 Op[Stmt_JumpIf]@4 =={"case":true,"type":"control"}=> #4 Op[Expr_Assign]@5
+        #3 Op[Stmt_JumpIf]@4 =={"case":true,"type":"control"}=> #5 Op[Stmt_Jump]@4
+        #3 Op[Stmt_JumpIf]@4 =={"case":false,"type":"control"}=> #7 Op[Stmt_JumpIf]@6
+        #7 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #8 Op[Expr_Assign]@7
+        #7 Op[Stmt_JumpIf]@6 =={"case":true,"type":"control"}=> #9 Op[Stmt_Jump]@6
+        #7 Op[Stmt_JumpIf]@6 =={"case":false,"type":"control"}=> #10 Op[Stmt_JumpIf]@8
+        #10 Op[Stmt_JumpIf]@8 =={"case":true,"type":"control"}=> #11 Op[Expr_Assign]@9
+        #10 Op[Stmt_JumpIf]@8 =={"case":true,"type":"control"}=> #12 Op[Stmt_Jump]@8
+        #10 Op[Stmt_JumpIf]@8 =={"case":false,"type":"control"}=> #13 Op[Stmt_Jump]@4
+        #4 Op[Expr_Assign]@5 =={"type":"data","operand":"expr"}=> #6 Op[Terminal_Echo]@11
+        #8 Op[Expr_Assign]@7 =={"type":"data","operand":"expr"}=> #6 Op[Terminal_Echo]@11
+        #11 Op[Expr_Assign]@9 =={"type":"data","operand":"expr"}=> #6 Op[Terminal_Echo]@11
+        #2 Op[Expr_Assign]@3 =={"type":"data","operand":"expr"}=> #6 Op[Terminal_Echo]@11
