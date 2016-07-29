@@ -35,12 +35,12 @@ class MaybeGeneratingVisitor extends AbstractVisitor {
 				$this->addWriteMaybeDependences($op_node, $block, $i + 1);
 			} else {
 				foreach ($op->getVariableNames() as $variableName) {
-					$vars = is_array($op->$variableName) === true ? $op->$variableName : [$op->$variableName];
-					foreach ($vars as $var) {
-						if ($var !== null) {
-							assert($var instanceof Operand);
-							/** @var Operand $var */
-							if ($var instanceof Operand\Variable && $var->name instanceof Operand\Literal === false) {
+					$operands = is_array($op->$variableName) === true ? $op->$variableName : [$op->$variableName];
+					foreach ($operands as $operand) {
+						if ($operand !== null) {
+							assert($operand instanceof Operand);
+							/** @var Operand $operand */
+							if ($operand instanceof Operand\Variable && $operand->name instanceof Operand\Literal === false) {
 								$op_node = new OpNode($op);
 								if ($op->isWriteVariable($variableName) === false) {
 									$this->addReadMaybeDependences($op_node, $block, $i - 1);
@@ -132,12 +132,15 @@ class MaybeGeneratingVisitor extends AbstractVisitor {
 		}
 	}
 
-	private function getOperandVariable(Operand $operand) {
-		if ($operand instanceof Operand\Variable) {
-			return $operand;
-		}
-		if ($operand instanceof Operand\Temporary && $operand->original !== null && $operand->original instanceof Operand\Variable) {
-			return $operand->original;
+	private function getOperandVariable($operand) {
+		if ($operand !== null) {
+			assert($operand instanceof Operand);
+			if ($operand instanceof Operand\Variable) {
+				return $operand;
+			}
+			if ($operand instanceof Operand\Temporary && $operand->original !== null && $operand->original instanceof Operand\Variable) {
+				return $operand->original;
+			}
 		}
 		return null;
 	}
