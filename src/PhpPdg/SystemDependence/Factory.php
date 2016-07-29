@@ -18,13 +18,13 @@ use PhpParser\Node\Expr\AssignOp;
 use PhpPdg\CfgBridge\System as CfgSystem;
 use PhpPdg\Graph\FactoryInterface as GraphFactoryInterface;
 use PhpPdg\Graph\GraphInterface;
+use PhpPdg\Graph\Node\NodeInterface;
 use PhpPdg\ProgramDependence\FactoryInterface as PdgFactoryInterface;
 use PhpPdg\ProgramDependence\Func;
 use PhpPdg\ProgramDependence\Node\OpNode;
 use PhpPdg\SystemDependence\Node\BuiltinFuncNode;
 use PhpPdg\SystemDependence\Node\FuncNode;
 use PhpPdg\SystemDependence\Node\UndefinedFuncNode;
-use PhpPdg\SystemDependence\Node\UndefinedNsFuncNode;
 use PHPTypes\InternalArgInfo;
 use PHPTypes\State;
 use PHPTypes\Type;
@@ -309,6 +309,14 @@ class Factory implements FactoryInterface {
 		return $classnames;
 	}
 
+	/**
+	 * @param State $state
+	 * @param string $classname
+	 * @param string $methodname
+	 * @param \SplObjectStorage $pdg_func_lookup
+	 * @param bool $is_static_call
+	 * @return NodeInterface[]
+	 */
 	private function resolvePolymorphicMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup, $is_static_call) {
 		$allnodes = [];
 		if (isset($state->classResolvedBy[$classname]) === true) {
@@ -324,9 +332,16 @@ class Factory implements FactoryInterface {
 				}
 			}
 		}
-		return array_unique($allnodes, SORT_REGULAR);
+		return $allnodes;
 	}
 
+	/**
+	 * @param State $state
+	 * @param string $classname
+	 * @param string $methodname
+	 * @param \SplObjectStorage $pdg_func_lookup
+	 * @return NodeInterface[]
+	 */
 	private function resolveMethodCall(State $state, $classname, $methodname, \SplObjectStorage $pdg_func_lookup) {
 		$nodes = [];
 
@@ -338,11 +353,13 @@ class Factory implements FactoryInterface {
 					foreach ($state->methodLookup[$class][$methodname] as $method) {
 						$func = $method->getFunc();
 						assert(isset($pdg_func_lookup[$func]));
-						$nodes[] = $pdg_func_lookup[$func];
+						/** @var FuncNode $funcnode */
+						$funcnode = $pdg_func_lookup[$func];
+						$nodes[$funcnode->getHash()] = $funcnode;
 					}
 				} else if ($class->extends !== null) {
 					foreach ($this->resolveMethodCall($state, strtolower($class->extends->value), $methodname, $pdg_func_lookup) as $node) {
-						$nodes[] = $node;
+						$nodes[$node->getHash()] = $node;
 					}
 				}
 			}
@@ -350,12 +367,18 @@ class Factory implements FactoryInterface {
 
 		$node = $this->resolveBuiltinMethodCall($state->internalTypeInfo, $classname, $methodname);
 		if ($node !== null) {
-			$nodes[] = $node;
+			$nodes[$node->getHash()] = $node;
 		}
 
 		return $nodes;
 	}
 
+	/**
+	 * @param InternalArgInfo $internalArgInfo
+	 * @param string $classname
+	 * @param string $methodname
+	 * @return null|BuiltinFuncNode
+	 */
 	private function resolveBuiltinMethodCall(InternalArgInfo $internalArgInfo, $classname, $methodname) {
 		$node = null;
 		if (isset($internalArgInfo->methods[$classname][$methodname]) === true) {
@@ -367,6 +390,13 @@ class Factory implements FactoryInterface {
 		return $node;
 	}
 
+	/**
+	 * @param State $state
+	 * @param string $classname
+	 * @param string $propname
+	 * @param \SplObjectStorage|FuncNode[] $pdg_func_lookup
+	 * @return NodeInterface[]
+	 */
 	private function resolvePolymorphicPropertyOverloadingIsset(State $state, $classname, $propname, $pdg_func_lookup) {
 		$nodes = [];
 		if (isset($state->classResolvedBy[$classname]) === true) {
@@ -379,6 +409,13 @@ class Factory implements FactoryInterface {
 		return $nodes;
 	}
 
+	/**
+	 * @param State $state
+	 * @param string $classname
+	 * @param string $propname
+	 * @param \SplObjectStorage|FuncNode[] $pdg_func_lookup
+	 * @return NodeInterface[]
+	 */
 	private function resolvePolymorphicPropertyOverloadingUnset(State $state, $classname, $propname, $pdg_func_lookup) {
 		$nodes = [];
 		if (isset($state->classResolvedBy[$classname]) === true) {
@@ -391,6 +428,13 @@ class Factory implements FactoryInterface {
 		return $nodes;
 	}
 
+	/**
+	 * @param State $state
+	 * @param string $classname
+	 * @param string $propname
+	 * @param \SplObjectStorage|FuncNode[] $pdg_func_lookup
+	 * @return NodeInterface[]
+	 */
 	private function resolvePolymorphicPropertyOverloadingSet(State $state, $classname, $propname, $pdg_func_lookup) {
 		$nodes = [];
 		if (isset($state->classResolvedBy[$classname]) === true) {
@@ -403,6 +447,13 @@ class Factory implements FactoryInterface {
 		return $nodes;
 	}
 
+	/**
+	 * @param State $state
+	 * @param string $classname
+	 * @param string $propname
+	 * @param \SplObjectStorage|FuncNode[] $pdg_func_lookup
+	 * @return NodeInterface[]
+	 */
 	private function resolvePolymorphicPropertyOverloadingGet(State $state, $classname, $propname, $pdg_func_lookup) {
 		$nodes = [];
 		if (isset($state->classResolvedBy[$classname]) === true) {
@@ -415,6 +466,12 @@ class Factory implements FactoryInterface {
 		return $nodes;
 	}
 
+	/**
+	 * @param State $state
+	 * @param string $classname
+	 * @param string $propname
+	 * @return bool
+	 */
 	private function hasProperty(State $state, $classname, $propname) {
 		if (isset($state->classLookup[$classname]) === true) {
 			foreach ($state->classLookup[$classname] as $class) {
@@ -431,12 +488,22 @@ class Factory implements FactoryInterface {
 		return false;
 	}
 
+	/**
+	 * @param GraphInterface $sdg
+	 * @param NodeInterface $source_node
+	 * @param NodeInterface[] $target_nodes
+	 */
 	private function ensureNodesAndCallEdgesAdded(GraphInterface $sdg, $source_node, $target_nodes) {
 		foreach ($target_nodes as $target_node) {
 			$this->ensureNodeAndCallEdgeAdded($sdg, $source_node, $target_node);
 		}
 	}
 
+	/**
+	 * @param GraphInterface $sdg
+	 * @param NodeInterface $source_node
+	 * @param NodeInterface $target_node
+	 */
 	private function ensureNodeAndCallEdgeAdded(GraphInterface $sdg, $source_node, $target_node) {
 		if ($sdg->hasNode($target_node) === false) {
 			$sdg->addNode($target_node);
