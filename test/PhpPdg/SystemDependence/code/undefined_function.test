@@ -16,9 +16,9 @@ Script /foo/bar/baz.php[{main}]:
             #0 ENTRY =={"type":"control"}=> #1 Op[Terminal_Return]@-1
 Graph:
     Nodes:
-        #3 Func /foo/bar/baz.php[{main}]
+        #3 Func[/foo/bar/baz.php[{main}]]
         #2 Op[Expr_FuncCall]@3
         #4 Undefined Func foo
     Edges:
-        #3 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #2 Op[Expr_FuncCall]@3
+        #3 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #2 Op[Expr_FuncCall]@3
         #2 Op[Expr_FuncCall]@3 =={"type":"call"}=> #4 Undefined Func foo

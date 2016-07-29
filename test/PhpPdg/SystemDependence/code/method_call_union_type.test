@@ -75,12 +75,12 @@ Method /foo/bar/baz.php[C::bar]:
             #12 Op[Expr_MethodCall]@16 =={"type":"data","operand":"expr"}=> #11 Op[Terminal_Return]@16
 Graph:
     Nodes:
-        #13 Func /foo/bar/baz.php[{main}]
-        #14 Func /foo/bar/baz.php[A::foo]
-        #15 Func /foo/bar/baz.php[B::foo]
-        #16 Func /foo/bar/baz.php[C::bar]
+        #13 Func[/foo/bar/baz.php[{main}]]
+        #14 Func[/foo/bar/baz.php[A::foo]]
+        #15 Func[/foo/bar/baz.php[B::foo]]
+        #16 Func[/foo/bar/baz.php[C::bar]]
         #12 Op[Expr_MethodCall]@16
     Edges:
-        #16 Func /foo/bar/baz.php[C::bar] =={"type":"contains"}=> #12 Op[Expr_MethodCall]@16
-        #12 Op[Expr_MethodCall]@16 =={"type":"call"}=> #14 Func /foo/bar/baz.php[A::foo]
-        #12 Op[Expr_MethodCall]@16 =={"type":"call"}=> #15 Func /foo/bar/baz.php[B::foo]
+        #16 Func[/foo/bar/baz.php[C::bar]] =={"type":"contains"}=> #12 Op[Expr_MethodCall]@16
+        #12 Op[Expr_MethodCall]@16 =={"type":"call"}=> #14 Func[/foo/bar/baz.php[A::foo]]
+        #12 Op[Expr_MethodCall]@16 =={"type":"call"}=> #15 Func[/foo/bar/baz.php[B::foo]]

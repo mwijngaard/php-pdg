@@ -73,12 +73,12 @@ Method /foo/bar/baz.php[A::__isset]:
             #0 ENTRY =={"type":"control"}=> #17 Op[Terminal_Return]@-1
 Graph:
     Nodes:
-        #18 Func /foo/bar/baz.php[{main}]
-        #19 Func /foo/bar/baz.php[A::__isset]
+        #18 Func[/foo/bar/baz.php[{main}]]
+        #19 Func[/foo/bar/baz.php[A::__isset]]
         #10 Op[Expr_Isset]@10
         #13 Op[Expr_Isset]@11
     Edges:
-        #18 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op[Expr_Isset]@10
-        #18 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #13 Op[Expr_Isset]@11
-        #10 Op[Expr_Isset]@10 =={"type":"call"}=> #19 Func /foo/bar/baz.php[A::__isset]
-        #13 Op[Expr_Isset]@11 =={"type":"call"}=> #19 Func /foo/bar/baz.php[A::__isset]
+        #18 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #10 Op[Expr_Isset]@10
+        #18 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #13 Op[Expr_Isset]@11
+        #10 Op[Expr_Isset]@10 =={"type":"call"}=> #19 Func[/foo/bar/baz.php[A::__isset]]
+        #13 Op[Expr_Isset]@11 =={"type":"call"}=> #19 Func[/foo/bar/baz.php[A::__isset]]

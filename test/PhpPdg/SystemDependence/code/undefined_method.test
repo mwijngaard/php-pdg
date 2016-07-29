@@ -23,9 +23,9 @@ Script /foo/bar/baz.php[{main}]:
             #3 Op[Expr_Assign]@3 =={"type":"data","operand":"var"}=> #4 Op[Expr_MethodCall]@4
 Graph:
     Nodes:
-        #5 Func /foo/bar/baz.php[{main}]
+        #5 Func[/foo/bar/baz.php[{main}]]
         #4 Op[Expr_MethodCall]@4
         #6 Undefined Func foo::bar
     Edges:
-        #5 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #4 Op[Expr_MethodCall]@4
+        #5 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #4 Op[Expr_MethodCall]@4
         #4 Op[Expr_MethodCall]@4 =={"type":"call"}=> #6 Undefined Func foo::bar

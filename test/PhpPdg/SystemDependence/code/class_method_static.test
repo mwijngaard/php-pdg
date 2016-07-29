@@ -41,9 +41,9 @@ Method /foo/bar/baz.php[Foo::bar]:
             #5 Op[Expr_Param]@4 =={"type":"data","operand":"expr"}=> #7 Op[Terminal_Echo]@5
 Graph:
     Nodes:
-        #8 Func /foo/bar/baz.php[{main}]
-        #9 Func /foo/bar/baz.php[Foo::bar]
+        #8 Func[/foo/bar/baz.php[{main}]]
+        #9 Func[/foo/bar/baz.php[Foo::bar]]
         #4 Op[Expr_StaticCall]@9
     Edges:
-        #8 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #4 Op[Expr_StaticCall]@9
-        #4 Op[Expr_StaticCall]@9 =={"type":"call"}=> #9 Func /foo/bar/baz.php[Foo::bar]
+        #8 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #4 Op[Expr_StaticCall]@9
+        #4 Op[Expr_StaticCall]@9 =={"type":"call"}=> #9 Func[/foo/bar/baz.php[Foo::bar]]

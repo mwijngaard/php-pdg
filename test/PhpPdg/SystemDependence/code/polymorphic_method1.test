@@ -44,9 +44,9 @@ Method /foo/bar/baz.php[A::foo]:
             #0 ENTRY =={"type":"control"}=> #8 Op[Terminal_Return]@-1
 Graph:
     Nodes:
-        #9 Func /foo/bar/baz.php[{main}]
-        #10 Func /foo/bar/baz.php[A::foo]
+        #9 Func[/foo/bar/baz.php[{main}]]
+        #10 Func[/foo/bar/baz.php[A::foo]]
         #7 Op[Expr_MethodCall]@10
     Edges:
-        #9 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #7 Op[Expr_MethodCall]@10
-        #7 Op[Expr_MethodCall]@10 =={"type":"call"}=> #10 Func /foo/bar/baz.php[A::foo]
+        #9 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #7 Op[Expr_MethodCall]@10
+        #7 Op[Expr_MethodCall]@10 =={"type":"call"}=> #10 Func[/foo/bar/baz.php[A::foo]]

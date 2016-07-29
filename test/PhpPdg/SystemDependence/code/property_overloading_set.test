@@ -76,15 +76,15 @@ Method /foo/bar/baz.php[A::__set]:
             #0 ENTRY =={"type":"control"}=> #19 Op[Terminal_Return]@-1
 Graph:
     Nodes:
-        #20 Func /foo/bar/baz.php[{main}]
-        #21 Func /foo/bar/baz.php[A::__set]
+        #20 Func[/foo/bar/baz.php[{main}]]
+        #21 Func[/foo/bar/baz.php[A::__set]]
         #10 Op[Expr_Assign]@9
         #13 Op[Expr_Assign]@10
         #16 Op[Expr_Assign]@11
     Edges:
-        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #10 Op[Expr_Assign]@9
-        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #13 Op[Expr_Assign]@10
-        #20 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #16 Op[Expr_Assign]@11
-        #10 Op[Expr_Assign]@9 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]
-        #13 Op[Expr_Assign]@10 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]
-        #16 Op[Expr_Assign]@11 =={"type":"call"}=> #21 Func /foo/bar/baz.php[A::__set]
+        #20 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #10 Op[Expr_Assign]@9
+        #20 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #13 Op[Expr_Assign]@10
+        #20 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #16 Op[Expr_Assign]@11
+        #10 Op[Expr_Assign]@9 =={"type":"call"}=> #21 Func[/foo/bar/baz.php[A::__set]]
+        #13 Op[Expr_Assign]@10 =={"type":"call"}=> #21 Func[/foo/bar/baz.php[A::__set]]
+        #16 Op[Expr_Assign]@11 =={"type":"call"}=> #21 Func[/foo/bar/baz.php[A::__set]]

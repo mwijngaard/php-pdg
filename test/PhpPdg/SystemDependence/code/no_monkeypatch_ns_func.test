@@ -32,9 +32,9 @@ Function /foo/bar/baz.php[Foo\strrev]:
             #0 ENTRY =={"type":"control"}=> #4 Op[Terminal_Return]@-1
 Graph:
     Nodes:
-        #5 Func /foo/bar/baz.php[{main}]
-        #6 Func /foo/bar/baz.php[Foo\strrev]
+        #5 Func[/foo/bar/baz.php[{main}]]
+        #6 Func[/foo/bar/baz.php[Foo\strrev]]
         #3 Op[Expr_NsFuncCall]@6
     Edges:
-        #5 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #3 Op[Expr_NsFuncCall]@6
-        #3 Op[Expr_NsFuncCall]@6 =={"type":"call"}=> #6 Func /foo/bar/baz.php[Foo\strrev]
+        #5 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #3 Op[Expr_NsFuncCall]@6
+        #3 Op[Expr_NsFuncCall]@6 =={"type":"call"}=> #6 Func[/foo/bar/baz.php[Foo\strrev]]

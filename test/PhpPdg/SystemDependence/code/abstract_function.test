@@ -48,6 +48,6 @@ Method /foo/bar/baz.php[B::foo]:
             #0 ENTRY =={"type":"control"}=> #8 Op[Terminal_Return]@-1
 Graph:
     Nodes:
-        #9 Func /foo/bar/baz.php[{main}]
-        #10 Func /foo/bar/baz.php[A::foo]
-        #11 Func /foo/bar/baz.php[B::foo]
+        #9 Func[/foo/bar/baz.php[{main}]]
+        #10 Func[/foo/bar/baz.php[A::foo]]
+        #11 Func[/foo/bar/baz.php[B::foo]]

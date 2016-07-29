@@ -40,9 +40,9 @@ Function /foo/bar/baz.php[Foo\foo]:
             #4 Op[Expr_Param]@5 =={"type":"data","operand":"expr"}=> #6 Op[Terminal_Echo]@6
 Graph:
     Nodes:
-        #7 Func /foo/bar/baz.php[{main}]
-        #8 Func /foo/bar/baz.php[Foo\foo]
+        #7 Func[/foo/bar/baz.php[{main}]]
+        #8 Func[/foo/bar/baz.php[Foo\foo]]
         #3 Op[Expr_NsFuncCall]@9
     Edges:
-        #7 Func /foo/bar/baz.php[{main}] =={"type":"contains"}=> #3 Op[Expr_NsFuncCall]@9
-        #3 Op[Expr_NsFuncCall]@9 =={"type":"call"}=> #8 Func /foo/bar/baz.php[Foo\foo]
+        #7 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #3 Op[Expr_NsFuncCall]@9
+        #3 Op[Expr_NsFuncCall]@9 =={"type":"call"}=> #8 Func[/foo/bar/baz.php[Foo\foo]]
