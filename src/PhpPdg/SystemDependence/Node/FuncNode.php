@@ -25,7 +25,7 @@ class FuncNode implements NodeInterface {
 	}
 
 	public function toString() {
-		return 'Func ' . $this->func->getId();
+		return 'Func[' . $this->func->getId() . ']';
 	}
 
 	public function getHash() {
