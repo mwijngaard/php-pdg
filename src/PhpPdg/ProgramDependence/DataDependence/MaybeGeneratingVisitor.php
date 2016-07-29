@@ -28,27 +28,48 @@ class MaybeGeneratingVisitor extends AbstractVisitor {
 	public function enterBlock(Block $block, Block $prior = null) {
 		for ($i = 0; $i < count($block->children); $i++) {
 			$op = $block->children[$i];
+
 			if ($op instanceof Op\Expr\Eval_) {
-				$eval_node = new OpNode($op);
-				$this->addOutgoingMaybeDependences($eval_node, $block, $i - 1);
-				$this->addIncomingMaybeDependences($eval_node, $block, $i + 1);
+				$op_node = new OpNode($op);
+				$this->addReadMaybeDependences($op_node, $block, $i - 1);
+				$this->addWriteMaybeDependences($op_node, $block, $i + 1);
+			} else {
+				foreach ($op->getVariableNames() as $variableName) {
+					$vars = is_array($op->$variableName) === true ? $op->$variableName : [$op->$variableName];
+					foreach ($vars as $var) {
+						if ($var !== null) {
+							assert($var instanceof Operand);
+							/** @var Operand $var */
+							if ($var instanceof Operand\Variable && $var->name instanceof Operand\Literal === false) {
+								$op_node = new OpNode($op);
+								if ($op->isWriteVariable($variableName) === false) {
+									$this->addReadMaybeDependences($op_node, $block, $i - 1);
+								} else {
+									$this->addWriteMaybeDependences($op_node, $block, $i + 1);
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
 
-	private function addOutgoingMaybeDependences(OpNode $eval_node, Block $block, $offset, $mask = [], $path = []) {
+	private function addReadMaybeDependences(OpNode $op_node, Block $block, $offset, $mask = [], $path = []) {
 		for ($i = $offset; $i >= 0; $i--) {
 			$op = $block->children[$i];
 			foreach ($op->getVariableNames() as $var_name) {
 				if ($op->isWriteVariable($var_name) === true) {
-					foreach ((array) $op->$var_name as $operand) {
-						if ($operand instanceof Operand\Variable) {
-							if (isset($mask[$operand->name->value]) === false) {
+					$operands = is_array($op->$var_name) === true ? $op->$var_name : [$op->$var_name];
+					foreach ($operands as $operand) {
+						$variable = $this->getOperandVariable($operand);
+						if ($variable !== null) {
+							if ($this->isMasked($variable, $mask) === false) {
+								$mask = $this->mask($variable, $mask);
 								$source_node = new OpNode($op);
-								if ($this->target_graph->hasEdges($source_node, $eval_node, ['type' => $this->edge_type]) === false) {
-									$this->target_graph->addEdge($source_node, $eval_node, ['type' => $this->edge_type]);
+								if ($this->target_graph->hasEdges($source_node, $op_node, ['type' => $this->edge_type]) === false) {
+									$this->target_graph->addEdge($source_node, $op_node, ['type' => $this->edge_type]);
 								}
-								$mask[$operand->name->value] = 1;
 							}
 						}
 					}
@@ -58,32 +79,33 @@ class MaybeGeneratingVisitor extends AbstractVisitor {
 		$path[] = $block;
 		foreach ($block->parents as $parent_block) {
 			if (in_array($parent_block, $path, true) === false) {
-				$this->addOutgoingMaybeDependences($eval_node, $parent_block, count($parent_block->children) - 1, $mask, $path);
+				$this->addReadMaybeDependences($op_node, $parent_block, count($parent_block->children) - 1, $mask, $path);
 			}
 		}
 	}
 
-	private function addIncomingMaybeDependences(OpNode $eval_node, Block $block, $offset, $mask = [], $path = []) {
+	private function addWriteMaybeDependences(OpNode $op_node, Block $block, $offset, $mask = [], $path = []) {
 		$children_ct = count($block->children);
 		if ($children_ct > 0) {
 			for ($i = $offset; $i < $children_ct; $i++) {
 				$op = $block->children[$i];
 				foreach ($op->getVariableNames() as $var_name) {
+					$operands = is_array($op->$var_name) === true ? $op->$var_name : [$op->$var_name];
 					if ($op->isWriteVariable($var_name) === false) {
-						foreach ((array) $op->$var_name as $operand) {
-							if ($operand instanceof Operand\Variable) {
-								if (isset($mask[$operand->name->value]) === false) {
-									$target_node = new OpNode($op);
-									if ($this->target_graph->hasEdges($eval_node, $target_node, ['type' => $this->edge_type]) === false) {
-										$this->target_graph->addEdge($eval_node, $target_node, ['type' => $this->edge_type]);
-									}
+						foreach ($operands as $operand) {
+							$variable = $this->getOperandVariable($operand);
+							if ($variable !== null && $this->isMasked($variable, $mask) === false) {
+								$target_node = new OpNode($op);
+								if ($this->target_graph->hasEdges($op_node, $target_node, ['type' => $this->edge_type]) === false) {
+									$this->target_graph->addEdge($op_node, $target_node, ['type' => $this->edge_type]);
 								}
 							}
 						}
 					} else {
-						foreach ((array) $op->$var_name as $operand) {
-							if ($operand instanceof Operand\Variable) {
-								$mask[$operand->name->value] = 1;
+						foreach ($operands as $operand) {
+							$variable = $this->getOperandVariable($operand);
+							if ($variable !== null) {
+								$mask = $this->mask($variable, $mask);
 							}
 						}
 					}
@@ -104,9 +126,33 @@ class MaybeGeneratingVisitor extends AbstractVisitor {
 			}
 			foreach ($target_blocks as $target_block) {
 				if (in_array($target_block, $path, true) === false) {
-					$this->addIncomingMaybeDependences($eval_node, $target_block, 0, $mask, $path);
+					$this->addWriteMaybeDependences($op_node, $target_block, 0, $mask, $path);
 				}
 			}
 		}
+	}
+
+	private function getOperandVariable(Operand $operand) {
+		if ($operand instanceof Operand\Variable) {
+			return $operand;
+		}
+		if ($operand instanceof Operand\Temporary && $operand->original !== null && $operand->original instanceof Operand\Variable) {
+			return $operand->original;
+		}
+		return null;
+	}
+
+	private function isMasked(Operand\Variable $variable, array &$mask) {
+		if ($variable->name instanceof Operand\Literal === false) {
+			return false;
+		}
+		return isset($mask[$variable->name->value]);
+	}
+
+	private function mask(Operand\Variable $variable, array $mask) {
+		if ($variable->name instanceof Operand\Literal) {
+			$mask[$variable->name->value] = 1;
+		}
+		return $mask;
 	}
 }
