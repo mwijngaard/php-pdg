@@ -21,7 +21,7 @@ class UndefinedFuncNode implements NodeInterface {
 	}
 
 	public function toString() {
-		return 'Undefined Func ' . $this->getId();
+		return 'UndefinedFunc[' . $this->getId() . ']';
 	}
 
 	public function getHash() {

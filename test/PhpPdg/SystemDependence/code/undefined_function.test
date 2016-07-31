@@ -18,7 +18,7 @@ Graph:
     Nodes:
         #3 Func[/foo/bar/baz.php[{main}]]
         #2 Op[Expr_FuncCall]@3
-        #4 Undefined Func foo
+        #4 UndefinedFunc[foo]
     Edges:
         #3 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #2 Op[Expr_FuncCall]@3
-        #2 Op[Expr_FuncCall]@3 =={"type":"call"}=> #4 Undefined Func foo
+        #2 Op[Expr_FuncCall]@3 =={"type":"call"}=> #4 UndefinedFunc[foo]

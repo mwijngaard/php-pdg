@@ -45,7 +45,7 @@ Graph:
         #7 Func[/foo/bar/baz.php[{main}]]
         #8 Func[/foo/bar/baz.php[Bar\foo]]
         #3 Op[Expr_NsFuncCall]@10
-        #9 Undefined Func foo
+        #9 UndefinedFunc[foo]
     Edges:
         #7 Func[/foo/bar/baz.php[{main}]] =={"type":"contains"}=> #3 Op[Expr_NsFuncCall]@10
-        #3 Op[Expr_NsFuncCall]@10 =={"type":"call"}=> #9 Undefined Func foo
+        #3 Op[Expr_NsFuncCall]@10 =={"type":"call"}=> #9 UndefinedFunc[foo]

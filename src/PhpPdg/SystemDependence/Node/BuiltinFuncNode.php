@@ -16,7 +16,7 @@ class BuiltinFuncNode implements NodeInterface {
 	}
 
 	public function toString() {
-		return 'Builtin Func ' . $this->getId();
+		return 'BuiltinFunc[' . $this->getId() . ']';
 	}
 
 	public function getHash() {
