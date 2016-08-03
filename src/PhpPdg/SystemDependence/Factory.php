@@ -122,23 +122,23 @@ class Factory implements FactoryInterface {
 			assert($ns_func_call->name instanceof Literal);
 			assert($ns_func_call->nsName instanceof Literal);
 
-			$name = strtolower($ns_func_call->name->value);
 			$nsName = strtolower($ns_func_call->nsName->value);
+			$name = strtolower($ns_func_call->name->value);
 
 			if (isset($state->functionLookup[$nsName]) === true) {
 				$this->linkFunctions($sdg, $call_node, $state->functionLookup[$nsName], $pdg_func_lookup);
-			} else {
-				if (isset($state->functionLookup[$name]) === true) {
-					$this->linkFunctions($sdg, $call_node, $state->functionLookup[$name], $pdg_func_lookup);
-				}
-				// take monkey-patching into account and also link builtin functions
-				if (isset($state->internalTypeInfo->functions[$name]) === true) {
-					$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new BuiltinFuncNode($name, null));
-				}
-				// if we haven't linked anything yet, this is most likely a vendor function (because we know its name).
-				if ($sdg->hasEdges($call_node, null, ['type' => 'call']) === false) {
-					$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($name, null));
-				}
+			}
+			if (isset($state->functionLookup[$name]) === true) {
+				$this->linkFunctions($sdg, $call_node, $state->functionLookup[$name], $pdg_func_lookup);
+			}
+			// take monkey-patching into account and also link builtin functions
+			if (isset($state->internalTypeInfo->functions[$name]) === true) {
+				$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new BuiltinFuncNode($name, null));
+			}
+			// if we haven't linked anything yet, this is most likely a vendor function (because we know its name).
+			if ($sdg->hasEdges($call_node, null, ['type' => 'call']) === false) {
+				$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($nsName, null));
+				$this->ensureNodeAndCallEdgeAdded($sdg, $call_node, new UndefinedFuncNode($name, null));
 			}
 		}
 
