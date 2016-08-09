@@ -34,7 +34,7 @@ class BackwardSlicer implements SlicerInterface {
 			if ($func->filename === $slice_file_path) {
 				foreach ($func->pdg->getNodes() as $node) {
 					if ($node instanceof OpNode && $node->op->getLine() === $slice_line_nr) {
-						$this->updateFuncSlicingCriterion($func, [$node->getHash() => $node]);
+						$this->addFuncSlicingCriterion($func, [$node->getHash() => $node]);
 					}
 				}
 			}
@@ -54,7 +54,7 @@ class BackwardSlicer implements SlicerInterface {
 					/** @var FuncNode $containing_func_node */
 					$containing_func_node = $contains_edges[0]->getFromNode();
 					assert($containing_func_node instanceof FuncNode);
-					$this->updateFuncSlicingCriterion($containing_func_node->getFunc(), [$call_node->getHash() => $call_node]);
+					$this->addFuncSlicingCriterion($containing_func_node->getFunc(), [$call_node->getHash() => $call_node]);
 				}
 
 				// DOWN - all procedures called by this functions
@@ -63,7 +63,7 @@ class BackwardSlicer implements SlicerInterface {
 						foreach ($system->sdg->getEdges($node, null, ['type' => 'call']) as $outgoing_call_edge) {
 							$func_node = $outgoing_call_edge->getToNode();
 							if ($func_node instanceof FuncNode) {
-								$this->updateFuncSlicingCriterion($func_node->getFunc(), $func_node->getFunc()->return_nodes);
+								$this->addFuncSlicingCriterion($func_node->getFunc(), $func_node->getFunc()->return_nodes);
 							}
 						}
 					}
@@ -79,7 +79,7 @@ class BackwardSlicer implements SlicerInterface {
 		return $sliced_system;
 	}
 
-	private function updateFuncSlicingCriterion(Func $func, array $new_func_slicing_criterion) {
+	private function addFuncSlicingCriterion(Func $func, array $new_func_slicing_criterion) {
 		if (isset($this->func_slicing_criterions[$func]) === true) {
 			$existing_func_slicing_criterion = $this->func_slicing_criterions[$func];
 			$new_func_slicing_criterion = array_merge($existing_func_slicing_criterion, $new_func_slicing_criterion);
