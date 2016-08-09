@@ -1,0 +1,68 @@
+<?php
+
+function fac($n) {
+    assert($n >= 0);
+	if ($n > 0) {
+		return $n * fac($n - 1);
+	}
+	return 1;
+}
+
+class MyFac {
+	public function fac($n) {
+		return fac($n);
+	}
+	public function foo() {
+		echo 'foo';
+	}
+}
+
+class HiddenFac {
+    public function bar($n) {
+        return fac(-$n);
+    }
+    public function baz() {
+        echo 'baz';
+    }
+    public function quux($n) {
+        if ($n % 2 === 0) {
+            (new self())->bar(-$n);
+        } else {
+            echo 'quux';
+        }
+    }
+}
+-----
+4
+-----
+<?php
+
+function fac($n)
+{
+    assert($n >= 0);
+    if ($n > 0) {
+        return $n * fac($n - 1);
+    }
+    return 1;
+}
+class MyFac
+{
+    public function fac($n)
+    {
+        return fac($n);
+    }
+}
+class HiddenFac
+{
+    public function bar($n)
+    {
+        return fac(-$n);
+    }
+    public function quux($n)
+    {
+        if ($n % 2 === 0) {
+            (new \HiddenFac())->bar(-$n);
+        } else {
+        }
+    }
+}

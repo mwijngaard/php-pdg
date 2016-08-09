@@ -1,0 +1,36 @@
+<?php
+
+function foo($a, $b) {
+    return $a + $b;
+}
+
+function bar($a, $b) {
+    return foo($a, $b);
+}
+
+function baz() {
+    return foo($a, $b);
+}
+
+$a = bar(4, 2);
+echo $a;
+
+-----
+16
+-----
+<?php
+
+function foo($a, $b)
+{
+    return $a + $b;
+}
+function bar($a, $b)
+{
+    return foo($a, $b);
+}
+function baz()
+{
+    return foo($a, $b);
+}
+$a = bar(4, 2);
+echo $a;
