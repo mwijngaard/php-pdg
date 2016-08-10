@@ -248,4 +248,31 @@ class Graph implements GraphInterface {
 		}
 		return $result;
 	}
+
+	/**
+	 * @param GraphInterface $graph
+	 * @param NodeInterface $source_node
+	 * @param NodeInterface[] $target_nodes
+	 * @param array $attributes
+	 */
+	public static function ensureNodesAndEdgesAdded(GraphInterface $graph, $source_node, $target_nodes, $attributes = []) {
+		foreach ($target_nodes as $target_node) {
+			self::ensureNodeAndEdgeAdded($graph, $source_node, $target_node, $attributes);
+		}
+	}
+
+	/**
+	 * @param GraphInterface $graph
+	 * @param NodeInterface $source_node
+	 * @param NodeInterface $target_node
+	 * @param array $attributes
+	 */
+	public static function ensureNodeAndEdgeAdded(GraphInterface $graph, $source_node, $target_node, $attributes = []) {
+		if ($graph->hasNode($target_node) === false) {
+			$graph->addNode($target_node);
+			$graph->addEdge($source_node, $target_node, $attributes);
+		} else if ($graph->hasEdges($source_node, $target_node, $attributes) === false) {
+			$graph->addEdge($source_node, $target_node, $attributes);
+		}
+	}
 }
