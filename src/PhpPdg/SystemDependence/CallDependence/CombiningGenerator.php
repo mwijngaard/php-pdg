@@ -21,9 +21,9 @@ class CombiningGenerator implements GeneratorInterface {
 		}
 	}
 
-	public function addSystemCallDependences(System $system, State $state, \SplObjectStorage $pdg_func_lookup) {
+	public function addCallDependencesToSystem(System $system, State $state, \SplObjectStorage $pdg_func_lookup) {
 		foreach ($this->generators as $generator) {
-			$generator->addSystemCallDependences($system, $state, $pdg_func_lookup);
+			$generator->addCallDependencesToSystem($system, $state, $pdg_func_lookup);
 		}
 	}
 }

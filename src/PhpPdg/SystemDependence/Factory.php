@@ -81,7 +81,7 @@ class Factory implements FactoryInterface {
 
 		$state = new State($cfg_scripts);
 		$this->type_reconstructor->resolve($state);
-		$this->call_dependence_generator->addSystemCallDependences($system, $state, $pdg_func_lookup);
+		$this->call_dependence_generator->addCallDependencesToSystem($system, $state, $pdg_func_lookup);
 		return $system;
 	}
 }

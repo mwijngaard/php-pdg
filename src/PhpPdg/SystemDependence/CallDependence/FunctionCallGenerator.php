@@ -13,7 +13,7 @@ use PhpPdg\SystemDependence\System;
 use PHPTypes\State;
 
 class FunctionCallGenerator implements GeneratorInterface {
-	public function addSystemCallDependences(System $system, State $state, \SplObjectStorage $pdg_func_lookup) {
+	public function addCallDependencesToSystem(System $system, State $state, \SplObjectStorage $pdg_func_lookup) {
 		$sdg = $system->sdg;
 		// link function calls to their functions
 		foreach ($state->funcCalls as $funcCallPair) {

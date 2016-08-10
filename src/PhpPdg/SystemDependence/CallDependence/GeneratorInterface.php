@@ -13,5 +13,5 @@ interface GeneratorInterface {
 	 * @param State $state
 	 * @param \SplObjectStorage $pdg_func_lookup
 	 */
-	public function addSystemCallDependences(System $system, State $state, \SplObjectStorage $pdg_func_lookup);
+	public function addCallDependencesToSystem(System $system, State $state, \SplObjectStorage $pdg_func_lookup);
 }

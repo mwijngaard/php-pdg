@@ -27,7 +27,7 @@ class OverloadingCallGenerator implements GeneratorInterface {
 		$this->method_resolver = $method_resolver;
 	}
 
-	public function addSystemCallDependences(System $system, State $state, \SplObjectStorage $pdg_func_lookup) {
+	public function addCallDependencesToSystem(System $system, State $state, \SplObjectStorage $pdg_func_lookup) {
 		$sdg = $system->sdg;
 		/** @var Func $pdg_func */
 		foreach (array_merge($system->scripts, $system->functions, $system->methods, $system->closures) as $pdg_func) {
