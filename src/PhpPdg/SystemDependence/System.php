@@ -17,6 +17,10 @@ class System {
 	/** @var GraphInterface  */
 	public $sdg;
 
+	/**
+	 * System constructor.
+	 * @param GraphInterface $sdg
+	 */
 	public function __construct(GraphInterface $sdg) {
 		$this->sdg = $sdg;
 	}
