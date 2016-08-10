@@ -13,7 +13,7 @@ class Func {
 	public $class_name;
 	/** @var  string|null */
 	public $filename;
-	/** @var EntryNode */
+	/** @var NodeInterface */
 	public $entry_node;
 	/** @var NodeInterface[] */
 	public $param_nodes = [];
