@@ -57,7 +57,7 @@ class MethodResolver implements MethodResolverInterface {
 	private function resolveBuiltinMethod(InternalArgInfo $internalArgInfo, $classname, $methodname) {
 		$node = null;
 		if (isset($internalArgInfo->methods[$classname][$methodname]) === true) {
-			$node = new BuiltinFuncNode($classname, $methodname);
+			$node = new BuiltinFuncNode($methodname, $classname);
 		}
 		if (isset($internalArgInfo->classExtends[$classname]) === true) {
 			$node = $this->resolveBuiltinMethod($internalArgInfo, $internalArgInfo->classExtends[$classname], $methodname);
